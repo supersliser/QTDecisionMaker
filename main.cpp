@@ -5,7 +5,6 @@
 
 int main(int argc, char *argv[])
 {
-
     QApplication a(argc, argv);
     TableViewerWindow w;
     w.menuBar()->setVisible(true);
