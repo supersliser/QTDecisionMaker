@@ -25,6 +25,7 @@ set(PROJECT_SOURCES
     qt_add_executable(DecisionMaker
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        table.h table.cpp
     )
 
 
