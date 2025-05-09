@@ -1,10 +1,10 @@
-#ifndef COLUMNTESTS_H
-#define COLUMNTESTS_H
+#ifndef ROWTESTS_H
+#define ROWTESTS_H
 
 #include <QObject>
 #include <QTest>
 
-class ColumnTests : public QObject
+class RowTests : public QObject
 {
     Q_OBJECT
 
@@ -18,8 +18,8 @@ private slots:
     void setName();
     void setName_data();
 
-    void setImportance();
-    void setImportance_data();
+    void setTotalValue();
+    void setTotalValue_data();
 };
 
-#endif // COLUMNTESTS_H
+#endif // ROWTESTS_H

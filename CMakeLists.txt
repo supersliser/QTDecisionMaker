@@ -18,6 +18,8 @@ set(PROJECT_SOURCES
         tableviewerwindow.ui
         column.cpp
         column.h
+        row.cpp
+        row.h
 )
 
     qt_add_executable(DecisionMaker
@@ -50,10 +52,15 @@ endif()
 qt_standard_project_setup()
 
 qt_add_executable(Tests
+    test_main.cpp
     column.cpp
     column.h
     columntests.h
     columntests.cpp
+    row.cpp
+    row.h
+    rowtests.h
+    rowtests.cpp
 )
 
 set_target_properties(Tests PROPERTIES

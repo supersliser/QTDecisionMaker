@@ -1,17 +1,17 @@
-#include "columntests.h"
-#include "column.h" // Assuming this is where Column is defined
+#include "rowtests.h"
+#include "row.h"
 
-void ColumnTests::setIndex() {
+void RowTests::setIndex() {
 
     QFETCH(int, input);
     QFETCH(int, expected);
 
-    Column c = Column();
+    Row c = Row();
     c.setIndex(input);
     QCOMPARE(c.index(), expected);
 }
 
-void ColumnTests::setIndex_data() {
+void RowTests::setIndex_data() {
     QTest::addColumn<int>("input");
     QTest::addColumn<int>("expected");
 
@@ -20,16 +20,17 @@ void ColumnTests::setIndex_data() {
     QTest::newRow("erroneusLower") << -2 << 0;
 }
 
-void ColumnTests::setDisplayIndex() {
+void RowTests::setDisplayIndex() {
+
     QFETCH(int, input);
     QFETCH(int, expected);
 
-    Column c = Column();
+    Row c = Row();
     c.setDisplayIndex(input);
     QCOMPARE(c.displayIndex(), expected);
 }
 
-void ColumnTests::setDisplayIndex_data() {
+void RowTests::setDisplayIndex_data() {
     QTest::addColumn<int>("input");
     QTest::addColumn<int>("expected");
 
@@ -38,16 +39,16 @@ void ColumnTests::setDisplayIndex_data() {
     QTest::newRow("erroneusLower") << -2 << 0;
 }
 
-void ColumnTests::setName() {
+void RowTests::setName() {
     QFETCH(QString, input);
     QFETCH(QString, expected);
 
-    Column c = Column();
+    Row c = Row();
     c.setName(input.toStdString());
     QCOMPARE(c.name().data(), expected.toStdString());
 }
 
-void ColumnTests::setName_data() {
+void RowTests::setName_data() {
     QTest::addColumn<QString>("input");
     QTest::addColumn<QString>("expected");
 
@@ -65,20 +66,21 @@ void ColumnTests::setName_data() {
     QTest::newRow("EmptyName") << "" << "name";
 }
 
-void ColumnTests::setImportance() {
-    QFETCH(int, input);
-    QFETCH(int, expected);
+void RowTests::setTotalValue() {
+    QFETCH(float, input);
+    QFETCH(float, expected);
 
-    Column c = Column();
-    c.setImportance(input);
-    QCOMPARE(c.importance(), expected);
+    Row r = Row();
+    r.setTotalValue(input);
+    QCOMPARE(r.totalValue(), expected);
 }
 
-void ColumnTests::setImportance_data() {
-    QTest::addColumn<int>("input");
-    QTest::addColumn<int>("expected");
+void RowTests::setTotalValue_data() {
+    QTest::addColumn<float>("input");
+    QTest::addColumn<float>("expected");
 
-    QTest::newRow("normal") << 20 << 20;
-    QTest::newRow("erroneusHigh") << 300 << 127;
-    QTest::newRow("erroneusLow") << -300 << -128;
+    QTest::newRow("normalWhole") << 5.0f << 5.0f;
+    QTest::newRow("normalDecimal") << 20.3f << 20.3f;
+    QTest::newRow("erroneusUpper") << (float)(__FLT32_MAX__) << (float)(__FLT32_MAX__);
+    QTest::newRow("erroneusLower") << (float)(__FLT32_MIN__) << (float)(__FLT32_MIN__);
 }
