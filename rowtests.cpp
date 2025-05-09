@@ -1,7 +1,9 @@
-#include "rowtests.h"
+#include "test_main.h"
 #include "row.h"
+#include <cstdlib>
+#include <cstdint>
 
-void RowTests::setIndex() {
+void Tests::row_setIndex() {
 
     QFETCH(int, input);
     QFETCH(int, expected);
@@ -11,7 +13,7 @@ void RowTests::setIndex() {
     QCOMPARE(c.index(), expected);
 }
 
-void RowTests::setIndex_data() {
+void Tests::row_setIndex_data() {
     QTest::addColumn<int>("input");
     QTest::addColumn<int>("expected");
 
@@ -20,7 +22,7 @@ void RowTests::setIndex_data() {
     QTest::newRow("erroneusLower") << -2 << 0;
 }
 
-void RowTests::setDisplayIndex() {
+void Tests::row_setDisplayIndex() {
 
     QFETCH(int, input);
     QFETCH(int, expected);
@@ -30,7 +32,7 @@ void RowTests::setDisplayIndex() {
     QCOMPARE(c.displayIndex(), expected);
 }
 
-void RowTests::setDisplayIndex_data() {
+void Tests::row_setDisplayIndex_data() {
     QTest::addColumn<int>("input");
     QTest::addColumn<int>("expected");
 
@@ -39,7 +41,7 @@ void RowTests::setDisplayIndex_data() {
     QTest::newRow("erroneusLower") << -2 << 0;
 }
 
-void RowTests::setName() {
+void Tests::row_setName() {
     QFETCH(QString, input);
     QFETCH(QString, expected);
 
@@ -48,7 +50,7 @@ void RowTests::setName() {
     QCOMPARE(c.name().data(), expected.toStdString());
 }
 
-void RowTests::setName_data() {
+void Tests::row_setName_data() {
     QTest::addColumn<QString>("input");
     QTest::addColumn<QString>("expected");
 
@@ -66,7 +68,7 @@ void RowTests::setName_data() {
     QTest::newRow("EmptyName") << "" << "name";
 }
 
-void RowTests::setTotalValue() {
+void Tests::row_setTotalValue() {
     QFETCH(float, input);
     QFETCH(float, expected);
 
@@ -75,7 +77,7 @@ void RowTests::setTotalValue() {
     QCOMPARE(r.totalValue(), expected);
 }
 
-void RowTests::setTotalValue_data() {
+void Tests::row_setTotalValue_data() {
     QTest::addColumn<float>("input");
     QTest::addColumn<float>("expected");
 

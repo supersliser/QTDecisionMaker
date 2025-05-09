@@ -2,13 +2,14 @@
 #define ROW_H
 #include <cstdint>
 #include <cstdlib>
+#include <QtCore>
 #include <string>
 
 class Row
 {
 public:
     Row() = default;
-    Row(bool i_verbose);
+    Row(QString i_name, bool i_verbose = false);
 
     void setIndex(int i_index);
     int index() const;
@@ -18,6 +19,8 @@ public:
     std::string name() const;
     void setTotalValue(float i_totalValue);
     float totalValue() const;
+
+    bool operator==(const Row &i_row) const;
 
 protected:
     uint16_t m_trueIndex = 0;

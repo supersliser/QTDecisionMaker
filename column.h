@@ -3,6 +3,9 @@
 
 #include <cstdint>
 #include <string>
+#include <QtCore>
+
+
 class Column
 {
 protected:
@@ -13,7 +16,7 @@ protected:
     bool m_verbose = false;
 public:
     Column() = default;
-    Column(bool i_verbose);
+    Column(QString i_name, int i_importance = 0, bool i_verbose = false);
     ~Column() = default;
 
     void setIndex(int i_index);
@@ -25,6 +28,9 @@ public:
     void setImportance(int i_importance);
     int importance() const;
 
+    void print() const;
+
+    bool operator==(const Column &i_column) const;
 };
 
 #endif // COLUMN_H

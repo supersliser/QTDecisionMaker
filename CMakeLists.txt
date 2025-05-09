@@ -20,12 +20,13 @@ set(PROJECT_SOURCES
         column.h
         row.cpp
         row.h
+        table.cpp
+        table.h
 )
 
     qt_add_executable(DecisionMaker
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        table.h table.cpp
     )
 
 
@@ -54,14 +55,19 @@ qt_standard_project_setup()
 
 qt_add_executable(Tests
     test_main.cpp
+    test_main.h
     column.cpp
     column.h
-    columntests.h
+
     columntests.cpp
     row.cpp
     row.h
-    rowtests.h
+
     rowtests.cpp
+    table.cpp
+    table.h
+    tabletests.cpp
+
 )
 
 set_target_properties(Tests PROPERTIES

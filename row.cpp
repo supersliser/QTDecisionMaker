@@ -1,7 +1,9 @@
 #include "row.h"
 #include <iostream>
+#include <QtCore>
 
-Row::Row(bool i_verbose) {
+Row::Row(QString i_name, bool i_verbose) {
+    setName(i_name.toStdString());
     m_verbose = i_verbose;
 }
 
@@ -91,4 +93,9 @@ void Row::setTotalValue(float i_totalValue) {
 
 float Row::totalValue() const {
     return m_totalValue;
+}
+
+bool Row::operator==(const Row& i_row) const{
+    return
+        m_name == i_row.m_name;
 }

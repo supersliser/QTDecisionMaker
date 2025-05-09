@@ -1,7 +1,7 @@
-#include "columntests.h"
+#include "test_main.h"
 #include "column.h" // Assuming this is where Column is defined
 
-void ColumnTests::setIndex() {
+void Tests::column_setIndex() {
 
     QFETCH(int, input);
     QFETCH(int, expected);
@@ -11,7 +11,7 @@ void ColumnTests::setIndex() {
     QCOMPARE(c.index(), expected);
 }
 
-void ColumnTests::setIndex_data() {
+void Tests::column_setIndex_data() {
     QTest::addColumn<int>("input");
     QTest::addColumn<int>("expected");
 
@@ -20,7 +20,7 @@ void ColumnTests::setIndex_data() {
     QTest::newRow("erroneusLower") << -2 << 0;
 }
 
-void ColumnTests::setDisplayIndex() {
+void Tests::column_setDisplayIndex() {
     QFETCH(int, input);
     QFETCH(int, expected);
 
@@ -29,7 +29,7 @@ void ColumnTests::setDisplayIndex() {
     QCOMPARE(c.displayIndex(), expected);
 }
 
-void ColumnTests::setDisplayIndex_data() {
+void Tests::column_setDisplayIndex_data() {
     QTest::addColumn<int>("input");
     QTest::addColumn<int>("expected");
 
@@ -38,7 +38,7 @@ void ColumnTests::setDisplayIndex_data() {
     QTest::newRow("erroneusLower") << -2 << 0;
 }
 
-void ColumnTests::setName() {
+void Tests::column_setName() {
     QFETCH(QString, input);
     QFETCH(QString, expected);
 
@@ -47,7 +47,7 @@ void ColumnTests::setName() {
     QCOMPARE(c.name().data(), expected.toStdString());
 }
 
-void ColumnTests::setName_data() {
+void Tests::column_setName_data() {
     QTest::addColumn<QString>("input");
     QTest::addColumn<QString>("expected");
 
@@ -65,7 +65,7 @@ void ColumnTests::setName_data() {
     QTest::newRow("EmptyName") << "" << "name";
 }
 
-void ColumnTests::setImportance() {
+void Tests::column_setImportance() {
     QFETCH(int, input);
     QFETCH(int, expected);
 
@@ -74,7 +74,7 @@ void ColumnTests::setImportance() {
     QCOMPARE(c.importance(), expected);
 }
 
-void ColumnTests::setImportance_data() {
+void Tests::column_setImportance_data() {
     QTest::addColumn<int>("input");
     QTest::addColumn<int>("expected");
 

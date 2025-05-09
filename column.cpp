@@ -1,8 +1,11 @@
 #include "column.h"
 #include <iostream>
+#include <QtCore>
 
-Column::Column(bool i_verbose) {
-    m_verbose = i_verbose;
+Column::Column(QString i_name, int i_importance, bool i_verbose) {
+    setName(i_name.toStdString());
+    setImportance(i_importance);
+        m_verbose = i_verbose;
 }
 
 void Column::setIndex(int i_index) {
@@ -43,6 +46,7 @@ int Column::displayIndex() const {
 
 void Column::setName(std::string i_name) {
     if (i_name.length() <= 0) {
+        if (m_verbose) {std::cerr << "Warning: Attempted to assign blank name to 'column name', defaulting to 'name'\n";}
         m_name = "name";
         return;
     }
@@ -91,4 +95,18 @@ void Column::setImportance(int i_importance) {
 
 int Column::importance() const {
     return m_importance;
+}
+
+bool Column::operator==(const Column& i_column) const{
+    return (
+        m_name == i_column.m_name &&
+        m_importance == i_column.m_importance
+        );
+}
+
+void Column::print() const {
+    std::cout << "Column Index: " << index() << '\n'
+              << "Display Index: " << displayIndex() << '\n'
+              << "Name: " << name() << '\n'
+              << "Importance: " << importance() << '\n';
 }
