@@ -9,7 +9,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Widgets Core Gui Test)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Core Gui Test Sql)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -30,7 +30,7 @@ set(PROJECT_SOURCES
     )
 
 
-target_link_libraries(DecisionMaker PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(DecisionMaker PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt6::Sql Qt6::Core Qt6::Gui)
 
 set_target_properties(DecisionMaker PROPERTIES
     ${BUNDLE_ID_OPTION}

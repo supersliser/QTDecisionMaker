@@ -62,15 +62,6 @@ private slots:
 
     void table_setTotalValues();
     void table_setTotalValues_data();
-
-    void setItem();
-    void setItem_data();
-    void headingUpdateItemConstraints();
-    void headingUpdateItemConstraints_data();
-    void rowUpdateItemConstraints();
-    void rowUpdateItemConstraints_data();
-
-
 };
 
 #endif // TEST_MAIN_H

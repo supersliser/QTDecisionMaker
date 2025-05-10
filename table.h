@@ -42,7 +42,7 @@ public:
     Item* item(unsigned int i_index);
     Item* item(unsigned int i_x, unsigned int i_y);
 
-
+    void print() const;
     void calculateTotal(unsigned int i_row);
     void calculateAllTotals();
 };

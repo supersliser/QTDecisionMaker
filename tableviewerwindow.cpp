@@ -6,9 +6,47 @@ TableViewerWindow::TableViewerWindow(QWidget *parent)
     , ui(new Ui::TableViewerWindow)
 {
     ui->setupUi(this);
+    data = new Table();
+    model = new QSqlTableModel;
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
 }
 
 TableViewerWindow::~TableViewerWindow()
 {
     delete ui;
+}
+
+QTableView *TableViewerWindow::getTableDisplay() {
+    return ui->tableView;
+}
+
+void TableViewerWindow::drawTable() {
+        auto disp = getTableDisplay();
+
+        // Use QStandardItemModel for manual data population
+        QStandardItemModel *model = new QStandardItemModel(this);
+
+        // Set column headers
+        model->setColumnCount(data->headingCount() + 2);
+        model->setHeaderData(0, Qt::Horizontal, tr("ID"));
+        for (int column = 0; column < data->headingCount(); column++) {
+            model->setHeaderData(column + 1, Qt::Horizontal, tr(data->heading(column)->name().data()));
+        }
+        model->setHeaderData(data->headingCount() + 1, Qt::Horizontal, tr("Total Value"));
+
+        // Populate rows
+        model->setRowCount(data->rowCount());
+        for (int row = 0; row < data->rowCount(); row++) {
+            model->setData(model->index(row, 0), tr(std::to_string(row).data()));
+            model->setData(model->index(row, 1), tr(data->row(row)->name().data()));
+            for (int column = 1; column < data->headingCount(); column++) {
+                model->setData(model->index(row, column + 1), tr(data->item(column, row)->displayValue.data()));
+            }
+            model->setData(model->index(row, data->headingCount() + 1), tr(std::to_string(data->row(row)->totalValue()).data()));
+        }
+
+        // Set the model to the QTableView
+        disp->setModel(model);
+        disp->show();
+
 }

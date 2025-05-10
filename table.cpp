@@ -39,6 +39,23 @@ Table::Table() {
     r.setName("Blank Name");
     addRow(r);
     m_items.resize(headingCount() * rowCount());
+    print();
+}
+
+void Table::print() const {
+    std::cout << "Table: " << m_title << "\n";
+    for (const auto& heading : m_headings) {
+        std::cout << heading.name() << "\t";
+    }
+    std::cout << "\n";
+
+    for (const auto& row : m_rows) {
+        std::cout << row.name() << "\t";
+        for (unsigned int x = 0; x < headingCount(); x++) {
+            std::cout << m_items[x * rowCount() + row.index()].displayValue << "\t";
+        }
+        std::cout << "\n";
+    }
 }
 
 Table::Table(bool i_verbose) {
