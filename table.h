@@ -41,6 +41,10 @@ public:
     std::string title() const;
     Item* item(unsigned int i_index);
     Item* item(unsigned int i_x, unsigned int i_y);
+
+
+    void calculateTotal(unsigned int i_row);
+    void calculateAllTotals();
 };
 
 #endif // TABLE_H

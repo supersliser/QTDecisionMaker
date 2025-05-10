@@ -342,3 +342,40 @@ void Tests::table_setTitle_data() {
     QTest::newRow("EmptyName") << "" << "Title";
 
 }
+
+void Tests::table_setTotalValues() {
+    QFETCH(Table, table);
+    QFETCH(std::vector<float>, expectedTotals);
+
+    table.calculateAllTotals();
+    for (int i = 0; i < expectedTotals.size(); i++) {
+        QCOMPARE(table.row(i + 1)->totalValue(), expectedTotals[i]);
+    }
+}
+
+void Tests::table_setTotalValues_data() {
+    QTest::addColumn<Table>("table");
+    QTest::addColumn<std::vector<float>>("expectedTotals");
+
+    Table t = Table();
+    t.addHeading(Column("Column 1"));
+    t.addHeading(Column("Column 2"));
+    t.addRow(Row("Row 1"));
+    t.addRow(Row("Row 2"));
+    t.heading(1)->setImportance(5);
+    t.heading(2)->setImportance(-3);
+    t.item(1, 1)->worthValue = 1;
+    t.item(1, 2)->worthValue = 0;
+    t.item(2, 1)->worthValue = -1;
+    t.item(2, 2)->worthValue = -1;
+    std::vector<float> expected = {8, 3};
+
+    QTest::newRow("normal") << t << expected;
+    t.item(1, 1)->worthValue = 0;
+    t.item(1, 2)->worthValue = 0;
+    t.item(2, 1)->worthValue = 0;
+    t.item(2, 2)->worthValue = 0;
+    expected = {0, 0};
+    QTest::newRow("zero") << t << expected;
+}
+

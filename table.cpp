@@ -180,3 +180,20 @@ void Table::setTitle(std::string i_title) {
 std::string Table::title() const {
     return m_title;
 }
+
+void Table::calculateTotal(unsigned int i_row) {
+    Row* r = row(i_row);
+    float final = 0;
+    for (int x = 0; x < headingCount(); x++) {
+        Item* i = item(x, i_row);
+        Column* h = heading(x);
+        final += (i->worthValue * h->importance());
+    }
+    r->setTotalValue(final);
+}
+
+void Table::calculateAllTotals() {
+    for (int y = 0; y < rowCount(); y++) {
+        calculateTotal(y);
+    }
+}
