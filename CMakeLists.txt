@@ -11,19 +11,21 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets Core Gui Test Sql)
 
-set(PROJECT_SOURCES
-        main.cpp
-        tableviewerwindow.cpp
-        tableviewerwindow.h
-        tableviewerwindow.ui
-        column.cpp
-        column.h
-        row.cpp
-        row.h
-        table.cpp
-        table.h
-)
+set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_SOURCE_DIR}/ui)
 
+set(PROJECT_SOURCES
+        src/main.cpp
+        src/tableviewerwindow.cpp
+        include/tableviewerwindow.h
+        ui/tableviewerwindow.ui
+        src/column.cpp
+        include/column.h
+        src/row.cpp
+        include/row.h
+        src/table.cpp
+        include/table.h
+)
+include_directories(include)
     qt_add_executable(DecisionMaker
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
@@ -54,19 +56,12 @@ endif()
 qt_standard_project_setup()
 
 qt_add_executable(Tests
-    test_main.cpp
-    test_main.h
-    column.cpp
-    column.h
-
-    columntests.cpp
-    row.cpp
-    row.h
-
-    rowtests.cpp
-    table.cpp
-    table.h
-    tabletests.cpp
+        ${PROJECT_SOURCES}
+    tests/test_main.cpp
+        tests/test_main.h
+        tests/columntests.cpp
+        tests/rowtests.cpp
+        tests/tabletests.cpp
 
 )
 
