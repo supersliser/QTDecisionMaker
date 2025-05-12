@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>992</width>
-    <height>609</height>
+    <width>1000</width>
+    <height>613</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -139,8 +139,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>191</width>
-              <height>401</height>
+              <width>201</width>
+              <height>71</height>
              </rect>
             </property>
             <layout class="QFormLayout" name="formLayout_3">
@@ -166,7 +166,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>992</width>
+     <width>1000</width>
      <height>31</height>
     </rect>
    </property>
