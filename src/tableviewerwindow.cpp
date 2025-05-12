@@ -27,22 +27,22 @@ void TableViewerWindow::drawTable() {
         QStandardItemModel *model = new QStandardItemModel(this);
 
         // Set column headers
-        model->setColumnCount(data->headingCount() + 2);
-        model->setHeaderData(0, Qt::Horizontal, tr("ID"));
+        model->setColumnCount(data->headingCount() + 1);
         for (int column = 0; column < data->headingCount(); column++) {
-            model->setHeaderData(column + 1, Qt::Horizontal, tr(data->heading(column)->name().data()));
+            model->setHeaderData(column, Qt::Horizontal, tr(data->heading(column)->name().data()));
         }
-        model->setHeaderData(data->headingCount() + 1, Qt::Horizontal, tr("Total Value"));
+        model->setHeaderData(data->headingCount(), Qt::Horizontal, tr("Total Value"));
 
         // Populate rows
+        data->calculateAllTotals();
         model->setRowCount(data->rowCount());
         for (int row = 0; row < data->rowCount(); row++) {
-            model->setData(model->index(row, 0), tr(std::to_string(row).data()));
-            model->setData(model->index(row, 1), tr(data->row(row)->name().data()));
+            model->setData(model->index(row, 0), tr(data->row(row)->name().data()));
             for (int column = 1; column < data->headingCount(); column++) {
                 model->setData(model->index(row, column + 1), tr(data->item(column, row)->displayValue.data()));
             }
-            model->setData(model->index(row, data->headingCount() + 1), tr(std::to_string(data->row(row)->totalValue()).data()));
+            auto d = data->row(row)->totalValue();
+            model->setData(model->index(row, data->headingCount()), d);
         }
 
         // Set the model to the QTableView
