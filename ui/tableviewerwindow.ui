@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>992</width>
+    <height>609</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>9999999</width>
+    <height>999999</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>TableViewerWindow</string>
@@ -23,39 +35,128 @@
    <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="horizontalLayoutWidget">
+   <widget class="QFrame" name="horizontalFrame">
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>0</y>
-      <width>801</width>
-      <height>561</height>
+      <y>20</y>
+      <width>991</width>
+      <height>541</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="TableSeparatorLayout">
+     <property name="sizeConstraint">
+      <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+     </property>
      <item>
-      <widget class="QTableView" name="tableView">
+      <layout class="QVBoxLayout" name="TableContainer">
+       <item>
+        <widget class="QTableWidget" name="DataTable">
+         <property name="editTriggers">
+          <set>QAbstractItemView::EditTrigger::AllEditTriggers</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QFrame" name="verticalFrame">
        <property name="minimumSize">
         <size>
-         <width>100</width>
+         <width>200</width>
          <height>0</height>
         </size>
        </property>
+       <property name="maximumSize">
+        <size>
+         <width>200</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QDockWidget" name="ItemDetailsDock">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>200</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="features">
+           <set>QDockWidget::DockWidgetFeature::DockWidgetClosable|QDockWidget::DockWidgetFeature::DockWidgetFloatable|QDockWidget::DockWidgetFeature::DockWidgetMovable</set>
+          </property>
+          <property name="windowTitle">
+           <string>Item Details</string>
+          </property>
+          <widget class="QWidget" name="dockWidgetContents_2">
+           <widget class="QWidget" name="formLayoutWidget">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>201</width>
+              <height>71</height>
+             </rect>
+            </property>
+            <layout class="QFormLayout" name="formLayout">
+             <item row="0" column="0" colspan="2">
+              <widget class="QLineEdit" name="DisplayData"/>
+             </item>
+             <item row="1" column="0" colspan="2">
+              <widget class="QDoubleSpinBox" name="WorthData"/>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDockWidget" name="ColumnDetailsDock">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>200</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="windowTitle">
+           <string>Column Details</string>
+          </property>
+          <widget class="QWidget" name="dockWidgetContents_4">
+           <widget class="QWidget" name="formLayoutWidget_2">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>191</width>
+              <height>401</height>
+             </rect>
+            </property>
+            <layout class="QFormLayout" name="formLayout_3">
+             <item row="0" column="0" colspan="2">
+              <widget class="QLineEdit" name="columnName"/>
+             </item>
+             <item row="1" column="0" colspan="2">
+              <widget class="QDoubleSpinBox" name="columnImportance"/>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </widget>
+        </item>
+       </layout>
       </widget>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <layout class="QFormLayout" name="formLayout">
-         <item row="1" column="1">
-          <widget class="QSpinBox" name="spinBox"/>
-         </item>
-         <item row="0" column="1">
-          <widget class="QTextEdit" name="textEdit"/>
-         </item>
-        </layout>
-       </item>
-      </layout>
      </item>
     </layout>
    </widget>
@@ -65,8 +166,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>22</height>
+     <width>992</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -86,11 +187,6 @@
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionWee">
-   <property name="text">
-    <string>Wee</string>
-   </property>
-  </action>
  </widget>
  <resources/>
  <connections/>

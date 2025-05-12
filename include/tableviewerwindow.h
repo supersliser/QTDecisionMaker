@@ -9,6 +9,7 @@
 #include <QSqlField>
 #include <string>
 #include <QStandardItemModel>
+#include <QToolBar>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -27,10 +28,24 @@ public:
     void addRow();
     void addColumn();
     void drawTable();
+public slots:
+    void selectItem(int row, int column, int prev_row, int prev_column);
+    void newColumnTriggered(bool checked);
+    void newRowTriggered(bool checked);
+    void editItemDisplay();
+    void editItemWorth();
+    void editColumnName();
+    void editColumnImportance();
+
 private:
     Ui::TableViewerWindow *ui;
-    QTableView * getTableDisplay();
     Table* data;
-    QSqlTableModel *model;
+    // QSqlTableModel *model;
+
+    void setColumnHeader(int i_column, QString i_name);
+    void setRowHeader(int i_row, QString i_name);
+    void setItem(int i_row, int i_column, QString i_name);
+
+    void setupToolBar();
 };
 #endif // TABLEVIEWERWINDOW_H

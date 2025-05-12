@@ -24,7 +24,7 @@ unsigned int Table::headingCount() const {
 }
 
 Column* Table::heading(unsigned int i_index) {
-    if (i_index > headingCount()) {
+    if (i_index >= headingCount()) {
         if (m_verbose) {std::cerr << "Attempted to access 'heading' outside of array length, returning NullPtr\n";}
         return nullptr;
     }
@@ -39,7 +39,6 @@ Table::Table() {
     r.setName("Blank Name");
     addRow(r);
     m_items.resize(headingCount() * rowCount());
-    print();
 }
 
 void Table::print() const {
@@ -60,7 +59,13 @@ void Table::print() const {
 
 Table::Table(bool i_verbose) {
     m_verbose = i_verbose;
-    Table();
+    Column c;
+    c.setName("Name");
+    addHeading(c);
+    Row r;
+    r.setName("Blank Name");
+    addRow(r);
+    m_items.resize(headingCount() * rowCount());
 }
 
 unsigned int Table::rowCount() const {
@@ -68,6 +73,11 @@ unsigned int Table::rowCount() const {
 }
 
 Item* Table::item(unsigned int i_x, unsigned int i_y) {
+    auto hc = headingCount();
+    if (i_x >= hc) {
+        if (m_verbose) {std::cerr << "Attempted to access 'TotalValue', returnning NullPtr\n"; }
+        return nullptr;
+    }
     if (i_x * rowCount() + i_y > rowCount() * headingCount()) {
         if (m_verbose) {std::cerr << "Attempted to access 'item' outside of array length on dimension '" << (i_x > headingCount() ? "x" : "y") << "', returning NullPtr\n"; }
         return nullptr;
@@ -214,3 +224,5 @@ void Table::calculateAllTotals() {
         calculateTotal(y);
     }
 }
+
+
