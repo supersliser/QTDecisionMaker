@@ -10,6 +10,7 @@
 #include <string>
 #include <QStandardItemModel>
 #include <QToolBar>
+#include <fmt/format.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

@@ -84,7 +84,7 @@ void TableViewerWindow::drawTable() {
                 // model->setData(model->index(row, column + 1), tr(data->item(column, row)->displayValue.data()));
             }
             auto d = data->row(row)->totalValue();
-            setItem(row, data->headingCount(), QString::number(d));
+            setItem(row, data->headingCount(), fmt::format("{:.2f}", d).c_str());
             // model->setData(model->index(row, data->headingCount() + 1), d);
         }
         // model->setData(model->index(data->rowCount(), 0), tr("Add Row"));
