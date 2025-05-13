@@ -9,28 +9,31 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Widgets Core Gui Test)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Core Gui Test Sql)
+find_package(fmt REQUIRED)
+
+set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_SOURCE_DIR}/ui)
 
 set(PROJECT_SOURCES
-        main.cpp
-        tableviewerwindow.cpp
-        tableviewerwindow.h
-        tableviewerwindow.ui
-        column.cpp
-        column.h
-        row.cpp
-        row.h
-        table.cpp
-        table.h
+        src/main.cpp
+        src/tableviewerwindow.cpp
+        include/tableviewerwindow.h
+        ui/tableviewerwindow.ui
+        src/column.cpp
+        include/column.h
+        src/row.cpp
+        include/row.h
+        src/table.cpp
+        include/table.h
 )
-
+include_directories(include)
     qt_add_executable(DecisionMaker
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
 
 
-target_link_libraries(DecisionMaker PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(DecisionMaker PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt6::Sql Qt6::Core Qt6::Gui fmt::fmt)
 
 set_target_properties(DecisionMaker PROPERTIES
     ${BUNDLE_ID_OPTION}
@@ -54,19 +57,12 @@ endif()
 qt_standard_project_setup()
 
 qt_add_executable(Tests
-    test_main.cpp
-    test_main.h
-    column.cpp
-    column.h
-
-    columntests.cpp
-    row.cpp
-    row.h
-
-    rowtests.cpp
-    table.cpp
-    table.h
-    tabletests.cpp
+        ${PROJECT_SOURCES}
+    tests/test_main.cpp
+        tests/test_main.h
+        tests/columntests.cpp
+        tests/rowtests.cpp
+        tests/tabletests.cpp
 
 )
 
