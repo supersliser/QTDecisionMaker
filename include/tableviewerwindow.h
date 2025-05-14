@@ -9,9 +9,9 @@
 #include <QSqlField>
 #include <string>
 #include <QStandardItemModel>
-#include <QToolBar>
 #include <fmt/format.h>
 #include "tableViewerToolbar.h"
+#include "tableViewerMenubar.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -22,9 +22,6 @@ QT_END_NAMESPACE
 class TableViewerWindow : public QMainWindow
 {
     Q_OBJECT
-
-signals:
-    void initialise(Table* i_table);
 
 public:
     TableViewerWindow(QWidget *parent = nullptr);

@@ -12,10 +12,7 @@ signals:
     void newRow();
     void newColumn();
 
-public slots:
-    void initialise();
-
-    private slots:
+private slots:
     void _newRow(bool checked);
     void _newColumn(bool checked);
 

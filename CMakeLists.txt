@@ -32,6 +32,10 @@ include_directories(include)
         ${PROJECT_SOURCES}
             src/tableViewerToolbar.cpp
             include/tableViewerToolbar.h
+            src/tableViewerMenubar.cpp
+            include/tableViewerMenubar.h
+            src/MenuBarFile.cpp
+            include/MenuBarFile.h
     )
 
 

@@ -10,10 +10,12 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
 
     tableViewerToolbar *toolbar = new tableViewerToolbar(this);
     ui->TableContainer->setDirection(QBoxLayout::BottomToTop);
-
     ui->TableContainer->addWidget(toolbar);
     connect(toolbar, &tableViewerToolbar::newRow, this, &TableViewerWindow::newRowTriggered);
     connect(toolbar, &tableViewerToolbar::newColumn, this, &TableViewerWindow::newColumnTriggered);
+
+    tableViewerMenubar *menubar = new tableViewerMenubar(this);
+    ui->menubar = menubar;
 
 
     connect(ui->DataTable, &QTableWidget::currentCellChanged, this, &TableViewerWindow::selectItem);
