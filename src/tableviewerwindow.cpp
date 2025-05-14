@@ -15,6 +15,14 @@ TableViewerWindow::TableViewerWindow(QWidget *parent)
     connect(ui->WorthData, &QDoubleSpinBox::valueChanged, this, &TableViewerWindow::editItemWorth);
     connect(ui->columnName, &QLineEdit::editingFinished, this, &TableViewerWindow::editColumnName);
     connect(ui->columnImportance, &QDoubleSpinBox::valueChanged, this, &TableViewerWindow::editColumnImportance);
+
+    //connect File menu actions
+    connect(ui->menubar->actions()[0], &QAction::triggered, this, &TableViewerWindow::newTriggered);
+    connect(ui->menubar->actions()[1], &QAction::triggered, this, &TableViewerWindow::openTriggered);
+    connect(ui->menubar->actions()[3], &QAction::triggered, this, &TableViewerWindow::saveTriggered);
+    connect(ui->menubar->actions()[4], &QAction::triggered, this, &TableViewerWindow::saveAsTriggered);
+    connect(ui->menubar->actions()[5], &QAction::triggered, this, &TableViewerWindow::closeTriggered);
+    connect(ui->menubar->actions()[6], &QAction::triggered, this, &TableViewerWindow::quitTriggered);
 }
 
 void TableViewerWindow::setupToolBar()
@@ -58,39 +66,26 @@ void TableViewerWindow::setRowHeader(int i_row, QString i_name)
 void TableViewerWindow::drawTable() {
         auto disp = ui->DataTable;
 
-        // Use QStandardItemModel for manual data population
 
         // Set column headers
         disp->setColumnCount(data->headingCount() + 1);
         for (int column = 0; column < data->headingCount(); column++)
         {
             setColumnHeader(column, tr(data->heading(column)->name().data()));
-            // auto i = new QTableWidgetItem(tr(data->heading(column + 1)->name().data()));
-            // disp->setHorizontalHeaderItem(column, i);
         }
         setColumnHeader(data->headingCount(), tr("Total Value"));
-        // model->setHeaderData(data->headingCount(), Qt::Horizontal, tr("Add Column"));
-        // model->setHeaderData(data->headingCount() + 1, Qt::Horizontal, tr("Total Value"));
 
         // Populate rows
         data->calculateAllTotals();
         disp->setRowCount(data->rowCount());
         for (int row = 0; row < data->rowCount(); row++) {
-            // setRowHeader(row, tr(data->row(row)->name().data()));
-            // model->setData(model->index(row, 0), tr(data->row(row)->name().data()));
             setItem(row, 0, tr(data->row(row)->name().data()));
             for (int column = 1; column < data->headingCount(); column++) {
                 setItem(row, column, tr(data->item(column, row)->displayValue.data()));
-                // model->setData(model->index(row, column + 1), tr(data->item(column, row)->displayValue.data()));
             }
             auto d = data->row(row)->totalValue();
             setItem(row, data->headingCount(), fmt::format("{:.2f}", d).c_str());
-            // model->setData(model->index(row, data->headingCount() + 1), d);
         }
-        // model->setData(model->index(data->rowCount(), 0), tr("Add Row"));
-
-        // Set the model to the QTableView
-        // disp->setModel(model);
         disp->show();
 }
 

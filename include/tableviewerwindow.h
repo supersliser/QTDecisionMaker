@@ -38,6 +38,13 @@ public slots:
     void editColumnName();
     void editColumnImportance();
 
+    void newTriggered(bool checked);
+    void openTriggered(bool checked);
+    void saveTriggered(bool checked);
+    void saveAsTriggered(bool checked);
+    void closeTriggered(bool checked);
+    void quitTriggered(bool checked);
+
 private:
     Ui::TableViewerWindow *ui;
     Table* data;
