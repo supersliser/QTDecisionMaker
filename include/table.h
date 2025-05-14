@@ -27,6 +27,8 @@ public:
     Table(bool i_verbose);
     ~Table() = default;
 
+    static Table fromJson(const QJsonDocument& i_json);
+
     void addHeading(Column i_heading);
     Column* heading(unsigned int i_index);
     unsigned int headingCount() const;

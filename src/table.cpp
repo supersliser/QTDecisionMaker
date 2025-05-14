@@ -225,4 +225,36 @@ void Table::calculateAllTotals() {
     }
 }
 
+Table Table::fromJson(const QJsonDocument& i_json)
+{
+    auto columns = i_json.object().value("columns").toArray();
+    auto rows = i_json.object().value("rows").toArray();
+    auto title = i_json.object().value("title").toString();
+    auto table = Table();
+    table.setTitle(title.toStdString());
+    for (const auto& column : columns) {
+        auto col = column.toObject();
+        Column c;
+        c.setName(col.value("name").toString().toStdString());
+        c.setImportance(col.value("importance").toDouble());
+        table.addHeading(c);
+    }
+    for (const auto& row : rows) {
+        auto r = row.toObject();
+        Row c;
+        c.setName(r.value("name").toString().toStdString());
+        table.addRow(c);
+    }
+    auto items = i_json.object().value("items").toArray();
+    for (int i = 0; i < items.size(); i++) {
+        auto item = items[i].toObject();
+        auto x = item.value("x").toInt();
+        auto y = item.value("y").toInt();
+        auto displayValue = item.value("displayValue").toString().toStdString();
+        auto worthValue = item.value("worthValue").toDouble();
+        table.item(x, y)->displayValue = displayValue;
+        table.item(x, y)->worthValue = worthValue;
+    }
+    return table;
+}
 

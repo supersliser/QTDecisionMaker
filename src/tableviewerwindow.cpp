@@ -1,37 +1,28 @@
+#include <iostream>
 #include "tableviewerwindow.h"
 #include "./ui_tableviewerwindow.h"
+#include "FileSystemManager.h"
 
-TableViewerWindow::TableViewerWindow(QWidget *parent)
+TableViewerWindow::TableViewerWindow(QWidget* parent)
     : QMainWindow(parent)
-    , ui(new Ui::TableViewerWindow)
+      , ui(new Ui::TableViewerWindow)
 {
     ui->setupUi(this);
     data = new Table(true);
-    setupToolBar();
-    // model = new QSqlTableModel;
-    // model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+
+    tableViewerToolbar *toolbar = new tableViewerToolbar(this);
+    ui->TableContainer->setDirection(QBoxLayout::BottomToTop);
+    ui->TableContainer->addWidget(toolbar);
+    connect(toolbar, &tableViewerToolbar::newRow, this, &TableViewerWindow::newRowTriggered);
+    connect(toolbar, &tableViewerToolbar::newColumn, this, &TableViewerWindow::newColumnTriggered);
+
+    menubar = new tableViewerMenubar(this);
+
     connect(ui->DataTable, &QTableWidget::currentCellChanged, this, &TableViewerWindow::selectItem);
     connect(ui->DisplayData, &QLineEdit::editingFinished, this, &TableViewerWindow::editItemDisplay);
     connect(ui->WorthData, &QDoubleSpinBox::valueChanged, this, &TableViewerWindow::editItemWorth);
     connect(ui->columnName, &QLineEdit::editingFinished, this, &TableViewerWindow::editColumnName);
     connect(ui->columnImportance, &QDoubleSpinBox::valueChanged, this, &TableViewerWindow::editColumnImportance);
-}
-
-void TableViewerWindow::setupToolBar()
-{
-    // Create actions for adding rows and columns
-    QAction* addRowAction = new QAction(tr("Add Row"), this);
-    QAction* addColumnAction = new QAction(tr("Add Column"), this);
-
-    // Connect actions to slots
-    connect(addRowAction, &QAction::triggered, this, &TableViewerWindow::newRowTriggered);
-    connect(addColumnAction, &QAction::triggered, this, &TableViewerWindow::newColumnTriggered);
-
-    // Add actions to the toolbar
-    auto mainToolbar = new QToolBar();
-    ui->TableContainer->addWidget(mainToolbar);
-    mainToolbar->addAction(addRowAction);
-    mainToolbar->addAction(addColumnAction);
 }
 
 TableViewerWindow::~TableViewerWindow()
@@ -41,12 +32,12 @@ TableViewerWindow::~TableViewerWindow()
 
 void TableViewerWindow::setColumnHeader(int i_column, QString i_name)
 {
-        ui->DataTable->setHorizontalHeaderItem(i_column, new QTableWidgetItem(i_name));
+    ui->DataTable->setHorizontalHeaderItem(i_column, new QTableWidgetItem(i_name));
 }
 
 void TableViewerWindow::setItem(int i_row, int i_column, QString i_name)
 {
-        ui->DataTable->setItem(i_row, i_column, new QTableWidgetItem(i_name));
+    ui->DataTable->setItem(i_row, i_column, new QTableWidgetItem(i_name));
 }
 
 void TableViewerWindow::setRowHeader(int i_row, QString i_name)
@@ -55,43 +46,33 @@ void TableViewerWindow::setRowHeader(int i_row, QString i_name)
 }
 
 
-void TableViewerWindow::drawTable() {
-        auto disp = ui->DataTable;
+void TableViewerWindow::drawTable()
+{
+    auto disp = ui->DataTable;
 
-        // Use QStandardItemModel for manual data population
 
-        // Set column headers
-        disp->setColumnCount(data->headingCount() + 1);
-        for (int column = 0; column < data->headingCount(); column++)
+    // Set column headers
+    disp->setColumnCount(data->headingCount() + 1);
+    for (int column = 0; column < data->headingCount(); column++)
+    {
+        setColumnHeader(column, tr(data->heading(column)->name().data()));
+    }
+    setColumnHeader(data->headingCount(), tr("Total Value"));
+
+    // Populate rows
+    data->calculateAllTotals();
+    disp->setRowCount(data->rowCount());
+    for (int row = 0; row < data->rowCount(); row++)
+    {
+        setItem(row, 0, tr(data->row(row)->name().data()));
+        for (int column = 1; column < data->headingCount(); column++)
         {
-            setColumnHeader(column, tr(data->heading(column)->name().data()));
-            // auto i = new QTableWidgetItem(tr(data->heading(column + 1)->name().data()));
-            // disp->setHorizontalHeaderItem(column, i);
+            setItem(row, column, tr(data->item(column, row)->displayValue.data()));
         }
-        setColumnHeader(data->headingCount(), tr("Total Value"));
-        // model->setHeaderData(data->headingCount(), Qt::Horizontal, tr("Add Column"));
-        // model->setHeaderData(data->headingCount() + 1, Qt::Horizontal, tr("Total Value"));
-
-        // Populate rows
-        data->calculateAllTotals();
-        disp->setRowCount(data->rowCount());
-        for (int row = 0; row < data->rowCount(); row++) {
-            // setRowHeader(row, tr(data->row(row)->name().data()));
-            // model->setData(model->index(row, 0), tr(data->row(row)->name().data()));
-            setItem(row, 0, tr(data->row(row)->name().data()));
-            for (int column = 1; column < data->headingCount(); column++) {
-                setItem(row, column, tr(data->item(column, row)->displayValue.data()));
-                // model->setData(model->index(row, column + 1), tr(data->item(column, row)->displayValue.data()));
-            }
-            auto d = data->row(row)->totalValue();
-            setItem(row, data->headingCount(), fmt::format("{:.2f}", d).c_str());
-            // model->setData(model->index(row, data->headingCount() + 1), d);
-        }
-        // model->setData(model->index(data->rowCount(), 0), tr("Add Row"));
-
-        // Set the model to the QTableView
-        // disp->setModel(model);
-        disp->show();
+        auto d = data->row(row)->totalValue();
+        setItem(row, data->headingCount(), fmt::format("{:.2f}", d).c_str());
+    }
+    disp->show();
 }
 
 void TableViewerWindow::selectItem(int row, int column, int prev_row, int prev_column)
@@ -108,7 +89,8 @@ void TableViewerWindow::selectItem(int row, int column, int prev_row, int prev_c
         i = data->item(column, row);
     }
     // Get the data from the model
-    if (i == nullptr) {
+    if (i == nullptr)
+    {
         return;
     }
 
@@ -137,14 +119,19 @@ void TableViewerWindow::selectItem(int row, int column, int prev_row, int prev_c
     }
 }
 
-void TableViewerWindow::newColumnTriggered(bool checked)
+void TableViewerWindow::newColumnTriggered()
 {
     data->addHeading(Column("Unnamed Column"));
+    fileSaved = false;
+
     drawTable();
 }
-void TableViewerWindow::newRowTriggered(bool checked)
+
+void TableViewerWindow::newRowTriggered()
 {
     data->addRow(Row("Unnamed Item"));
+    fileSaved = false;
+
     drawTable();
 }
 
@@ -155,31 +142,106 @@ void TableViewerWindow::editItemDisplay()
         data->row(ui->DataTable->currentRow())->setName(ui->DisplayData->text().toStdString());
     }
     Item* i = data->item(ui->DataTable->currentColumn(), ui->DataTable->currentRow());
-    if (i == nullptr) {
+    if (i == nullptr)
+    {
         return;
     }
     i->displayValue = ui->DisplayData->text().toStdString();
+    fileSaved = false;
     drawTable();
 }
 
 void TableViewerWindow::editItemWorth()
 {
     Item* i = data->item(ui->DataTable->currentColumn(), ui->DataTable->currentRow());
-    if (i == nullptr) {
+    if (i == nullptr)
+    {
         return;
     }
     i->worthValue = ui->WorthData->value();
+    fileSaved = false;
     drawTable();
 }
 
 void TableViewerWindow::editColumnName()
 {
     data->heading(ui->DataTable->currentColumn())->setName(ui->columnName->text().toStdString());
+    fileSaved = false;
     drawTable();
 }
 
 void TableViewerWindow::editColumnImportance()
 {
     data->heading(ui->DataTable->currentColumn())->setImportance(ui->columnImportance->value());
+    fileSaved = false;
     drawTable();
+}
+
+ void TableViewerWindow::newTriggered()
+ {
+    delete data;
+    data = new Table(false);
+    drawTable();
+    fileSaved = false;
+    filePath.clear();
+ }
+
+void TableViewerWindow::openTriggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/", tr("Decision File (*.dec)"));
+    if (fileName.isEmpty())
+    {
+        return;
+    }
+    *data = FileSystemManager::readFile(fileName);
+    drawTable();
+    fileSaved = true;
+    filePath = fileName;
+}
+
+void TableViewerWindow::saveTriggered()
+{
+    if (filePath.isEmpty())
+    {
+        saveAsTriggered();
+    }
+    else
+    {
+        if (FileSystemManager::writeFile(filePath, data))
+        {
+            fileSaved = true;
+        }
+        else
+        {
+            std::cerr << "Failed to save file." << std::endl;
+        }
+    }
+}
+
+void TableViewerWindow::saveAsTriggered()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "/home/", tr("Decision File (*.dec)"));
+    if (fileName.isEmpty())
+    {
+        return;
+    }
+    if (FileSystemManager::writeFile(fileName, data))
+    {
+        fileSaved = true;
+        filePath = fileName;
+    }
+    else
+    {
+        std::cerr << "Failed to save file." << std::endl;
+    }
+}
+
+void TableViewerWindow::closeTriggered()
+{
+    // Implement close file logic here
+}
+
+void TableViewerWindow::quitTriggered()
+{
+    close();
 }

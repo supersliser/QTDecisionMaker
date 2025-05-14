@@ -30,6 +30,14 @@ include_directories(include)
     qt_add_executable(DecisionMaker
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+            src/tableViewerToolbar.cpp
+            include/tableViewerToolbar.h
+            src/tableViewerMenubar.cpp
+            include/tableViewerMenubar.h
+            src/MenuBarFile.cpp
+            include/MenuBarFile.h
+            src/FileSystemManager.cpp
+            include/FileSystemManager.h
     )
 
 
