@@ -30,6 +30,8 @@ include_directories(include)
     qt_add_executable(DecisionMaker
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+            src/tableViewerToolbar.cpp
+            include/tableViewerToolbar.h
     )
 
 

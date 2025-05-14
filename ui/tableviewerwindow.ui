@@ -39,9 +39,9 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>20</y>
+      <y>0</y>
       <width>991</width>
-      <height>541</height>
+      <height>561</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="TableSeparatorLayout">
@@ -98,9 +98,9 @@
            <widget class="QWidget" name="formLayoutWidget">
             <property name="geometry">
              <rect>
-              <x>0</x>
+              <x>10</x>
               <y>0</y>
-              <width>201</width>
+              <width>181</width>
               <height>71</height>
              </rect>
             </property>
@@ -137,9 +137,9 @@
            <widget class="QWidget" name="formLayoutWidget_2">
             <property name="geometry">
              <rect>
-              <x>0</x>
+              <x>10</x>
               <y>0</y>
-              <width>201</width>
+              <width>181</width>
               <height>71</height>
              </rect>
             </property>
