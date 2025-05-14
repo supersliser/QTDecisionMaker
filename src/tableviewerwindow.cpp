@@ -1,3 +1,4 @@
+#include <iostream>
 #include "tableviewerwindow.h"
 #include "./ui_tableviewerwindow.h"
 
@@ -16,8 +17,7 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
 
     tableViewerMenubar *menubar = new tableViewerMenubar(this);
     setMenuBar(menubar);
-    menubar->show();
-    printf("%d %d %d %d\n", menubar->x(), menubar->y(), menubar->width(), menubar->height());
+    connect(menubar, &tableViewerMenubar::newClicked, this, &TableViewerWindow::newTriggered);
 
     connect(ui->DataTable, &QTableWidget::currentCellChanged, this, &TableViewerWindow::selectItem);
     connect(ui->DisplayData, &QLineEdit::editingFinished, this, &TableViewerWindow::editItemDisplay);
@@ -177,3 +177,11 @@ void TableViewerWindow::editColumnImportance()
     data->heading(ui->DataTable->currentColumn())->setImportance(ui->columnImportance->value());
     drawTable();
 }
+
+ void TableViewerWindow::newTriggered()
+ {
+    std::cout << "New file triggered" << std::endl;
+    delete data;
+    data = new Table(false);
+    drawTable();
+ }

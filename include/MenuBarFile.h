@@ -20,12 +20,12 @@ signals:
     void quitClicked();
 
 private slots:
-    // void _new();
-    // void _open();
-    // void _save();
-    // void _saveAs();
-    // void _close();
-    // void _quit();
+     void _new(bool checked);
+     void _open(bool checked);
+     void _save(bool checked);
+     void _saveAs(bool checked);
+     void _close(bool checked);
+     void _quit(bool checked);
 
 public:
     MenuBarFile(QWidget* parent = nullptr);

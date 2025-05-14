@@ -8,6 +8,8 @@ tableViewerMenubar::tableViewerMenubar(QWidget* parent)
     : QMenuBar(parent)
 {
     // Create the File menu
-    MenuBarFile* fileMenu = new MenuBarFile(this);
+    fileMenu = new MenuBarFile(this);
+    connect(fileMenu, &MenuBarFile::newClicked, this, &tableViewerMenubar::newClicked);
+
     addMenu(fileMenu);
 }
