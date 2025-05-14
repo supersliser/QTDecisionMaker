@@ -8,6 +8,8 @@
 
 #include <QMenu>
 
+#include "tableviewerwindow.h"
+
 MenuBarFile::MenuBarFile(QWidget* parent)
     : QMenu(parent)
 {
@@ -25,14 +27,12 @@ MenuBarFile::MenuBarFile(QWidget* parent)
     QAction* quitAction = new QAction(tr("Quit"), this);
 
 //     Connect actions to slots
-     connect(newAction, &QAction::triggered, this, &MenuBarFile::_new);
-     connect(openAction, &QAction::triggered, this, &MenuBarFile::_open);
-     connect(saveAction, &QAction::triggered, this, &MenuBarFile::_save);
-     connect(saveAsAction, &QAction::triggered, this, &MenuBarFile::_saveAs);
-     connect(closeAction, &QAction::triggered, this, &MenuBarFile::_close);
-     connect(quitAction, &QAction::triggered, this, &MenuBarFile::_quit);
-
-     connect()
+     connect(newAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::newTriggered);
+     connect(openAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::openTriggered);
+     connect(saveAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::saveTriggered);
+     connect(saveAsAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::saveAsTriggered);
+     connect(closeAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::closeTriggered);
+     connect(quitAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::quitTriggered);
 
     // Add actions to the menu
     addAction(newAction);

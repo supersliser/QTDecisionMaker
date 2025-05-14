@@ -4,12 +4,13 @@
 
 #include "../include/tableViewerMenubar.h"
 
+#include "tableviewerwindow.h"
+
 tableViewerMenubar::tableViewerMenubar(QWidget* parent)
     : QMenuBar(parent)
 {
     // Create the File menu
     fileMenu = new MenuBarFile(this);
-    connect(fileMenu, &MenuBarFile::newClicked, this, &tableViewerMenubar::newClicked);
-
     addMenu(fileMenu);
+    dynamic_cast<TableViewerWindow*>(parent)->setMenuBar(this);
 }

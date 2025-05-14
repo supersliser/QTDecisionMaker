@@ -50,16 +50,16 @@ public slots:
     void editColumnImportance();
 
     void newTriggered();
-    // void openTriggered(bool checked);
-    // void saveTriggered(bool checked);
-    // void saveAsTriggered(bool checked);
-    // void closeTriggered(bool checked);
-    // void quitTriggered(bool checked);
+    void openTriggered(bool checked);
+    void saveTriggered(bool checked);
+    void saveAsTriggered(bool checked);
+    void closeTriggered(bool checked);
+    void quitTriggered(bool checked);
 
 private:
     Ui::TableViewerWindow *ui;
     Table *data;
-    // QSqlTableModel *model;
+    tableViewerMenubar *menubar;
 
     void setColumnHeader(int i_column, QString i_name);
 

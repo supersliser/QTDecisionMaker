@@ -15,23 +15,13 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
     connect(toolbar, &tableViewerToolbar::newRow, this, &TableViewerWindow::newRowTriggered);
     connect(toolbar, &tableViewerToolbar::newColumn, this, &TableViewerWindow::newColumnTriggered);
 
-    tableViewerMenubar *menubar = new tableViewerMenubar(this);
-    setMenuBar(menubar);
-    connect(menubar, &tableViewerMenubar::newClicked, this, &TableViewerWindow::newTriggered);
+    menubar = new tableViewerMenubar(this);
 
     connect(ui->DataTable, &QTableWidget::currentCellChanged, this, &TableViewerWindow::selectItem);
     connect(ui->DisplayData, &QLineEdit::editingFinished, this, &TableViewerWindow::editItemDisplay);
     connect(ui->WorthData, &QDoubleSpinBox::valueChanged, this, &TableViewerWindow::editItemWorth);
     connect(ui->columnName, &QLineEdit::editingFinished, this, &TableViewerWindow::editColumnName);
     connect(ui->columnImportance, &QDoubleSpinBox::valueChanged, this, &TableViewerWindow::editColumnImportance);
-
-    //connect File menu actions
-    // connect(ui->menubar->actions()[0], &QAction::triggered, this, &TableViewerWindow::newTriggered);
-    // connect(ui->menubar->actions()[1], &QAction::triggered, this, &TableViewerWindow::openTriggered);
-    // connect(ui->menubar->actions()[3], &QAction::triggered, this, &TableViewerWindow::saveTriggered);
-    // connect(ui->menubar->actions()[4], &QAction::triggered, this, &TableViewerWindow::saveAsTriggered);
-    // connect(ui->menubar->actions()[5], &QAction::triggered, this, &TableViewerWindow::closeTriggered);
-    // connect(ui->menubar->actions()[6], &QAction::triggered, this, &TableViewerWindow::quitTriggered);
 }
 
 TableViewerWindow::~TableViewerWindow()
@@ -185,3 +175,38 @@ void TableViewerWindow::editColumnImportance()
     data = new Table(false);
     drawTable();
  }
+
+void TableViewerWindow::openTriggered(bool checked)
+{
+    Q_UNUSED(checked);
+    std::cout << "Open file triggered" << std::endl;
+    // Implement open file logic here
+}
+
+void TableViewerWindow::saveTriggered(bool checked)
+{
+    Q_UNUSED(checked);
+    std::cout << "Save file triggered" << std::endl;
+    // Implement save file logic here
+}
+
+void TableViewerWindow::saveAsTriggered(bool checked)
+{
+    Q_UNUSED(checked);
+    std::cout << "Save As file triggered" << std::endl;
+    // Implement save as file logic here
+}
+
+void TableViewerWindow::closeTriggered(bool checked)
+{
+    Q_UNUSED(checked);
+    std::cout << "Close file triggered" << std::endl;
+    // Implement close file logic here
+}
+
+void TableViewerWindow::quitTriggered(bool checked)
+{
+    Q_UNUSED(checked);
+    std::cout << "Quit file triggered" << std::endl;
+    // Implement quit file logic here
+}
