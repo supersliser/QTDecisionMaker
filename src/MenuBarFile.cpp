@@ -9,7 +9,7 @@
 #include <QMenu>
 
 MenuBarFile::MenuBarFile(QWidget* parent)
-    : QMenu(parent)
+    : QMenu("File", parent)
 {
     // Create actions for file operations
     QAction* newAction = new QAction(tr("New"), this);

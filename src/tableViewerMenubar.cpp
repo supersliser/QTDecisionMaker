@@ -10,6 +10,4 @@ tableViewerMenubar::tableViewerMenubar(QWidget* parent)
     // Create the File menu
     MenuBarFile* fileMenu = new MenuBarFile(this);
     addMenu(fileMenu);
-
-    // Add other menus as needed
 }

@@ -26,7 +26,7 @@
    <string>TableViewerWindow</string>
   </property>
   <property name="toolButtonStyle">
-   <enum>Qt::ToolButtonStyle::ToolButtonTextBesideIcon</enum>
+   <enum>Qt::ToolButtonTextBesideIcon</enum>
   </property>
   <property name="documentMode">
    <bool>false</bool>
@@ -46,14 +46,14 @@
     </property>
     <layout class="QHBoxLayout" name="TableSeparatorLayout">
      <property name="sizeConstraint">
-      <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+      <enum>QLayout::SetDefaultConstraint</enum>
      </property>
      <item>
       <layout class="QVBoxLayout" name="TableContainer">
        <item>
         <widget class="QTableWidget" name="DataTable">
          <property name="editTriggers">
-          <set>QAbstractItemView::EditTrigger::AllEditTriggers</set>
+          <set>QAbstractItemView::AllEditTriggers</set>
          </property>
         </widget>
        </item>
@@ -89,7 +89,7 @@
            </size>
           </property>
           <property name="features">
-           <set>QDockWidget::DockWidgetFeature::DockWidgetClosable|QDockWidget::DockWidgetFeature::DockWidgetFloatable|QDockWidget::DockWidgetFeature::DockWidgetMovable</set>
+           <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
           </property>
           <property name="windowTitle">
            <string>Item Details</string>
@@ -161,13 +161,14 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>31</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -207,7 +208,6 @@
    </widget>
    <addaction name="menuFile"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="actionNew_Decision">
    <property name="text">
     <string>New Decision</string>

@@ -15,8 +15,9 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
     connect(toolbar, &tableViewerToolbar::newColumn, this, &TableViewerWindow::newColumnTriggered);
 
     tableViewerMenubar *menubar = new tableViewerMenubar(this);
-    ui->menubar = menubar;
-
+    setMenuBar(menubar);
+    menubar->show();
+    printf("%d %d %d %d\n", menubar->x(), menubar->y(), menubar->width(), menubar->height());
 
     connect(ui->DataTable, &QTableWidget::currentCellChanged, this, &TableViewerWindow::selectItem);
     connect(ui->DisplayData, &QLineEdit::editingFinished, this, &TableViewerWindow::editItemDisplay);
