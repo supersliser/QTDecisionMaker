@@ -26,7 +26,7 @@ set(PROJECT_SOURCES
         src/table.cpp
         include/table.h
 )
-include_directories(include)
+include_directories(include include/DataTypes)
     qt_add_executable(DecisionMaker
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
@@ -38,6 +38,8 @@ include_directories(include)
             include/MenuBarFile.h
             src/FileSystemManager.cpp
             include/FileSystemManager.h
+            include/DataType.h
+            include/DataTypes/NameType.h
     )
 
 
