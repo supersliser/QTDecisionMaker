@@ -1,6 +1,7 @@
 #include <iostream>
 #include "tableviewerwindow.h"
 #include "./ui_tableviewerwindow.h"
+#include "FileSystemManager.h"
 
 TableViewerWindow::TableViewerWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -121,12 +122,16 @@ void TableViewerWindow::selectItem(int row, int column, int prev_row, int prev_c
 void TableViewerWindow::newColumnTriggered()
 {
     data->addHeading(Column("Unnamed Column"));
+    fileSaved = false;
+
     drawTable();
 }
 
 void TableViewerWindow::newRowTriggered()
 {
     data->addRow(Row("Unnamed Item"));
+    fileSaved = false;
+
     drawTable();
 }
 
@@ -142,6 +147,7 @@ void TableViewerWindow::editItemDisplay()
         return;
     }
     i->displayValue = ui->DisplayData->text().toStdString();
+    fileSaved = false;
     drawTable();
 }
 
@@ -153,60 +159,89 @@ void TableViewerWindow::editItemWorth()
         return;
     }
     i->worthValue = ui->WorthData->value();
+    fileSaved = false;
     drawTable();
 }
 
 void TableViewerWindow::editColumnName()
 {
     data->heading(ui->DataTable->currentColumn())->setName(ui->columnName->text().toStdString());
+    fileSaved = false;
     drawTable();
 }
 
 void TableViewerWindow::editColumnImportance()
 {
     data->heading(ui->DataTable->currentColumn())->setImportance(ui->columnImportance->value());
+    fileSaved = false;
     drawTable();
 }
 
  void TableViewerWindow::newTriggered()
  {
-    std::cout << "New file triggered" << std::endl;
     delete data;
     data = new Table(false);
     drawTable();
+    fileSaved = false;
+    filePath.clear();
  }
 
-void TableViewerWindow::openTriggered(bool checked)
+void TableViewerWindow::openTriggered()
 {
-    Q_UNUSED(checked);
-    std::cout << "Open file triggered" << std::endl;
-    // Implement open file logic here
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/", tr("Decision File (*.dec)"));
+    if (fileName.isEmpty())
+    {
+        return;
+    }
+    *data = FileSystemManager::readFile(fileName);
+    drawTable();
+    fileSaved = true;
+    filePath = fileName;
 }
 
-void TableViewerWindow::saveTriggered(bool checked)
+void TableViewerWindow::saveTriggered()
 {
-    Q_UNUSED(checked);
-    std::cout << "Save file triggered" << std::endl;
-    // Implement save file logic here
+    if (filePath.isEmpty())
+    {
+        saveAsTriggered();
+    }
+    else
+    {
+        if (FileSystemManager::writeFile(filePath, data))
+        {
+            fileSaved = true;
+        }
+        else
+        {
+            std::cerr << "Failed to save file." << std::endl;
+        }
+    }
 }
 
-void TableViewerWindow::saveAsTriggered(bool checked)
+void TableViewerWindow::saveAsTriggered()
 {
-    Q_UNUSED(checked);
-    std::cout << "Save As file triggered" << std::endl;
-    // Implement save as file logic here
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "/home/", tr("Decision File (*.dec)"));
+    if (fileName.isEmpty())
+    {
+        return;
+    }
+    if (FileSystemManager::writeFile(fileName, data))
+    {
+        fileSaved = true;
+        filePath = fileName;
+    }
+    else
+    {
+        std::cerr << "Failed to save file." << std::endl;
+    }
 }
 
-void TableViewerWindow::closeTriggered(bool checked)
+void TableViewerWindow::closeTriggered()
 {
-    Q_UNUSED(checked);
-    std::cout << "Close file triggered" << std::endl;
     // Implement close file logic here
 }
 
-void TableViewerWindow::quitTriggered(bool checked)
+void TableViewerWindow::quitTriggered()
 {
-    Q_UNUSED(checked);
-    std::cout << "Quit file triggered" << std::endl;
-    // Implement quit file logic here
+    close();
 }

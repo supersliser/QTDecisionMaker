@@ -36,6 +36,8 @@ include_directories(include)
             include/tableViewerMenubar.h
             src/MenuBarFile.cpp
             include/MenuBarFile.h
+            src/FileSystemManager.cpp
+            include/FileSystemManager.h
     )
 
 

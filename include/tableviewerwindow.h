@@ -12,6 +12,7 @@
 #include <fmt/format.h>
 #include "tableViewerToolbar.h"
 #include "tableViewerMenubar.h"
+#include <QFileDialog>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -50,13 +51,15 @@ public slots:
     void editColumnImportance();
 
     void newTriggered();
-    void openTriggered(bool checked);
-    void saveTriggered(bool checked);
-    void saveAsTriggered(bool checked);
-    void closeTriggered(bool checked);
-    void quitTriggered(bool checked);
+    void openTriggered();
+    void saveTriggered();
+    void saveAsTriggered();
+    void closeTriggered();
+    void quitTriggered();
 
 private:
+    bool fileSaved = true;
+    QString filePath;
     Ui::TableViewerWindow *ui;
     Table *data;
     tableViewerMenubar *menubar;
