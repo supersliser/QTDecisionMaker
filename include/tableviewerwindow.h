@@ -57,6 +57,8 @@ public slots:
     void closeTriggered();
     void quitTriggered();
 
+    void changeColumnType(int index);
+
 private:
     bool fileSaved = true;
     QString filePath;

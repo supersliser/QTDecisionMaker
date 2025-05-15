@@ -5,12 +5,16 @@
 #include <string>
 #include <QtCore>
 
+#include "DataType.h"
+
 
 class Column
 {
 protected:
     uint16_t m_trueIndex = 0;
     uint16_t m_displayIndex = 0;
+    DataType m_type;
+    bool m_typeAutoSet = true;
     std::string m_name = "name";
     int8_t m_importance = 0;
     bool m_verbose = false;
@@ -27,6 +31,9 @@ public:
     std::string name() const;
     void setImportance(int i_importance);
     int importance() const;
+    void setType(DataType i_type);
+    DataType type() const;
+    void testAutoSetType(std::string_view i_value);
 
     void print() const;
 

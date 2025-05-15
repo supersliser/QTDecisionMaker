@@ -26,7 +26,7 @@
    <string>TableViewerWindow</string>
   </property>
   <property name="toolButtonStyle">
-   <enum>Qt::ToolButtonTextBesideIcon</enum>
+   <enum>Qt::ToolButtonStyle::ToolButtonTextBesideIcon</enum>
   </property>
   <property name="documentMode">
    <bool>false</bool>
@@ -46,14 +46,14 @@
     </property>
     <layout class="QHBoxLayout" name="TableSeparatorLayout">
      <property name="sizeConstraint">
-      <enum>QLayout::SetDefaultConstraint</enum>
+      <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
      </property>
      <item>
       <layout class="QVBoxLayout" name="TableContainer">
        <item>
         <widget class="QTableWidget" name="DataTable">
          <property name="editTriggers">
-          <set>QAbstractItemView::AllEditTriggers</set>
+          <set>QAbstractItemView::EditTrigger::AllEditTriggers</set>
          </property>
         </widget>
        </item>
@@ -89,7 +89,7 @@
            </size>
           </property>
           <property name="features">
-           <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+           <set>QDockWidget::DockWidgetFeature::DockWidgetClosable|QDockWidget::DockWidgetFeature::DockWidgetFloatable|QDockWidget::DockWidgetFeature::DockWidgetMovable</set>
           </property>
           <property name="windowTitle">
            <string>Item Details</string>
@@ -109,7 +109,23 @@
               <widget class="QLineEdit" name="DisplayData"/>
              </item>
              <item row="1" column="0" colspan="2">
-              <widget class="QDoubleSpinBox" name="WorthData"/>
+              <widget class="QDoubleSpinBox" name="WorthData">
+               <property name="frame">
+                <bool>true</bool>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::ButtonSymbols::PlusMinus</enum>
+               </property>
+               <property name="decimals">
+                <number>5</number>
+               </property>
+               <property name="minimum">
+                <double>-100.000000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -121,7 +137,7 @@
           <property name="minimumSize">
            <size>
             <width>200</width>
-            <height>100</height>
+            <height>200</height>
            </size>
           </property>
           <property name="maximumSize">
@@ -140,7 +156,7 @@
               <x>10</x>
               <y>0</y>
               <width>181</width>
-              <height>71</height>
+              <height>171</height>
              </rect>
             </property>
             <layout class="QFormLayout" name="formLayout_3">
@@ -148,7 +164,27 @@
               <widget class="QLineEdit" name="columnName"/>
              </item>
              <item row="1" column="0" colspan="2">
-              <widget class="QDoubleSpinBox" name="columnImportance"/>
+              <widget class="QDoubleSpinBox" name="columnImportance">
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::ButtonSymbols::PlusMinus</enum>
+               </property>
+               <property name="decimals">
+                <number>0</number>
+               </property>
+               <property name="minimum">
+                <double>-100.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0" colspan="2">
+              <widget class="QComboBox" name="TypeDropDown">
+               <property name="currentText">
+                <string/>
+               </property>
+               <property name="placeholderText">
+                <string>Data Type</string>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -168,7 +204,7 @@
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>22</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="minimumSize">

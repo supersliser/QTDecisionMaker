@@ -23,6 +23,14 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
     connect(ui->WorthData, &QDoubleSpinBox::valueChanged, this, &TableViewerWindow::editItemWorth);
     connect(ui->columnName, &QLineEdit::editingFinished, this, &TableViewerWindow::editColumnName);
     connect(ui->columnImportance, &QDoubleSpinBox::valueChanged, this, &TableViewerWindow::editColumnImportance);
+
+    for (int i = 0; i < 7; i++)
+    {
+        ui->TypeDropDown->addItem(tr(DataType::createDataType((Type)(i))->getName().data()));
+    }
+
+    connect(ui->TypeDropDown, &QComboBox::currentIndexChanged, this, &TableViewerWindow::changeColumnType);
+
 }
 
 TableViewerWindow::~TableViewerWindow()
@@ -91,6 +99,10 @@ void TableViewerWindow::selectItem(int row, int column, int prev_row, int prev_c
     // Get the data from the model
     if (i == nullptr)
     {
+        if (column == data->headingCount())
+        {
+            ui->TypeDropDown->setCurrentIndex(6);
+        }
         return;
     }
 
@@ -111,12 +123,15 @@ void TableViewerWindow::selectItem(int row, int column, int prev_row, int prev_c
         ui->columnImportance->setValue(c->importance());
         ui->columnImportance->setEnabled(column != 0);
         ui->ColumnDetailsDock->show();
+        ui->TypeDropDown->setCurrentIndex(c->type().getType());
     }
 
     if (column == 0)
     {
+        ui->TypeDropDown->setCurrentIndex(0);
         delete i;
     }
+
 }
 
 void TableViewerWindow::newColumnTriggered()
@@ -148,6 +163,9 @@ void TableViewerWindow::editItemDisplay()
     }
     i->displayValue = ui->DisplayData->text().toStdString();
     fileSaved = false;
+    Column* c = data->heading(ui->DataTable->currentColumn());
+    c->testAutoSetType(i->displayValue);
+    ui->TypeDropDown->setCurrentIndex(c->type().getType());
     drawTable();
 }
 
@@ -244,4 +262,26 @@ void TableViewerWindow::closeTriggered()
 void TableViewerWindow::quitTriggered()
 {
     close();
+}
+
+void TableViewerWindow::changeColumnType(int index)
+{
+    if (index == -1)
+    {
+        ui->TypeDropDown->clear();
+        return;
+    }
+    if (ui->DataTable->currentColumn() == 0)
+    {
+        ui->TypeDropDown->setCurrentIndex(0);
+        return;
+    }
+    if (ui->DataTable->currentColumn() == data->headingCount())
+    {
+        ui->TypeDropDown->setCurrentIndex(6);
+        return;
+    }
+    data->heading(ui->DataTable->currentColumn())->setType(*DataType::createDataType((Type)index));
+    fileSaved = false;
+    drawTable();
 }

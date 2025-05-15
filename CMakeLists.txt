@@ -38,6 +38,15 @@ include_directories(include)
             include/MenuBarFile.h
             src/FileSystemManager.cpp
             include/FileSystemManager.h
+            include/DataType.h
+            include/DataTypes/LinkType.h
+            src/DataType.cpp
+            include/DataTypes/DescType.h
+            include/DataTypes/BoolType.h
+            include/DataTypes/RatingType.h
+            include/DataTypes/MoneyType.h
+            include/DataTypes/NumberType.h
+            include/DataTypes/NameType.h
     )
 
 
