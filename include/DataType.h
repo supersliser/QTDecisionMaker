@@ -7,7 +7,7 @@
 #include <functional>
 #include <string>
 
-#include "DataTypes/NameType.h"
+#include "DataTypes/NameDataType.h"
 
 enum Type
 {
@@ -20,29 +20,23 @@ enum Type
     NUM
 };
 
-template<typename baseType>
 class DataType {
 protected:
     std::string name;
     std::string desc;
 
-    std::function<bool(baseType)> autoSetCondition;
-    int defaultImportance;
+    int defaultImportance = 0;
 
 public:
-    DataType(std::string name, std::string desc, std::function<bool(baseType)> autoSetCondition, int defaultImportance)
-            : name(name), desc(desc), autoSetCondition(autoSetCondition), defaultImportance(defaultImportance) {}
+    DataType() = default;
 
     virtual ~DataType() = default;
 
-    static DataType * createDataType() {
-        switch (type) {
-        case NAME:
-            return new NameType("Name", "Stores the name of an option in a decision", [](std::string item) {return false;}, 0);
-        }
-    }
+    static DataType * createDataType(Type type);
 
-    virtual bool isValid(baseType value) const = 0;
+    virtual bool attemptAutoSet(std::string item) const {
+        return false;
+    }
 
     virtual std::string getName() const {
         return name;
@@ -54,10 +48,6 @@ public:
 
     virtual int getDefaultImportance() const {
         return defaultImportance;
-    }
-
-    virtual bool autoSet(baseType value) const {
-        return autoSetCondition(value);
     }
 };
 
