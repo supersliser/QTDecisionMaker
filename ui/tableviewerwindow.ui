@@ -137,7 +137,7 @@
           <property name="minimumSize">
            <size>
             <width>200</width>
-            <height>100</height>
+            <height>200</height>
            </size>
           </property>
           <property name="maximumSize">
@@ -156,7 +156,7 @@
               <x>10</x>
               <y>0</y>
               <width>181</width>
-              <height>71</height>
+              <height>171</height>
              </rect>
             </property>
             <layout class="QFormLayout" name="formLayout_3">
@@ -173,6 +173,16 @@
                </property>
                <property name="minimum">
                 <double>-100.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0" colspan="2">
+              <widget class="QComboBox" name="TypeDropDown">
+               <property name="currentText">
+                <string/>
+               </property>
+               <property name="placeholderText">
+                <string>Data Type</string>
                </property>
               </widget>
              </item>

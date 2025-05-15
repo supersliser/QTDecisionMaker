@@ -14,6 +14,7 @@ public:
     {
         name = "Bool";
         desc = "True or False";
+        enumType = Type::BOOL;
         defaultImportance = 0;
     }
 

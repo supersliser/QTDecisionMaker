@@ -17,6 +17,7 @@ public:
     {
         name = "Number";
         desc = "Generic Number";
+        enumType = Type::NUM;
         defaultImportance = 0;
     }
 

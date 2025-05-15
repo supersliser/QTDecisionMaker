@@ -13,6 +13,7 @@ public:
     {
         name = "Link";
         desc = "Link to a website";
+        enumType = Type::LINK;
         defaultImportance = 0;
     }
 

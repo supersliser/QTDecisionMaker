@@ -7,8 +7,6 @@
 #include <functional>
 #include <string>
 
-#include "DataTypes/NameDataType.h"
-
 enum Type
 {
     NAME,
@@ -24,7 +22,7 @@ class DataType {
 protected:
     std::string name;
     std::string desc;
-
+    Type enumType;
     int defaultImportance = 0;
 
 public:
@@ -48,6 +46,10 @@ public:
 
     virtual int getDefaultImportance() const {
         return defaultImportance;
+    }
+
+    virtual Type getType() const {
+        return enumType;
     }
 };
 

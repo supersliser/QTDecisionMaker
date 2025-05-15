@@ -20,6 +20,7 @@ public:
     {
         name = "Rate";
         desc = "Rating of an option in a decision";
+        enumType = Type::RATE;
         defaultImportance = 0;
         maxNumber = i_maxNumber;
         minNumber = i_minNumber;

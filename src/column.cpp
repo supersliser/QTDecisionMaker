@@ -6,6 +6,7 @@ Column::Column(QString i_name, int i_importance, bool i_verbose) {
     setName(i_name.toStdString());
     setImportance(i_importance);
         m_verbose = i_verbose;
+    setType(*DataType::createDataType(Type::NAME));
 }
 
 void Column::setIndex(int i_index) {
@@ -109,4 +110,26 @@ void Column::print() const {
               << "Display Index: " << displayIndex() << '\n'
               << "Name: " << name() << '\n'
               << "Importance: " << importance() << '\n';
+}
+
+void Column::setType(DataType i_type) {
+    m_type = i_type;
+    m_typeAutoSet = false;
+}
+
+DataType Column::type() const {
+    return m_type;
+}
+
+void Column::testAutoSetType(std::string_view i_value) {
+if (m_typeAutoSet)
+{
+    for (int i = 1; i < 7; i++) {
+        if (DataType::createDataType((Type)i)->attemptAutoSet(i_value.data()))
+        {
+            m_type = *DataType::createDataType((Type)i);
+            return;
+        }
+    }
+}
 }

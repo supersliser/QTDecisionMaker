@@ -46,6 +46,7 @@ include_directories(include)
             include/DataTypes/RatingType.h
             include/DataTypes/MoneyType.h
             include/DataTypes/NumberType.h
+            include/DataTypes/NameType.h
     )
 
 

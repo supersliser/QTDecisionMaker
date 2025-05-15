@@ -8,6 +8,7 @@
 #include "DataTypes/DescType.h"
 #include "DataTypes/LinkType.h"
 #include "DataTypes/MoneyType.h"
+#include "DataTypes/NameType.h"
 #include "DataTypes/NumberType.h"
 #include "DataTypes/RatingType.h"
 
@@ -16,7 +17,7 @@ DataType* DataType::createDataType(Type type)
     switch (type)
     {
         case NAME:
-            return new DescType();
+            return new NameType();
         case DESC:
             return new DescType();
         case LINK:

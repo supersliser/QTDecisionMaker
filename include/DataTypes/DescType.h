@@ -14,6 +14,7 @@ public:
     {
         name = "Desc";
         desc = "Description of an option in a decision";
+        enumType = Type::DESC;
         defaultImportance = 0;
     }
 

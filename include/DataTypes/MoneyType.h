@@ -17,6 +17,7 @@ class MoneyType : public DataType
     {
         name = "Money";
         desc = "Amount of money in a decision";
+        enumType = Type::MONEY;
         defaultImportance = 0;
     }
 
