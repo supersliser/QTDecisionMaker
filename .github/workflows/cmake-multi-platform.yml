@@ -19,46 +19,46 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Qt (Linux)
-      if: matrix.os == 'ubuntu-latest'
-      uses: jurplel/install-qt-action@v3
-      with:
-        version: '6.5.0' # Change as needed
-
-    - name: Install dependencies (Linux)
+    # ----------- LINUX SETUP -----------
+    - name: Install Qt and fmt (Linux)
       if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential cmake qt6-base-dev
+        sudo apt-get install -y build-essential cmake qt6-base-dev libfmt-dev
+
+    # ----------- WINDOWS SETUP -----------
+    - name: Install vcpkg (Windows)
+      if: matrix.os == 'windows-latest'
+      uses: lukka/run-vcpkg@v11
+      with:
+        vcpkgArguments: 'fmt qt6-base'
+        vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+        runVcpkgInstall: true
 
     - name: Set up MSVC (Windows)
       if: matrix.os == 'windows-latest'
       uses: ilammy/msvc-dev-cmd@v1
 
-    - name: Set up Qt (Windows)
+    # ----------- CMAKE CONFIGURE -----------
+    - name: Configure CMake (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      run: cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -S .
+
+    - name: Configure CMake (Windows)
       if: matrix.os == 'windows-latest'
-      uses: jurplel/install-qt-action@v3
-      with:
-        version: '6.5.0' # Change as needed
+      run: |
+        cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -S . -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
 
-    - name: Configure CMake
-      run: >
-        cmake -B build
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -S .
-      env:
-        CC: ${{ matrix.os == 'ubuntu-latest' && 'gcc' || '' }}
-        CXX: ${{ matrix.os == 'ubuntu-latest' && 'g++' || '' }}
-
+    # ----------- BUILD -----------
     - name: Build
       run: cmake --build build --config ${{ matrix.build_type }}
 
+    # ----------- FIND EXECUTABLES -----------
     - name: Find Executable (Linux)
       if: matrix.os == 'ubuntu-latest'
       id: find_exe_linux
       run: |
-        # Try to find the main executable (change DecisionMaker if needed)
-        exe=$(find build -type f -executable -name DecisionMaker | head -n 1)
+        exe=$(find build -type f -executable -name QTDecisionMaker | head -n 1)
         echo "exe_path=$exe" >> $GITHUB_OUTPUT
 
     - name: Find Executable (Windows)
@@ -66,9 +66,10 @@ jobs:
       id: find_exe_win
       shell: pwsh
       run: |
-        $exe = Get-ChildItem -Path build -Recurse -Filter DecisionMaker.exe | Select-Object -First 1
+        $exe = Get-ChildItem -Path build -Recurse -Filter QTDecisionMaker.exe | Select-Object -First 1
         echo "exe_path=$($exe.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
+    # ----------- UPLOAD ARTIFACTS -----------
     - name: Upload Linux Executable
       if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v4
