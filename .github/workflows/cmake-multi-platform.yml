@@ -19,27 +19,23 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # ----------- LINUX SETUP -----------
+    # ---------- LINUX ----------
     - name: Install Qt and fmt (Linux)
       if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get update
         sudo apt-get install -y build-essential cmake qt6-base-dev libfmt-dev
 
-    # ----------- WINDOWS SETUP -----------
-    - name: Install vcpkg (Windows)
+    # ---------- WINDOWS ----------
+    - name: Run vcpkg (Windows)
       if: matrix.os == 'windows-latest'
       uses: lukka/run-vcpkg@v11
-      with:
-        vcpkgArguments: 'fmt qt6-base'
-        vcpkgDirectory: '${{ github.workspace }}/vcpkg'
-        runVcpkgInstall: true
 
     - name: Set up MSVC (Windows)
       if: matrix.os == 'windows-latest'
       uses: ilammy/msvc-dev-cmd@v1
 
-    # ----------- CMAKE CONFIGURE -----------
+    # ---------- CMAKE CONFIGURE ----------
     - name: Configure CMake (Linux)
       if: matrix.os == 'ubuntu-latest'
       run: cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -S .
@@ -49,11 +45,11 @@ jobs:
       run: |
         cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -S . -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
 
-    # ----------- BUILD -----------
+    # ---------- BUILD ----------
     - name: Build
       run: cmake --build build --config ${{ matrix.build_type }}
 
-    # ----------- FIND EXECUTABLES -----------
+    # ---------- FIND EXECUTABLES ----------
     - name: Find Executable (Linux)
       if: matrix.os == 'ubuntu-latest'
       id: find_exe_linux
@@ -69,7 +65,7 @@ jobs:
         $exe = Get-ChildItem -Path build -Recurse -Filter QTDecisionMaker.exe | Select-Object -First 1
         echo "exe_path=$($exe.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
-    # ----------- UPLOAD ARTIFACTS -----------
+    # ---------- UPLOAD ARTIFACTS ----------
     - name: Upload Linux Executable
       if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v4
