@@ -2,9 +2,9 @@ name: Build Windows App
 
 on:
   push:
-    branches: [ "Production" ]
+    branches: [ "production" ]
   pull_request:
-    branches: [ "Production" ]
+    branches: [ "production" ]
 
 jobs:
   build-windows:
