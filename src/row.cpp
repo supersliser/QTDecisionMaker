@@ -1,4 +1,6 @@
 #include "row.h"
+
+#include <float.h>
 #include <iostream>
 #include <QtCore>
 
@@ -78,13 +80,13 @@ std::string Row::name() const {
 }
 
 void Row::setTotalValue(float i_totalValue) {
-    if (i_totalValue < (__FLT32_MIN__)) {
-        m_totalValue = (__FLT32_MIN__);
+    if (i_totalValue < (FLT_MIN)) {
+        m_totalValue = (FLT_MIN);
         if (m_verbose) {std::cerr << "Warning: Attempted to set 'total value' to value lower than MIN_FLOAT, clamping to MIN_FLOAT\n";}
         return;
     }
-    if (i_totalValue > __FLT32_MAX__) {
-        m_totalValue = __FLT32_MAX__;
+    if (i_totalValue > FLT_MAX) {
+        m_totalValue = FLT_MAX;
         if (m_verbose) {std::cerr << "Warning: Attempted to set 'total value' to value higher than MAX_FLOAT, clamping to MAX_FLOAT\n";}
         return;
     }
