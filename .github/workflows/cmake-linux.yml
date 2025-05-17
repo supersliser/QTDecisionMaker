@@ -1,0 +1,59 @@
+name: Build Linux App
+
+on:
+  push:
+    branches: [ "production" ]
+  pull_request:
+    branches: [ "production" ]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libgl1-mesa-dev libxkbcommon-x11-0 libpulse-dev \
+          libfmt-dev libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
+          libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xkb1 libxkbcommon-x11-0
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.5.0'
+          modules: 'qt5compat qtmultimedia qtnetworkauth qtpositioning qtcharts qtvirtualkeyboard qtwebchannel qtwebsockets qtwebview'
+
+      - name: Configure CMake
+        run: |
+          cmake -B build \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_PREFIX_PATH=${{ env.Qt6_DIR }} \
+          -DBUILD_TESTING=OFF
+
+      - name: Build
+        run: cmake --build build --config Release --verbose --target QTDecisionMaker
+
+      - name: List build directory
+        run: find build -type f -name "QTDecisionMaker*" | sort
+
+      - name: Find Executable
+        id: find_exe
+        run: |
+          exe=$(find build -type f -executable -name "QTDecisionMaker" | head -n 1)
+          if [ -z "$exe" ]; then
+            echo "No executable found!"
+            exit 1
+          fi
+          echo "exe_path=$exe" >> $GITHUB_OUTPUT
+          echo "Found executable at: $exe"
+
+      - name: Upload Executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-executable
+          path: ${{ steps.find_exe.outputs.exe_path }}
