@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(DecisionMaker VERSION 0.1 LANGUAGES CXX)
+project(QTDecisionMaker VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -27,7 +27,7 @@ set(PROJECT_SOURCES
         include/table.h
 )
 include_directories(include)
-    qt_add_executable(DecisionMaker
+    qt_add_executable(QTDecisionMaker
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
             src/tableViewerToolbar.cpp
@@ -50,9 +50,9 @@ include_directories(include)
     )
 
 
-target_link_libraries(DecisionMaker PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt6::Sql Qt6::Core Qt6::Gui fmt::fmt)
+target_link_libraries(QTDecisionMaker PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt6::Sql Qt6::Core Qt6::Gui fmt::fmt)
 
-set_target_properties(DecisionMaker PROPERTIES
+set_target_properties(QTDecisionMaker PROPERTIES
     ${BUNDLE_ID_OPTION}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -61,14 +61,14 @@ set_target_properties(DecisionMaker PROPERTIES
 )
 
 include(GNUInstallDirs)
-install(TARGETS DecisionMaker
+install(TARGETS QTDecisionMaker
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(DecisionMaker)
+    qt_finalize_executable(QTDecisionMaker)
 endif()
 
 qt_standard_project_setup()
