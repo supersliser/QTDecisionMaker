@@ -30,12 +30,12 @@ public:
     static Table fromJson(const QJsonDocument& i_json);
 
     void addHeading(Column i_heading);
-    Column* heading(unsigned int i_index);
+     Column* heading(unsigned int i_index);
     unsigned int headingCount() const;
     void removeHeading(unsigned int i_index);
     int findHeading(std::function<bool(Column i_value)> i_predicate);
     void addRow(Row i_row);
-    Row* row(unsigned int i_index);
+     Row* row(unsigned int i_index) ;
     unsigned int rowCount() const;
     void removeRow(unsigned int i_index);
     int findRow(std::function<bool(Row i_value)> i_predicate);

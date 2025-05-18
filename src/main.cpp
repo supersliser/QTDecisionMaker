@@ -8,6 +8,5 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     TableViewerWindow w;
     w.show();
-    w.drawTable();
     return a.exec();
 }

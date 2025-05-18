@@ -47,6 +47,8 @@ include_directories(include)
             include/DataTypes/MoneyType.h
             include/DataTypes/NumberType.h
             include/DataTypes/NameType.h
+            src/tableManager.cpp
+            include/tableManager.h
     )
 
 

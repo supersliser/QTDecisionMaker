@@ -49,15 +49,7 @@
       <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
      </property>
      <item>
-      <layout class="QVBoxLayout" name="TableContainer">
-       <item>
-        <widget class="QTableWidget" name="DataTable">
-         <property name="editTriggers">
-          <set>QAbstractItemView::EditTrigger::AllEditTriggers</set>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <layout class="QVBoxLayout" name="TableContainer"/>
      </item>
      <item>
       <widget class="QFrame" name="verticalFrame">
@@ -143,7 +135,7 @@
           <property name="maximumSize">
            <size>
             <width>200</width>
-            <height>100</height>
+            <height>200</height>
            </size>
           </property>
           <property name="windowTitle">
