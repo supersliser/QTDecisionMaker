@@ -34,7 +34,7 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
         ui->TypeDropDown->addItem(tr(DataType::createDataType((Type)(i))->getName().data()));
     }
 
-    connect(ui->TypeDropDown, &QComboBox::currentIndexChanged, this, &TableViewerWindow::changeColumnType);
+    connect(ui->TypeDropDown, &QComboBox::activated, this, &TableViewerWindow::changeColumnType);
 
     emit sendDrawTable(*data);
 }

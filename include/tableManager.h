@@ -30,7 +30,6 @@ public slots:
 
 private:
     void _setColumnHeader(int i_column, QString i_name);
-    void _setRowHeader(int i_row, QString i_name);
     void _setItem(int i_row, int i_column, QString i_name);
 };
 

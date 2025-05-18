@@ -11,7 +11,6 @@ tableManager::tableManager(QWidget* parent)
     : QTableWidget(parent)
 {
     connect(this, &QTableWidget::currentCellChanged, this, &tableManager::_selectItem);
-    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 void tableManager::_selectItem(int row, int column, int prev_row, int prev_column)
@@ -21,7 +20,7 @@ void tableManager::_selectItem(int row, int column, int prev_row, int prev_colum
 
 void tableManager::drawTable(Table& data)
 {
-    setColumnWidth(0, data.headingCount() + 1);
+    setColumnCount(data.headingCount() + 1);
     for (int i = 0; i < data.headingCount(); i++)
     {
         _setColumnHeader(i, tr(data.heading(i)->name().data()));
@@ -52,9 +51,4 @@ void tableManager::_setColumnHeader(int i_column, QString i_name)
 void tableManager::_setItem(int i_row, int i_column, QString i_name)
 {
     setItem(i_row, i_column, new QTableWidgetItem(i_name));
-}
-
-void tableManager::_setRowHeader(int i_row, QString i_name)
-{
-    setVerticalHeaderItem(i_row, new QTableWidgetItem(i_name));
 }
