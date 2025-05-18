@@ -12,31 +12,31 @@
 #include "table.h"
 
 
-class TableDataDock : public QDockWidget {
+class TableDataDock : public QDockWidget
+{
     Q_OBJECT;
 
-    public:
-    TableDataDock(QWidget *parent = 0);
+public:
+    TableDataDock(QWidget* parent = 0);
     ~TableDataDock() = default;
 
 public slots:
     void displayValueUpdated(std::string value);
-    void setItem(Table *table, int row, int column);
+    virtual void setItem(Table* table, int row, int column);
 
-    signals:
+signals:
     void displayValueChanged(std::string value);
     void worthValueChanged(float value);
 
-    private slots:
+protected slots:
     void _displayValueChanged();
     void _worthValueChanged();
 
-private:
-    QLineEdit *m_displayValue;
-    QDoubleSpinBox *m_worthValue;
-    QFormLayout *m_layout;
+protected:
+    QLineEdit* m_displayValue;
+    QDoubleSpinBox* m_worthValue;
+    QFormLayout* m_layout;
 };
-
 
 
 #endif //TABLEDATADOCK_H

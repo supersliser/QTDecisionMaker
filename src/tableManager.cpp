@@ -15,6 +15,11 @@ tableManager::tableManager(QWidget* parent)
 
 void tableManager::_selectItem(int row, int column, int prev_row, int prev_column)
 {
+    if (row != -1 && column != -1)
+    {
+        _lastSelectedRow = row;
+        _lastSelectedColumn = column;
+    }
     emit selectItem(row, column);
 }
 
@@ -59,3 +64,14 @@ void tableManager::_itemEdited(int row, int column)
 {
     emit itemEdited(currentItem()->text().toStdString());
 }
+
+int tableManager::selectedColumn()
+{
+    return _lastSelectedColumn;
+}
+
+int tableManager::selectedRow()
+{
+    return _lastSelectedRow;
+}
+

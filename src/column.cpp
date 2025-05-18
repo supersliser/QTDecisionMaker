@@ -125,6 +125,7 @@ DataType Column::type() const {
 void Column::testAutoSetType(std::string_view i_value) {
 if (m_typeAutoSet)
 {
+    if (i_value == "") { return; }
     for (int i = 1; i < 7; i++) {
         if (DataType::createDataType((Type)i)->attemptAutoSet(i_value.data()))
         {
