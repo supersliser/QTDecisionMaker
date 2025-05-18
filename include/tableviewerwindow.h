@@ -14,6 +14,7 @@
 #include "tableViewerMenubar.h"
 #include <QFileDialog>
 
+#include "TableDataDock.h"
 #include "tableManager.h"
 
 QT_BEGIN_NAMESPACE
@@ -35,7 +36,8 @@ public:
     void addColumn();
 
 signals:
-    void sendDrawTable(Table& table);
+    void sendDrawTable(Table* table);
+    void itemSelected(Table* table, int row, int column);
 
 public slots:
 
@@ -45,9 +47,9 @@ public slots:
 
     void newRowTriggered();
 
-    void editItemDisplay();
+    void editItemDisplay(std::string value);
 
-    void editItemWorth();
+    void editItemWorth(float value);
 
     void editColumnName();
 
@@ -70,6 +72,9 @@ private:
     tableViewerMenubar *menubar;
     tableViewerToolbar *toolbar;
     tableManager *table;
+    TableDataDock *itemDock;
+    TableDataDock *columnDock;
+
 };
 
 #endif // TABLEVIEWERWINDOW_H

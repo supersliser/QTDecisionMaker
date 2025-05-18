@@ -32,10 +32,9 @@ Column* Table::heading(unsigned int i_index) {
 }
 
 Table::Table() {
-    Column c;
-    c.setName("Name");
-    c.setType(*DataType::createDataType(Type::NAME));
-    addHeading(c);
+    // Column c;
+    // c.setName("Blank Column");
+    // addHeading(c);
     Row r;
     r.setName("Blank Name");
     addRow(r);
@@ -60,10 +59,9 @@ void Table::print() const {
 
 Table::Table(bool i_verbose) {
     m_verbose = i_verbose;
-    Column c;
-    c.setName("Name");
-    c.setType(*DataType::createDataType(Type::NAME));
-    addHeading(c);
+    // Column c;
+    // c.setName("Blank Column");
+    // addHeading(c);
     Row r;
     r.setName("Blank Name");
     addRow(r);

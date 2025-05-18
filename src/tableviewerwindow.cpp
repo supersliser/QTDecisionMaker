@@ -23,9 +23,18 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
     connect(table, &tableManager::selectItem, this, &TableViewerWindow::selectItem);
     connect(this, &TableViewerWindow::sendDrawTable, table, &tableManager::drawTable);
 
+
+    itemDock = new TableDataDock(ui->verticalFrame);
+    ui->verticalFrame->layout()->addWidget(itemDock);
+    connect(itemDock, &TableDataDock::displayValueChanged, this, &TableViewerWindow::editItemDisplay);
+    connect(itemDock, &TableDataDock::worthValueChanged, this, &TableViewerWindow::editItemWorth);
+    connect(table, &tableManager::itemEdited, itemDock, &TableDataDock::displayValueUpdated);
+    connect(this, &TableViewerWindow::itemSelected, itemDock, &TableDataDock::setItem);
+
+
     // connect(ui->DataTable, &QTableWidget::currentCellChanged, this, &TableViewerWindow::selectItem);
-    connect(ui->DisplayData, &QLineEdit::editingFinished, this, &TableViewerWindow::editItemDisplay);
-    connect(ui->WorthData, &QDoubleSpinBox::valueChanged, this, &TableViewerWindow::editItemWorth);
+    // connect(ui->DisplayData, &QLineEdit::editingFinished, this, &TableViewerWindow::editItemDisplay);
+    // connect(ui->WorthData, &QDoubleSpinBox::valueChanged, this, &TableViewerWindow::editItemWorth);
     connect(ui->columnName, &QLineEdit::editingFinished, this, &TableViewerWindow::editColumnName);
     connect(ui->columnImportance, &QDoubleSpinBox::valueChanged, this, &TableViewerWindow::editColumnImportance);
 
@@ -36,7 +45,7 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
 
     connect(ui->TypeDropDown, &QComboBox::activated, this, &TableViewerWindow::changeColumnType);
 
-    emit sendDrawTable(*data);
+    emit sendDrawTable(data);
 }
 
 TableViewerWindow::~TableViewerWindow()
@@ -75,52 +84,46 @@ TableViewerWindow::~TableViewerWindow()
 
 void TableViewerWindow::selectItem(int row, int column)
 {
-    Item* i;
-    if (column == 0)
-    {
-        i = new Item();
-        i->displayValue = data->row(row)->name();
-        i->worthValue = 0;
-    }
-    else
-    {
-        i = data->item(column, row);
-    }
-    // Get the data from the model
-    if (i == nullptr)
-    {
-        if (column == data->headingCount())
-        {
-            ui->TypeDropDown->setCurrentIndex(6);
-        }
-        return;
-    }
+    emit itemSelected(data, row, column);
 
-    // Do something with the data (e.g., display it in a message box)
-    ui->DisplayData->setText(QString(i->displayValue.c_str()));
-    ui->WorthData->setValue(i->worthValue);
-    ui->WorthData->setEnabled(column != 0);
-    if (ui->ItemDetailsDock->isHidden())
-    {
-        ui->ItemDetailsDock->setFloating(false);
-    }
-    ui->ItemDetailsDock->show();
-
-    if (column != 0)
-    {
-        auto c = data->heading(column);
-        ui->columnName->setText(c->name().c_str());
-        ui->columnImportance->setValue(c->importance());
-        ui->columnImportance->setEnabled(column != 0);
-        ui->ColumnDetailsDock->show();
-        ui->TypeDropDown->setCurrentIndex(c->type().getType());
-    }
-
-    if (column == 0)
-    {
-        ui->TypeDropDown->setCurrentIndex(0);
-        delete i;
-    }
+    // Item* i;
+    // if (column == 0)
+    // {
+    //     i = new Item();
+    //     i->displayValue = data->row(row)->name();
+    //     i->worthValue = 0;
+    // }
+    // else
+    // {
+    //     i = data->item(column, row);
+    // }
+    // // Get the data from the model
+    // if (i == nullptr)
+    // {
+    //     if (column == data->headingCount())
+    //     {
+    //         ui->TypeDropDown->setCurrentIndex(6);
+    //     }
+    //     return;
+    // }
+    //
+    // // Do something with the data (e.g., display it in a message box)
+    //
+    // if (column != 0)
+    // {
+    //     auto c = data->heading(column);
+    //     ui->columnName->setText(c->name().c_str());
+    //     ui->columnImportance->setValue(c->importance());
+    //     ui->columnImportance->setEnabled(column != 0);
+    //     ui->ColumnDetailsDock->show();
+    //     ui->TypeDropDown->setCurrentIndex(c->type().getType());
+    // }
+    //
+    // if (column == 0)
+    // {
+    //     ui->TypeDropDown->setCurrentIndex(0);
+    //     delete i;
+    // }
 
 }
 
@@ -129,7 +132,7 @@ void TableViewerWindow::newColumnTriggered()
     data->addHeading(Column("Unnamed Column"));
     fileSaved = false;
 
-    emit sendDrawTable(*data);
+    emit sendDrawTable(data);
 }
 
 void TableViewerWindow::newRowTriggered()
@@ -137,59 +140,48 @@ void TableViewerWindow::newRowTriggered()
     data->addRow(Row("Unnamed Item"));
     fileSaved = false;
 
-    emit sendDrawTable(*data);
+    emit sendDrawTable(data);
 }
 
-void TableViewerWindow::editItemDisplay()
+void TableViewerWindow::editItemDisplay(std::string value)
 {
-    if (table->currentColumn() == 0)
-    {
-        data->row(table->currentRow())->setName(ui->DisplayData->text().toStdString());
-    }
-    Item* i = data->item(table->currentColumn(), table->currentRow());
-    if (i == nullptr)
-    {
-        return;
-    }
-    i->displayValue = ui->DisplayData->text().toStdString();
+    Item* i = data->item(table->currentColumn() - 1,  table->currentRow());
+    if (i == nullptr) {return;}
+    i->displayValue = value;
     fileSaved = false;
-    Column* c = data->heading(table->currentColumn());
+    Column* c = data->heading(table->currentColumn() - 1);
     c->testAutoSetType(i->displayValue);
     ui->TypeDropDown->setCurrentIndex(c->type().getType());
-    emit sendDrawTable(*data);
+    emit sendDrawTable(data);
 }
 
-void TableViewerWindow::editItemWorth()
+void TableViewerWindow::editItemWorth(float value)
 {
-    Item* i = data->item(table->currentColumn(), table->currentRow());
-    if (i == nullptr)
-    {
-        return;
-    }
-    i->worthValue = ui->WorthData->value();
+    Item* i = data->item(table->currentColumn() - 1, table->currentRow());
+    i->worthValue = value;
     fileSaved = false;
-    emit sendDrawTable(*data);
+    emit sendDrawTable(data);
 }
 
 void TableViewerWindow::editColumnName()
 {
-    data->heading(table->currentColumn())->setName(ui->columnName->text().toStdString());
+    data->heading(table->currentColumn() - 1)->setName(ui->columnName->text().toStdString());
     fileSaved = false;
-    emit sendDrawTable(*data);
+    emit sendDrawTable(data);
 }
 
 void TableViewerWindow::editColumnImportance()
 {
-    data->heading(table->currentColumn())->setImportance(ui->columnImportance->value());
+    data->heading(table->currentColumn() - 1)->setImportance(ui->columnImportance->value());
     fileSaved = false;
-        emit sendDrawTable(*data);
+        emit sendDrawTable(data);
 }
 
  void TableViewerWindow::newTriggered()
  {
     delete data;
     data = new Table(false);
-    emit sendDrawTable(*data);
+    emit sendDrawTable(data);
     fileSaved = false;
     filePath.clear();
  }
@@ -202,7 +194,7 @@ void TableViewerWindow::openTriggered()
         return;
     }
     *data = FileSystemManager::readFile(fileName);
-    emit sendDrawTable(*data);
+    emit sendDrawTable(data);
     fileSaved = true;
     filePath = fileName;
 }
@@ -273,5 +265,5 @@ void TableViewerWindow::changeColumnType(int index)
     }
     data->heading(table->currentColumn())->setType(*DataType::createDataType((Type)index));
     fileSaved = false;
-    emit sendDrawTable(*data);
+    emit sendDrawTable(data);
 }

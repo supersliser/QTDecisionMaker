@@ -18,26 +18,28 @@ void tableManager::_selectItem(int row, int column, int prev_row, int prev_colum
     emit selectItem(row, column);
 }
 
-void tableManager::drawTable(Table& data)
+void tableManager::drawTable(Table* data)
 {
-    setColumnCount(data.headingCount() + 1);
-    for (int i = 0; i < data.headingCount(); i++)
+    clear();
+    setColumnCount(data->headingCount() + 2);
+    _setColumnHeader(0, tr("Name"));
+    for (int i = 1; i < data->headingCount() + 1; i++)
     {
-        _setColumnHeader(i, tr(data.heading(i)->name().data()));
+        _setColumnHeader(i, tr(data->heading(i - 1)->name().data()));
     }
-    _setColumnHeader(data.headingCount(), tr("Total Value"));
+    _setColumnHeader(data->headingCount() + 1, tr("Total Value"));
 
-    data.calculateAllTotals();
+    data->calculateAllTotals();
 
-    setRowCount(data.rowCount());
-    for (int r = 0; r < data.rowCount(); r++)
+    setRowCount(data->rowCount());
+    for (int r = 0; r < data->rowCount(); r++)
     {
-        _setItem(r, 0, tr(data.row(r)->name().data()));
-        for (int c = 1; c < data.headingCount(); c++)
+        _setItem(r, 0, tr(data->row(r)->name().data()));
+        for (int c = 1; c < data->headingCount() + 1; c++)
         {
-            _setItem(r, c, tr(data.item(c, r)->displayValue.data()));
+            _setItem(r, c, tr(data->item(c - 1, r)->displayValue.data()));
         }
-        _setItem(r, data.headingCount(), fmt::format("{:.2f}", data.row(r)->totalValue()).c_str());
+        _setItem(r, data->headingCount() + 1, fmt::format("{:.2f}", data->row(r)->totalValue()).c_str());
     }
 
     show();
@@ -51,4 +53,9 @@ void tableManager::_setColumnHeader(int i_column, QString i_name)
 void tableManager::_setItem(int i_row, int i_column, QString i_name)
 {
     setItem(i_row, i_column, new QTableWidgetItem(i_name));
+}
+
+void tableManager::_itemEdited(int row, int column)
+{
+    emit itemEdited(currentItem()->text().toStdString());
 }
