@@ -18,19 +18,25 @@ class tableManager : public QTableWidget
 public:
     tableManager(QWidget* parent = nullptr);
     ~tableManager() = default;
+    int selectedColumn();
+    int selectedRow();
 
 signals:
     void selectItem(int row, int column);
+    void itemEdited(std::string value);
 
 private slots:
     void _selectItem(int row, int column, int prev_row, int prev_column);
+    void _itemEdited(int row, int column);
 
 public slots:
-    void drawTable(Table& data);
+    void drawTable(Table* data);
 
 private:
     void _setColumnHeader(int i_column, QString i_name);
     void _setItem(int i_row, int i_column, QString i_name);
+    int _lastSelectedRow = -1;
+    int _lastSelectedColumn = -1;
 };
 
 
