@@ -6,7 +6,8 @@ Column::Column(QString i_name, int i_importance, bool i_verbose) {
     setName(i_name.toStdString());
     setImportance(i_importance);
         m_verbose = i_verbose;
-    setType(*DataType::createDataType(Type::NAME));
+    m_type = *DataType::createDataType(NAME);
+    m_typeAutoSet = true;
 }
 
 void Column::setIndex(int i_index) {
@@ -127,7 +128,7 @@ if (m_typeAutoSet)
     for (int i = 1; i < 7; i++) {
         if (DataType::createDataType((Type)i)->attemptAutoSet(i_value.data()))
         {
-            m_type = *DataType::createDataType((Type)i);
+            m_type = *DataType::createDataType(static_cast<Type>(i));
             return;
         }
     }

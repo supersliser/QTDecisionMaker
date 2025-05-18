@@ -14,6 +14,8 @@
 #include "tableViewerMenubar.h"
 #include <QFileDialog>
 
+#include "tableManager.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
     class TableViewerWindow;
@@ -32,11 +34,12 @@ public:
 
     void addColumn();
 
-    void drawTable();
+signals:
+    void sendDrawTable(Table& table);
 
 public slots:
 
-    void selectItem(int row, int column, int prev_row, int prev_column);
+    void selectItem(int row, int column);
 
     void newColumnTriggered();
 
@@ -65,12 +68,8 @@ private:
     Ui::TableViewerWindow *ui;
     Table *data;
     tableViewerMenubar *menubar;
-
-    void setColumnHeader(int i_column, QString i_name);
-
-    void setRowHeader(int i_row, QString i_name);
-
-    void setItem(int i_row, int i_column, QString i_name);
+    tableViewerToolbar *toolbar;
+    tableManager *table;
 };
 
 #endif // TABLEVIEWERWINDOW_H
