@@ -49,6 +49,10 @@ include_directories(include)
             include/DataTypes/NameType.h
             src/tableManager.cpp
             include/tableManager.h
+            src/TableDataDock.cpp
+            include/TableDataDock.h
+            src/TableColumnDataDock.cpp
+            include/TableColumnDataDock.h
     )
 
 
