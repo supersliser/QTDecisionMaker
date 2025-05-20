@@ -20,36 +20,36 @@ enum Type
 
 class DataType {
 protected:
-    std::string name;
-    std::string desc;
-    Type enumType;
-    int defaultImportance = 0;
+    std::string m_name;
+    std::string m_desc;
+    Type m_enumType = NAME;
+    int m_defaultImportance = 0;
 
 public:
     DataType() = default;
 
     virtual ~DataType() = default;
 
-    static DataType * createDataType(Type type);
+    static DataType * createDataType(Type i_type);
 
-    virtual bool attemptAutoSet(std::string item) const {
+    [[nodiscard]] virtual bool attemptAutoSet(std::string item) const {
         return false;
     }
 
-    virtual std::string getName() const {
-        return name;
+    [[nodiscard]] virtual std::string name() const {
+        return m_name;
     }
 
-    virtual std::string getDesc() const {
-        return desc;
+    [[nodiscard]] virtual std::string desc() const {
+        return m_desc;
     }
 
-    virtual int getDefaultImportance() const {
-        return defaultImportance;
+    [[nodiscard]] virtual int defaultImportance() const {
+        return m_defaultImportance;
     }
 
-    virtual Type getType() const {
-        return enumType;
+    [[nodiscard]] virtual Type type() const {
+        return m_enumType;
     }
 };
 

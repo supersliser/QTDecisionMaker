@@ -9,13 +9,13 @@
 #include "MenuBarFile.h"
 
 
-class tableViewerMenubar : public QMenuBar {
+class TableViewerMenubar : public QMenuBar {
 Q_OBJECT
 
 public:
-    tableViewerMenubar(QWidget *parent = nullptr);
+    TableViewerMenubar(QWidget *parent = nullptr);
 
-    ~tableViewerMenubar() override = default;
+    ~TableViewerMenubar() override = default;
 
 signals:
 
@@ -32,11 +32,7 @@ signals:
     void quitClicked();
 
 private:
-    MenuBarFile *fileMenu;
-    // Add other menus as needed
-    // QMenu* editMenu;
-    // QMenu* viewMenu;
-    // QMenu* helpMenu;
+    MenuBarFile *_m_fileMenu;
 };
 
 

@@ -15,15 +15,15 @@ public:
 
     NumType() : DataType()
     {
-        name = "Number";
-        desc = "Generic Number";
-        enumType = Type::NUM;
-        defaultImportance = 0;
+        m_name = "Number";
+        m_desc = "Generic Number";
+        m_enumType = Type::NUM;
+        m_defaultImportance = 0;
     }
 
-    bool attemptAutoSet(std::string item) const override
+    [[nodiscard]] bool attemptAutoSet(std::string i_item) const override
     {
-        return std::all_of(item.begin(), item.end(), ::isdigit);
+        return std::all_of(i_item.begin(), i_item.end(), ::isdigit);
     }
 };
 

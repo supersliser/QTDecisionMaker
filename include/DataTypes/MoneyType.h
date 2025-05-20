@@ -15,18 +15,18 @@ class MoneyType : public DataType
 
     MoneyType() : DataType()
     {
-        name = "Money";
-        desc = "Amount of money in a decision";
-        enumType = Type::MONEY;
-        defaultImportance = 0;
+        m_name = "Money";
+        m_desc = "Amount of money in a decision";
+        m_enumType = Type::MONEY;
+        m_defaultImportance = 0;
     }
 
-    bool attemptAutoSet(std::string item) const override
+    [[nodiscard]] bool attemptAutoSet(std::string i_item) const override
     {
-        return item.find('$') == 0 || item.find("£") == 0 || item.find("€") == 0 ||
-               item.find("¥") == 0 || item.find("₹") == 0 || item.find("₩") == 0 ||
-               item.find("₽") == 0 || item.find("₺") == 0 || item.find("₫") == 0 ||
-               item.find("₭") == 0 || item.find("₮") == 0 || item.find("₱") == 0 ||(item[item.find('.') + 1] == '0' && item[item.find('.') + 2] == '0') && std::all_of(item.begin() + 1, item.end(), ::isdigit);
+        return i_item.find('$') == 0 || i_item.find("£") == 0 || i_item.find("€") == 0 ||
+               i_item.find("¥") == 0 || i_item.find("₹") == 0 || i_item.find("₩") == 0 ||
+               i_item.find("₽") == 0 || i_item.find("₺") == 0 || i_item.find("₫") == 0 ||
+               i_item.find("₭") == 0 || i_item.find("₮") == 0 || i_item.find("₱") == 0 ||(i_item[i_item.find('.') + 1] == '0' && i_item[i_item.find('.') + 2] == '0') && std::all_of(i_item.begin() + 1, i_item.end(), ::isdigit);
     }
 };
 

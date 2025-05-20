@@ -12,10 +12,10 @@ class NameType : public DataType
 public:
     NameType() : DataType()
     {
-        name = "Name";
-        desc = "A name";
-        enumType = NAME;
-        defaultImportance = 0;
+        m_name = "Name";
+        m_desc = "A name";
+        m_enumType = NAME;
+        m_defaultImportance = 0;
     }
 
 

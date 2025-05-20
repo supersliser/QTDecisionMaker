@@ -1,12 +1,12 @@
 #ifndef TABLE_H
 #define TABLE_H
 
-#include "row.h"
+#include "Row.h"
 #include <functional>
 #include <stdlib.h>
 #include <vector>
 #include <string>
-#include "column.h"
+#include "Column.h"
 
 struct Item {
     std::string displayValue;

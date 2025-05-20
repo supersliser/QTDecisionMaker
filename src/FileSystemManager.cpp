@@ -11,8 +11,8 @@
 #include <QJsonValue>
 #include <QDebug>
 
-Table FileSystemManager::readFile(const QString &filePath) {
-    QFile file(filePath);
+Table FileSystemManager::readFile(const QString &i_filePath) {
+    QFile file(i_filePath);
     if (!file.open(QIODevice::ReadOnly)) {
         qDebug() << "Failed to open file for reading:" << file.errorString();
         return NULL;
@@ -28,8 +28,8 @@ Table FileSystemManager::readFile(const QString &filePath) {
     return Table::fromJson(jsonDoc);
 }
 
-bool FileSystemManager::writeFile(const QString &filePath, Table *jsonDoc) {
-    QFile file(filePath);
+bool FileSystemManager::writeFile(const QString &i_filePath, Table *i_jsonDoc) {
+    QFile file(i_filePath);
     if (!file.open(QIODevice::WriteOnly)) {
         qDebug() << "Failed to open file for writing:" << file.errorString();
         return false;
@@ -37,8 +37,8 @@ bool FileSystemManager::writeFile(const QString &filePath, Table *jsonDoc) {
 
     QJsonObject jsonObject;
     QJsonArray columnsArray;
-    for (unsigned int i = 0; i < jsonDoc->headingCount(); ++i) {
-        Column *column = jsonDoc->heading(i);
+    for (unsigned int i = 0; i < i_jsonDoc->headingCount(); ++i) {
+        Column *column = i_jsonDoc->heading(i);
         QJsonObject columnObject;
         columnObject["name"] = QString::fromStdString(column->name());
         columnObject["importance"] = column->importance();
@@ -46,13 +46,13 @@ bool FileSystemManager::writeFile(const QString &filePath, Table *jsonDoc) {
     }
     jsonObject["columns"] = columnsArray;
     QJsonArray rowsArray;
-    for (unsigned int i = 0; i < jsonDoc->rowCount(); ++i) {
-        Row *row = jsonDoc->row(i);
+    for (unsigned int i = 0; i < i_jsonDoc->rowCount(); ++i) {
+        Row *row = i_jsonDoc->row(i);
         QJsonObject rowObject;
         rowObject["name"] = QString::fromStdString(row->name());
         QJsonArray itemsArray;
-        for (unsigned int j = 0; j < jsonDoc->headingCount(); ++j) {
-            Item *item = jsonDoc->item(j, i);
+        for (unsigned int j = 0; j < i_jsonDoc->headingCount(); ++j) {
+            Item *item = i_jsonDoc->item(j, i);
             QJsonObject itemObject;
             itemObject["displayValue"] = QString::fromStdString(item->displayValue);
             itemObject["worthValue"] = item->worthValue;
@@ -63,9 +63,9 @@ bool FileSystemManager::writeFile(const QString &filePath, Table *jsonDoc) {
     }
     jsonObject["rows"] = rowsArray;
     QJsonArray itemsArray;
-    for (int i = 0; i < jsonDoc->headingCount(); ++i) {
-        for (int j = 0; j < jsonDoc->rowCount(); ++j) {
-            Item *item = jsonDoc->item(i, j);
+    for (int i = 0; i < i_jsonDoc->headingCount(); ++i) {
+        for (int j = 0; j < i_jsonDoc->rowCount(); ++j) {
+            Item *item = i_jsonDoc->item(i, j);
             QJsonObject itemObject;
             itemObject["x"] = i;
             itemObject["y"] = j;
@@ -75,7 +75,7 @@ bool FileSystemManager::writeFile(const QString &filePath, Table *jsonDoc) {
         }
     }
     jsonObject["items"] = itemsArray;
-    jsonObject["title"] = QString::fromStdString(jsonDoc->title());
+    jsonObject["title"] = QString::fromStdString(i_jsonDoc->title());
     QJsonDocument jsonDocToWrite(jsonObject);
     if (jsonDocToWrite.isNull()) {
         qDebug() << "Failed to create JSON document.";
@@ -93,7 +93,7 @@ bool FileSystemManager::writeFile(const QString &filePath, Table *jsonDoc) {
     return true;
 }
 
-bool FileSystemManager::fileExists(const QString &filePath) {
-    QFile file(filePath);
+bool FileSystemManager::fileExists(const QString &i_filePath) {
+    QFile file(i_filePath);
     return file.exists();
 }

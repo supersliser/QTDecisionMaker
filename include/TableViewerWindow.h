@@ -3,20 +3,20 @@
 
 #include <QMainWindow>
 #include <qtableview.h>
-#include "table.h"
+#include "Table.h"
 #include <QSqlTableModel>
 #include <QSqlRecord>
 #include <QSqlField>
 #include <string>
 #include <QStandardItemModel>
 #include <fmt/format.h>
-#include "tableViewerToolbar.h"
-#include "tableViewerMenubar.h"
+#include "TableViewerToolbar.h"
+#include "TableViewerMenubar.h"
 #include <QFileDialog>
 
 #include "TableColumnDataDock.h"
 #include "TableDataDock.h"
-#include "tableManager.h"
+#include "TableManager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -37,25 +37,25 @@ public:
     void addColumn();
 
 signals:
-    void sendDrawTable(Table* table);
-    void itemSelected(Table* table, int row, int column);
-    void columnSelected(Table* table, int column);
+    void sendDrawTable(Table* i_table);
+    void itemSelected(Table* i_table, int i_row, int i_column);
+    void columnSelected(Table* i_table, int i_column);
 
 public slots:
 
-    void selectItem(int row, int column);
+    void selectItem(int i_row, int i_column);
 
     void newColumnTriggered();
 
     void newRowTriggered();
 
-    void editItemDisplay(std::string value);
+    void editItemDisplay(std::string i_value);
 
-    void editItemWorth(float value);
+    void editItemWorth(float i_value);
 
-    void editColumnName(std::string value);
+    void editColumnName(std::string i_value);
 
-    void editColumnImportance(float value);
+    void editColumnImportance(float i_value);
 
     void newTriggered();
     void openTriggered();
@@ -64,18 +64,18 @@ public slots:
     void closeTriggered();
     void quitTriggered();
 
-    void changeColumnType(Type type);
+    void changeColumnType(Type i_type);
 
 private:
-    bool fileSaved = true;
-    QString filePath;
+    bool _m_fileSaved = true;
+    QString _m_filePath;
     Ui::TableViewerWindow *ui;
-    Table *data;
-    tableViewerMenubar *menubar;
-    tableViewerToolbar *toolbar;
-    tableManager *table;
-    TableDataDock *itemDock;
-    TableColumnDataDock *columnDock;
+    Table *_m_data;
+    TableViewerMenubar *_m_menubar;
+    TableViewerToolbar *_m_toolbar;
+    TableManager *_m_table;
+    TableDataDock *_m_itemDock;
+    TableColumnDataDock *_m_columnDock;
 
 };
 
