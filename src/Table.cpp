@@ -1,4 +1,4 @@
-#include "table.h"
+#include "Table.h"
 #include <iostream>
 
 void Table::addHeading(Column i_column) {

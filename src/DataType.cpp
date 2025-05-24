@@ -12,9 +12,9 @@
 #include "DataTypes/NumberType.h"
 #include "DataTypes/RatingType.h"
 
-DataType* DataType::createDataType(Type type)
+DataType* DataType::createDataType(Type i_type)
 {
-    switch (type)
+    switch (i_type)
     {
         case NAME:
             return new NameType();

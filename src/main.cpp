@@ -1,4 +1,4 @@
-#include "tableviewerwindow.h"
+#include "TableViewerWindow.h"
 
 #include <QApplication>
 #include <QMenuBar>

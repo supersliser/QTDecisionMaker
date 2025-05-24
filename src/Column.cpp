@@ -1,4 +1,4 @@
-#include "column.h"
+#include "Column.h"
 #include <iostream>
 #include <QtCore>
 

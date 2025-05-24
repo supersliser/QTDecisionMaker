@@ -1,10 +1,10 @@
 #ifndef TABLEVIEWERTOOLBAR_H
 #define TABLEVIEWERTOOLBAR_H
 #include <QToolBar>
-#include "table.h"
+#include "Table.h"
 
 
-class tableViewerToolbar : public QToolBar
+class TableViewerToolbar : public QToolBar
 {
     Q_OBJECT
 
@@ -13,12 +13,12 @@ signals:
     void newColumn();
 
 private slots:
-    void _newRow(bool checked);
+    void _newRow(bool i_checked);
     void _newColumn(bool checked);
 
 public :
-    tableViewerToolbar(QWidget* parent = nullptr);
-    ~tableViewerToolbar() = default;
+    TableViewerToolbar(QWidget* parent = nullptr);
+    ~TableViewerToolbar() = default;
 };
 
 

@@ -12,25 +12,25 @@ class BoolType : public DataType
 public:
     BoolType() : DataType()
     {
-        name = "Bool";
-        desc = "True or False";
-        enumType = Type::BOOL;
-        defaultImportance = 0;
+        m_name = "Bool";
+        m_desc = "True or False";
+        m_enumType = Type::BOOL;
+        m_defaultImportance = 0;
     }
 
-    bool attemptAutoSet(std::string item) const override
+    [[nodiscard]] bool attemptAutoSet(std::string i_item) const override
     {
-        return toLower(item) == "true" || toLower(item) == "false" || item == "1" || item == "0";
+        return _toLower(i_item) == "true" || _toLower(i_item) == "false" || i_item == "1" || i_item == "0";
     }
 
 private:
-    static std::string_view toLower(std::string& str)
+    static std::string_view _toLower(std::string& i_str)
     {
-        for (auto& c : str)
+        for (auto& c : i_str)
         {
             c = std::tolower(c);
         }
-        return str;
+        return i_str;
     }
 };
 

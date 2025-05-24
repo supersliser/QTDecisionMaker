@@ -1,7 +1,7 @@
 #include "test_main.h"
-#include "column.h"
-#include "table.h"
-#include "row.h"
+#include "Column.h"
+#include "Table.h"
+#include "Row.h"
 #include <array>
 #include <iostream>
 

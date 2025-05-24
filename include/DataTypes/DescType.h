@@ -12,15 +12,15 @@ class DescType : public DataType
 public:
     DescType(): DataType()
     {
-        name = "Desc";
-        desc = "Description of an option in a decision";
-        enumType = Type::DESC;
-        defaultImportance = 0;
+        m_name = "Desc";
+        m_desc = "Description of an option in a decision";
+        m_enumType = Type::DESC;
+        m_defaultImportance = 0;
     }
 
-    bool attemptAutoSet(std::string item) const override
+    bool attemptAutoSet(std::string i_item) const override
     {
-        return item.length() > 30;
+        return i_item.length() > 30;
     }
 };
 

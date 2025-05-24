@@ -11,15 +11,15 @@ class LinkType : public DataType
 public:
     LinkType() : DataType()
     {
-        name = "Link";
-        desc = "Link to a website";
-        enumType = Type::LINK;
-        defaultImportance = 0;
+        m_name = "Link";
+        m_desc = "Link to a website";
+        m_enumType = Type::LINK;
+        m_defaultImportance = 0;
     }
 
-    bool attemptAutoSet(std::string item) const override
+    [[nodiscard]] bool attemptAutoSet(std::string i_item) const override
     {
-        return item.find("http://") == 0 || item.find("https://") == 0 || item.find("www.") == 0;
+        return i_item.find("http://") == 0 || i_item.find("https://") == 0 || i_item.find("www.") == 0;
     }
 };
 

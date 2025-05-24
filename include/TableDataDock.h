@@ -9,7 +9,7 @@
 #include <QFormLayout>
 #include <QLineEdit>
 
-#include "table.h"
+#include "Table.h"
 
 
 class TableDataDock : public QDockWidget
@@ -21,12 +21,12 @@ public:
     ~TableDataDock() = default;
 
 public slots:
-    void displayValueUpdated(std::string value);
-    virtual void setItem(Table* table, int row, int column);
+    void displayValueUpdated(std::string i_value);
+    virtual void setItem(Table* i_table, int i_row, int i_column);
 
 signals:
-    void displayValueChanged(std::string value);
-    void worthValueChanged(float value);
+    void displayValueChanged(std::string i_value);
+    void worthValueChanged(float i_value);
 
 protected slots:
     void _displayValueChanged();

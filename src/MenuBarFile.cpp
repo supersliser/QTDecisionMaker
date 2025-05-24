@@ -8,7 +8,7 @@
 
 #include <QMenu>
 
-#include "tableviewerwindow.h"
+#include "TableViewerWindow.h"
 
 MenuBarFile::MenuBarFile(QWidget* parent)
     : QMenu(parent)
@@ -45,44 +45,44 @@ MenuBarFile::MenuBarFile(QWidget* parent)
     addAction(quitAction);
 }
 
-void MenuBarFile::_new(bool checked)
+void MenuBarFile::_new(bool i_checked)
 {
-    Q_UNUSED(checked);
+    Q_UNUSED(i_checked);
     // Handle the new action
     emit newClicked();
 }
 
-void MenuBarFile::_open(bool checked)
+void MenuBarFile::_open(bool i_checked)
 {
-    Q_UNUSED(checked);
+    Q_UNUSED(i_checked);
     // Handle the open action
     emit openClicked();
 }
 
-void MenuBarFile::_save(bool checked)
+void MenuBarFile::_save(bool i_checked)
 {
-    Q_UNUSED(checked);
+    Q_UNUSED(i_checked);
     // Handle the save action
     emit saveClicked();
 }
 
-void MenuBarFile::_saveAs(bool checked)
+void MenuBarFile::_saveAs(bool i_checked)
 {
-    Q_UNUSED(checked);
+    Q_UNUSED(i_checked);
     // Handle the save as action
     emit saveAsClicked();
 }
 
-void MenuBarFile::_close(bool checked)
+void MenuBarFile::_close(bool i_checked)
 {
-    Q_UNUSED(checked);
+    Q_UNUSED(i_checked);
     // Handle the close action
     emit closeClicked();
 }
 
-void MenuBarFile::_quit(bool checked)
+void MenuBarFile::_quit(bool i_checked)
 {
-    Q_UNUSED(checked);
+    Q_UNUSED(i_checked);
     // Handle the quit action
     emit quitClicked();
 }
