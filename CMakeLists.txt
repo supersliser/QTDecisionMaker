@@ -15,44 +15,44 @@ find_package(fmt REQUIRED)
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_SOURCE_DIR}/ui)
 
 set(PROJECT_SOURCES
-        src/main.cpp
-        src/tableviewerwindow.cpp
-        include/tableviewerwindow.h
+        src/TableViewerWindow.cpp
+        include/TableViewerWindow.h
         ui/tableviewerwindow.ui
-        src/column.cpp
-        include/column.h
-        src/row.cpp
-        include/row.h
-        src/table.cpp
-        include/table.h
+        src/Column.cpp
+        include/Column.h
+        src/Row.cpp
+        include/Row.h
+        src/Table.cpp
+        include/Table.h
+        src/TableViewerToolbar.cpp
+        include/TableViewerToolbar.h
+        src/TableViewerMenubar.cpp
+        include/TableViewerMenubar.h
+        src/MenuBarFile.cpp
+        include/MenuBarFile.h
+        src/FileSystemManager.cpp
+        include/FileSystemManager.h
+        include/DataType.h
+        include/DataTypes/LinkType.h
+        src/DataType.cpp
+        include/DataTypes/DescType.h
+        include/DataTypes/BoolType.h
+        include/DataTypes/RatingType.h
+        include/DataTypes/MoneyType.h
+        include/DataTypes/NumberType.h
+        include/DataTypes/NameType.h
+        src/TableManager.cpp
+        include/TableManager.h
+        src/TableDataDock.cpp
+        include/TableDataDock.h
+        src/TableColumnDataDock.cpp
+        include/TableColumnDataDock.h
 )
 include_directories(include)
     qt_add_executable(QTDecisionMaker
         MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-            src/tableViewerToolbar.cpp
-            include/tableViewerToolbar.h
-            src/tableViewerMenubar.cpp
-            include/tableViewerMenubar.h
-            src/MenuBarFile.cpp
-            include/MenuBarFile.h
-            src/FileSystemManager.cpp
-            include/FileSystemManager.h
-            include/DataType.h
-            include/DataTypes/LinkType.h
-            src/DataType.cpp
-            include/DataTypes/DescType.h
-            include/DataTypes/BoolType.h
-            include/DataTypes/RatingType.h
-            include/DataTypes/MoneyType.h
-            include/DataTypes/NumberType.h
-            include/DataTypes/NameType.h
-            src/tableManager.cpp
-            include/tableManager.h
-            src/TableDataDock.cpp
-            include/TableDataDock.h
-            src/TableColumnDataDock.cpp
-            include/TableColumnDataDock.h
+            src/main.cpp
+            ${PROJECT_SOURCES}
     )
 
 
@@ -98,7 +98,9 @@ target_link_libraries(Tests PRIVATE
     Qt6::Core
     Qt6::Gui
     Qt6::Test
+    Qt6::Sql
     Qt6::Widgets
+    fmt::fmt
 )
 
 install(TARGETS Tests

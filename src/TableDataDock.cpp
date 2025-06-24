@@ -42,32 +42,32 @@ void TableDataDock::_worthValueChanged()
     emit worthValueChanged(m_worthValue->value());
 }
 
-void TableDataDock::displayValueUpdated(std::string value)
+void TableDataDock::displayValueUpdated(std::string i_value)
 {
-    m_displayValue->setText(QString(value.c_str()));
+    m_displayValue->setText(QString(i_value.c_str()));
 }
 
-void TableDataDock::setItem(Table* table, int row, int column)
+void TableDataDock::setItem(Table* i_table, int i_row, int i_column)
 {
     int nameColumn = 0;
-    int totalValueColumn = table->headingCount() + 1;
+    int totalValueColumn = i_table->headingCount() + 1;
 
-    if (nameColumn == column)
+    if (nameColumn == i_column)
     {
-        m_displayValue->setText(table->row(row)->name().c_str());
+        m_displayValue->setText(i_table->row(i_row)->name().c_str());
         m_worthValue->setValue(0);
         m_worthValue->setReadOnly(true);
     }
-    else if (totalValueColumn == column)
+    else if (totalValueColumn == i_column)
     {
-        m_displayValue->setText(std::to_string(table->row(row)->totalValue()).c_str());
+        m_displayValue->setText(std::to_string(i_table->row(i_row)->totalValue()).c_str());
         m_worthValue->setValue(0);
         m_worthValue->setReadOnly(true);
     }
-    else if (row >= 0 && column > 0)
+    else if (i_row >= 0 && i_column > 0)
     {
-        m_displayValue->setText(table->item(column - 1, row)->displayValue.c_str());
+        m_displayValue->setText(i_table->item(i_column - 1, i_row)->displayValue.c_str());
         m_worthValue->setReadOnly(false);
-        m_worthValue->setValue(table->item(column - 1, row)->worthValue);
+        m_worthValue->setValue(i_table->item(i_column - 1, i_row)->worthValue);
     }
 }

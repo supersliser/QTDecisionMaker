@@ -15,16 +15,16 @@ class TableColumnDataDock : public TableDataDock
 public:
     TableColumnDataDock(QWidget* parent = 0);
     ~TableColumnDataDock() = default;
-    void setType(Type type);
+    void setType(Type i_type);
 
 public slots:
-    void setItem(Table* table, int column);
+    void setItem(Table* i_table, int i_column);
 
 signals:
     void typeChanged(Type i_type);
 
 private slots:
-    void _typeChanged(int index);
+    void _typeChanged(int i_index);
 
 private:
     QComboBox* m_typeValue;

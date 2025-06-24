@@ -1,5 +1,5 @@
 #include "test_main.h"
-#include "column.h" // Assuming this is where Column is defined
+#include "Column.h" // Assuming this is where Column is defined
 
 void Tests::column_setIndex() {
 
