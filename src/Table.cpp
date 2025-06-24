@@ -91,6 +91,10 @@ void Table::removeHeading(unsigned int i_index) {
     for (int x = 0; x < headingCount(); x++) {
         if (x == i_index) {
             x++;
+            if (x >= headingCount())
+            {
+                break;
+            }
         }
         o_c.push_back(m_headings[x]);
         for (int y = 0; y < rowCount(); y++) {
