@@ -5,6 +5,7 @@
 #ifndef TABLEMANAGER_H
 #define TABLEMANAGER_H
 #include <QTableWidget>
+#include <stack>
 
 #include "Column.h"
 #include "Row.h"
@@ -31,6 +32,7 @@ private slots:
 
 public slots:
     void drawTable(Table* i_data);
+    void findTriggered(const QString& i_text);
 
 private:
     void _setColumnHeader(int i_column, QString i_name);

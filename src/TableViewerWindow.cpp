@@ -21,6 +21,7 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
     ui->TableContainer->addWidget(_m_table);
     connect(_m_table, &TableManager::selectItem, this, &TableViewerWindow::selectItem);
     connect(this, &TableViewerWindow::sendDrawTable, _m_table, &TableManager::drawTable);
+    connect(this, &TableViewerWindow::sendDrawTable, this, &TableViewerWindow::actionOccured);
 
     _m_itemDock = new TableDataDock(ui->verticalFrame);
     ui->verticalFrame->layout()->addWidget(_m_itemDock);
@@ -36,8 +37,22 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
     connect(_m_columnDock, &TableColumnDataDock::typeChanged, this, &TableViewerWindow::changeColumnType);
     connect(this, &TableViewerWindow::columnSelected, _m_columnDock, &TableColumnDataDock::setItem);
 
+    _m_undoStack = std::stack<Table>();
+    _m_undoStack.push(_m_table);
+    _m_redoStack = std::stack<Table>();
+
     emit sendDrawTable(_m_data);
 }
+
+void TableViewerWindow::actionOccured(Table* i_table)
+{
+    if (!_m_undoing)
+    {
+        _m_undoStack.push(*i_table);
+    }
+    _m_undoing = false;
+}
+
 
 TableViewerWindow::~TableViewerWindow()
 {
@@ -169,6 +184,63 @@ void TableViewerWindow::closeTriggered()
 void TableViewerWindow::quitTriggered()
 {
     close();
+}
+
+void TableViewerWindow::undoTriggered()
+{
+    if (!_m_undoStack.empty())
+    {
+        _m_undoing = true;
+        _m_redoStack.push(_m_undoStack.top());
+        _m_undoStack.pop();
+        *_m_data = _m_undoStack.top();
+        emit sendDrawTable(_m_data);
+    }
+}
+void TableViewerWindow::redoTriggered()
+{
+    if (!_m_redoStack.empty())
+    {
+        _m_undoing = true;
+        *_m_data = _m_redoStack.top();
+        _m_undoStack.push(_m_data);
+        _m_redoStack.pop();
+        emit sendDrawTable(_m_data);
+    }
+}
+
+void TableViewerWindow::cutTriggered()
+{
+    // natively managed by the clipboard
+    emit sendDrawTable(_m_data);
+}
+void TableViewerWindow::copyTriggered()
+{
+    // natively managed by the clipboard
+}
+void TableViewerWindow::pasteTriggered()
+{
+    // natively managed by the clipboard
+    emit sendDrawTable(_m_data);
+}
+void TableViewerWindow::preferencesTriggered()
+{
+    // Implement preferences logic here
+}
+void TableViewerWindow::findTriggered()
+{
+    if (_m_findLineEdit == nullptr)
+    {
+        _m_findLineEdit = new QLineEdit(this);
+        connect(_m_findLineEdit, &QLineEdit::textEdited, _m_table, &TableManager::findTriggered);
+        ui->TableContainer->addWidget(_m_findLineEdit);
+    }
+    else
+    {
+        ui->TableContainer->removeWidget(_m_findLineEdit);
+        disconnect(_m_findLineEdit, &QLineEdit::textEdited, _m_table, &TableManager::findTriggered);
+        delete _m_findLineEdit;
+    }
 }
 
 void TableViewerWindow::changeColumnType(Type i_type)

@@ -13,6 +13,7 @@
 #include "TableViewerToolbar.h"
 #include "TableViewerMenubar.h"
 #include <QFileDialog>
+#include <stack>
 
 #include "TableColumnDataDock.h"
 #include "TableDataDock.h"
@@ -64,6 +65,15 @@ public slots:
     void closeTriggered();
     void quitTriggered();
 
+    void undoTriggered();
+    void actionOccured(Table* i_table);
+    void redoTriggered();
+    void cutTriggered();
+    void copyTriggered();
+    void pasteTriggered();
+    void preferencesTriggered();
+    void findTriggered();
+
     void changeColumnType(Type i_type);
 
 private:
@@ -77,6 +87,11 @@ private:
     TableDataDock *_m_itemDock;
     TableColumnDataDock *_m_columnDock;
 
+    std::stack<Table> _m_undoStack;
+    std::stack<Table> _m_redoStack;
+    bool _m_undoing = false;
+
+    QLineEdit* _m_findLineEdit = nullptr;
 };
 
 #endif // TABLEVIEWERWINDOW_H

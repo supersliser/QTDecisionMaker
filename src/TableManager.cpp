@@ -79,3 +79,17 @@ int TableManager::selectedRow()
     return _m_lastSelectedRow;
 }
 
+void TableManager::findTriggered(const QString& i_text)
+{
+    for (int r = 0; r < rowCount(); r++)
+    {
+        for (int c = 0; c < columnCount(); c++)
+        {
+            if (item(r, c) && item(r, c)->text().contains(i_text, Qt::CaseInsensitive))
+            {
+                setCurrentCell(r, c);
+                return;
+            }
+        }
+    }
+}
