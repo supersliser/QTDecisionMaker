@@ -41,8 +41,6 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
     _m_undoStack.push(_m_table);
     _m_redoStack = std::stack<Table>();
 
-    _m_clipboard = QGuiApplication::clipboard();
-
     emit sendDrawTable(_m_data);
 }
 
@@ -204,15 +202,45 @@ void TableViewerWindow::redoTriggered()
     if (!_m_redoStack.empty())
     {
         _m_undoing = true;
+        *_m_data = _m_redoStack.top();
+        _m_undoStack.push(_m_data);
         _m_redoStack.pop();
-        *_m_data = _m_undoStack.top();
         emit sendDrawTable(_m_data);
     }
 }
 
 void TableViewerWindow::cutTriggered()
 {
-
+    // natively managed by the clipboard
+    emit sendDrawTable(_m_data);
+}
+void TableViewerWindow::copyTriggered()
+{
+    // natively managed by the clipboard
+}
+void TableViewerWindow::pasteTriggered()
+{
+    // natively managed by the clipboard
+    emit sendDrawTable(_m_data);
+}
+void TableViewerWindow::preferencesTriggered()
+{
+    // Implement preferences logic here
+}
+void TableViewerWindow::findTriggered()
+{
+    if (_m_findLineEdit == nullptr)
+    {
+        _m_findLineEdit = new QLineEdit(this);
+        connect(_m_findLineEdit, &QLineEdit::textEdited, _m_table, &TableManager::findTriggered);
+        ui->TableContainer->addWidget(_m_findLineEdit);
+    }
+    else
+    {
+        ui->TableContainer->removeWidget(_m_findLineEdit);
+        disconnect(_m_findLineEdit, &QLineEdit::textEdited, _m_table, &TableManager::findTriggered);
+        delete _m_findLineEdit;
+    }
 }
 
 void TableViewerWindow::changeColumnType(Type i_type)

@@ -6,6 +6,8 @@
 #include <QAction>
 #include <QMenu>
 
+#include "TableViewerWindow.h"
+
 MenuBarEdit::MenuBarEdit(QWidget* parent)
     : QMenu(parent)
 {
@@ -18,28 +20,25 @@ MenuBarEdit::MenuBarEdit(QWidget* parent)
     auto* cutAction = new QAction(tr("Cut"), this);
     auto* copyAction = new QAction(tr("Copy"), this);
     auto* pasteAction = new QAction(tr("Paste"), this);
-    auto* selectAllAction = new QAction(tr("Select All"), this);
     auto* preferencesAction = new QAction(tr("Preferences"), this);
     auto* findAction = new QAction(tr("Find"), this);
 
     // Connect actions to slots
-    connect(undoAction, &QAction::triggered, this, &MenuBarEdit::_undo);
-    connect(redoAction, &QAction::triggered, this, &MenuBarEdit::_redo);
-    connect(cutAction, &QAction::triggered, this, &MenuBarEdit::_cut);
-    connect(copyAction, &QAction::triggered, this, &MenuBarEdit::_copy);
-    connect(pasteAction, &QAction::triggered, this, &MenuBarEdit::_paste);
-    connect(selectAllAction, &QAction::triggered, this, &MenuBarEdit::_selectAll);
-    connect(preferencesAction, &QAction::triggered, this, &MenuBarEdit::_preferences);
-    connect(findAction, &QAction::triggered, this, &MenuBarEdit::_find);
+    connect(undoAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::undoTriggered);
+    connect(redoAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::redoTriggered);
+    connect(cutAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::cutTriggered);
+    connect(copyAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::copyTriggered);
+    connect(pasteAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::pasteTriggered);
+    connect(preferencesAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::preferencesTriggered);
+    connect(findAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::findTriggered);
 
     // Add keybinds
-    undoAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key_Z), QKeySequence(Qt::CTRL | Qt::Key_U)});
-    redoAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key_Y), QKeySequence(Qt::CTRL | Qt::Key_R)});
-    cutAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key_X), QKeySequence::Cut});
-    copyAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key_C) , QKeySequence::Copy});
-    pasteAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key_V), QKeySequence::Paste});
-    findAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key_F), QKeySequence::Find});
-    selectAllAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key_A), QKeySequence::SelectAll});
+    undoAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key_Z)});
+    redoAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key_Y)});
+    cutAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key_X)});
+    copyAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key_C)});
+    pasteAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key_V)});
+    findAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key_F)});
 
     // Add actions to the menu
     addAction(undoAction);
@@ -49,48 +48,7 @@ MenuBarEdit::MenuBarEdit(QWidget* parent)
     addAction(copyAction);
     addAction(pasteAction);
     addSeparator();
-    addAction(selectAllAction);
+    addAction(findAction);
     addSeparator();
     addAction(preferencesAction);
-}
-
-void MenuBarEdit::_undo(bool i_checked)
-{
-    Q_UNUSED(i_checked);
-    emit undoClicked();
-}
-void MenuBarEdit::_redo(bool i_checked)
-{
-    Q_UNUSED(i_checked);
-    emit redoClicked();
-}
-void MenuBarEdit::_cut(bool i_checked)
-{
-    Q_UNUSED(i_checked);
-    emit cutClicked();
-}
-void MenuBarEdit::_copy(bool i_checked)
-{
-    Q_UNUSED(i_checked);
-    emit copyClicked();
-}
-void MenuBarEdit::_paste(bool i_checked)
-{
-    Q_UNUSED(i_checked);
-    emit pasteClicked();
-}
-void MenuBarEdit::_selectAll(bool i_checked)
-{
-    Q_UNUSED(i_checked);
-    emit selectAllClicked();
-}
-void MenuBarEdit::_preferences(bool i_checked)
-{
-    Q_UNUSED(i_checked);
-    emit preferencesClicked();
-}
-void MenuBarEdit::_find(bool i_checked)
-{
-    Q_UNUSED(i_checked);
-    emit findClicked();
 }

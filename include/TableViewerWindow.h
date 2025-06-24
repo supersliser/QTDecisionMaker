@@ -71,7 +71,6 @@ public slots:
     void cutTriggered();
     void copyTriggered();
     void pasteTriggered();
-    void selectAllTriggered();
     void preferencesTriggered();
     void findTriggered();
 
@@ -91,7 +90,8 @@ private:
     std::stack<Table> _m_undoStack;
     std::stack<Table> _m_redoStack;
     bool _m_undoing = false;
-    QClipboard *_m_clipboard;
+
+    QLineEdit* _m_findLineEdit = nullptr;
 };
 
 #endif // TABLEVIEWERWINDOW_H
