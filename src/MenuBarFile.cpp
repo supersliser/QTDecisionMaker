@@ -34,6 +34,13 @@ MenuBarFile::MenuBarFile(QWidget* parent)
      connect(closeAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::closeTriggered);
      connect(quitAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::quitTriggered);
 
+    // add keybinds
+    newAction->setShortcuts({QKeySequence(Qt::Key::Key_New), QKeySequence(Qt::CTRL | Qt::Key::Key_N), QKeySequence::New});
+    openAction->setShortcuts({QKeySequence(Qt::Key::Key_Open), QKeySequence(Qt::CTRL | Qt::Key::Key_O), QKeySequence::Open});
+    saveAction->setShortcuts({QKeySequence(Qt::Key::Key_Save), QKeySequence(Qt::CTRL | Qt::Key::Key_S), QKeySequence::Save});
+    saveAsAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key::Key_Shift | Qt::Key::Key_S), QKeySequence(Qt::CTRL | Qt::Key::Key_S)});
+
+
     // Add actions to the menu
     addAction(newAction);
     addAction(openAction);
