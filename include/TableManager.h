@@ -5,6 +5,7 @@
 #ifndef TABLEMANAGER_H
 #define TABLEMANAGER_H
 #include <QTableWidget>
+#include <stack>
 
 #include "Column.h"
 #include "Row.h"

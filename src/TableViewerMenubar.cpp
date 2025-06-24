@@ -11,6 +11,8 @@ TableViewerMenubar::TableViewerMenubar(QWidget* parent)
 {
     // Create the File menu
     _m_fileMenu = new MenuBarFile(this);
+    _m_editMenu = new MenuBarEdit(this);
     addMenu(_m_fileMenu);
+    addMenu(_m_editMenu);
     dynamic_cast<TableViewerWindow*>(parent)->setMenuBar(this);
 }

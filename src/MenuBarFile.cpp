@@ -19,12 +19,12 @@ MenuBarFile::MenuBarFile(QWidget* parent)
     setTitle(tr("File"));
 
     // Create actions for file operations
-    QAction* newAction = new QAction(tr("New"), this);
-    QAction* openAction = new QAction(tr("Open"), this);
-    QAction* saveAction = new QAction(tr("Save"), this);
-    QAction* saveAsAction = new QAction(tr("Save As"), this);
-    QAction* closeAction = new QAction(tr("Close"), this);
-    QAction* quitAction = new QAction(tr("Quit"), this);
+    auto* newAction = new QAction(tr("New"), this);
+    auto* openAction = new QAction(tr("Open"), this);
+    auto* saveAction = new QAction(tr("Save"), this);
+    auto* saveAsAction = new QAction(tr("Save As"), this);
+    auto* closeAction = new QAction(tr("Close"), this);
+    auto* quitAction = new QAction(tr("Quit"), this);
 
 //     Connect actions to slots
      connect(newAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::newTriggered);

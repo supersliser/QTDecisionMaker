@@ -47,6 +47,8 @@ set(PROJECT_SOURCES
         include/TableDataDock.h
         src/TableColumnDataDock.cpp
         include/TableColumnDataDock.h
+        include/MenuBarEdit.h
+        src/MenuBarEdit.cpp
 )
 include_directories(include)
     qt_add_executable(QTDecisionMaker

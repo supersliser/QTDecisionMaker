@@ -21,6 +21,7 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
     ui->TableContainer->addWidget(_m_table);
     connect(_m_table, &TableManager::selectItem, this, &TableViewerWindow::selectItem);
     connect(this, &TableViewerWindow::sendDrawTable, _m_table, &TableManager::drawTable);
+    connect(this, &TableViewerWindow::sendDrawTable, this, &TableViewerWindow::actionOccured);
 
     _m_itemDock = new TableDataDock(ui->verticalFrame);
     ui->verticalFrame->layout()->addWidget(_m_itemDock);
@@ -36,8 +37,24 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
     connect(_m_columnDock, &TableColumnDataDock::typeChanged, this, &TableViewerWindow::changeColumnType);
     connect(this, &TableViewerWindow::columnSelected, _m_columnDock, &TableColumnDataDock::setItem);
 
+    _m_undoStack = std::stack<Table>();
+    _m_undoStack.push(_m_table);
+    _m_redoStack = std::stack<Table>();
+
+    _m_clipboard = QGuiApplication::clipboard();
+
     emit sendDrawTable(_m_data);
 }
+
+void TableViewerWindow::actionOccured(Table* i_table)
+{
+    if (!_m_undoing)
+    {
+        _m_undoStack.push(*i_table);
+    }
+    _m_undoing = false;
+}
+
 
 TableViewerWindow::~TableViewerWindow()
 {
@@ -169,6 +186,33 @@ void TableViewerWindow::closeTriggered()
 void TableViewerWindow::quitTriggered()
 {
     close();
+}
+
+void TableViewerWindow::undoTriggered()
+{
+    if (!_m_undoStack.empty())
+    {
+        _m_undoing = true;
+        _m_redoStack.push(_m_undoStack.top());
+        _m_undoStack.pop();
+        *_m_data = _m_undoStack.top();
+        emit sendDrawTable(_m_data);
+    }
+}
+void TableViewerWindow::redoTriggered()
+{
+    if (!_m_redoStack.empty())
+    {
+        _m_undoing = true;
+        _m_redoStack.pop();
+        *_m_data = _m_undoStack.top();
+        emit sendDrawTable(_m_data);
+    }
+}
+
+void TableViewerWindow::cutTriggered()
+{
+
 }
 
 void TableViewerWindow::changeColumnType(Type i_type)

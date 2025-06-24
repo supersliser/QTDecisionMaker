@@ -6,6 +6,8 @@
 #define TABLEVIEWERMENUBAR_H
 
 #include <QMenuBar>
+
+#include "MenuBarEdit.h"
 #include "MenuBarFile.h"
 
 
@@ -17,22 +19,9 @@ public:
 
     ~TableViewerMenubar() override = default;
 
-signals:
-
-    void newClicked();
-
-    void openClicked();
-
-    void saveClicked();
-
-    void saveAsClicked();
-
-    void closeClicked();
-
-    void quitClicked();
-
 private:
     MenuBarFile *_m_fileMenu;
+    MenuBarEdit *_m_editMenu;
 };
 
 
