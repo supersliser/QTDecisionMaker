@@ -42,7 +42,7 @@ jobs:
         run: find build -type f -name "QTDecisionMaker*" | sort
 
       - name: Run Tests
-        run: build/Release/Tests
+        run: build/Tests
 
       - name: Find Executable
         id: find_exe
