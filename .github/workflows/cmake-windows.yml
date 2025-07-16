@@ -29,14 +29,16 @@ jobs:
 
       - name: Configure CMake
         run: |
-          cmake -B build `
-          -DCMAKE_BUILD_TYPE=Release `
-          -DCMAKE_PREFIX_PATH=${{ env.Qt6_DIR }} `
-          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake `
-          -DBUILD_TESTING=OFF
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${{ env.Qt6_DIR }} -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake -DBUILD_TESTING=OFF
 
       - name: Build
-        run: cmake --build build --config Release --verbose --target QTDecisionMaker
+        run: cmake --build build --config Release --verbose
+
+      - name: Build Tests
+        run: cmake --build build --target Tests --config Release
+
+      - name: Run Tests
+        run: build/Release/Tests
 
       - name: Build Installer Package
         run: |
