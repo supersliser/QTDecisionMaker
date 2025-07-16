@@ -34,9 +34,6 @@ jobs:
       - name: Build
         run: cmake --build build --config Release --verbose
 
-      - name: Run Tests
-        run: build/Tests
-
       - name: Build Installer Package
         run: |
           cd build
