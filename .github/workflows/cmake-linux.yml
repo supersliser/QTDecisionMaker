@@ -36,10 +36,10 @@ jobs:
           -DBUILD_TESTING=OFF
 
       - name: Build
-        run: cmake --build build --config Release --verbose --target QTDecisionMaker
+        run: cmake --build build --config Release --verbose
 
       - name: Build Tests
-        run: cmake --build build --target Tests --config Release
+        run: cmake --build build --config Release
 
       - name: Run Tests
         run: build/Release/Tests

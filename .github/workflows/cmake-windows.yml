@@ -34,9 +34,6 @@ jobs:
       - name: Build
         run: cmake --build build --config Release --verbose
 
-      - name: Build Tests
-        run: cmake --build build --target Tests --config Release
-
       - name: Run Tests
         run: build/Release/Tests
 
