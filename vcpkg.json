@@ -4,6 +4,10 @@
   "description": "A decision-making application based on QT.",
   "builtin-baseline": "f26ec398c25c4980f33a50391f00a75f7ad62ef7",
   "dependencies": [
-    "fmt"
+    "fmt",
+    {
+      "name": "qtbase",
+      "features": ["widgets", "sql"]
+    }
   ]
 }

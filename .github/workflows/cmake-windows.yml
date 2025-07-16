@@ -38,8 +38,13 @@ jobs:
       - name: Build
         run: cmake --build build --config Release --verbose --target QTDecisionMaker
 
+      - name: Build Installer Package
+        run: |
+          cd build
+          cpack -G NSIS -C Release
+
       - name: List build directory
-        run: Get-ChildItem -Path build -Recurse -Filter "QTDecisionMaker*" | Select-Object FullName
+        run: Get-ChildItem -Path build -Recurse -Filter "*QTDecisionMaker*" | Select-Object FullName
 
       - name: Find Executable
         id: find_exe
@@ -53,8 +58,31 @@ jobs:
           echo "exe_path=$exe" >> $GITHUB_OUTPUT
           echo "Found executable at: $exe"
 
+      - name: Find Installer
+        id: find_installer
+        shell: bash
+        run: |
+          installer=$(find build -type f -name "*.exe" -path "*/QTDecisionMaker-*" | head -n 1)
+          if [ -z "$installer" ]; then
+            echo "No installer found, checking for NSIS output..."
+            find build -name "*.exe" -o -name "*QTDecisionMaker*"
+            installer=$(find build -type f -name "QTDecisionMaker-*.exe" | head -n 1)
+            if [ -z "$installer" ]; then
+              echo "Still no installer found!"
+              exit 1
+            fi
+          fi
+          echo "installer_path=$installer" >> $GITHUB_OUTPUT
+          echo "Found installer at: $installer"
+
       - name: Upload Executable
         uses: actions/upload-artifact@v4
         with:
           name: windows-executable
           path: ${{ steps.find_exe.outputs.exe_path }}
+
+      - name: Upload Windows Installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: ${{ steps.find_installer.outputs.installer_path }}
