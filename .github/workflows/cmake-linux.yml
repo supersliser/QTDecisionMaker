@@ -38,14 +38,11 @@ jobs:
       - name: Build
         run: cmake --build build --config Release --verbose
 
-      - name: Build Tests
-        run: cmake --build build --config Release
+      - name: List build directory
+        run: find build -type f -name "QTDecisionMaker*" | sort
 
       - name: Run Tests
         run: build/Release/Tests
-
-      - name: List build directory
-        run: find build -type f -name "QTDecisionMaker*" | sort
 
       - name: Find Executable
         id: find_exe
