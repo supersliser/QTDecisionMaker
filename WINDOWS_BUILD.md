@@ -71,8 +71,13 @@ The Windows installer includes:
 
 - **Qt6 Libraries:** Core, Widgets, GUI, SQL components
 - **FMT Library:** For formatted text output
+- **Image Support Libraries:** libpng16.dll for PNG image handling
+- **Text Rendering Libraries:** harfbuzz.dll and freetype.dll for advanced text rendering
+- **Compression Libraries:** zlib1.dll, bz2.dll, and brotli libraries for various compression formats
 - **Visual C++ Redistributables:** Automatically detected and included
 - **Windows Runtime:** Required system libraries
+
+All dependencies are automatically detected and bundled using vcpkg and the enhanced deployment script.
 
 ## Installer Configuration
 
@@ -96,11 +101,16 @@ The installer is configured using CPack with the NSIS generator. Key configurati
    - Ensure vcpkg is properly set up
    - Run `vcpkg install fmt:x64-windows` if needed
 
-3. **NSIS not found:**
+3. **Missing DLL errors (fmt.dll, libpng16.dll, harfbuzz.dll, freetype.dll):**
+   - These are automatically handled by the enhanced deployment script
+   - Ensure vcpkg dependencies are properly installed: `vcpkg install fmt libpng harfbuzz freetype:x64-windows`
+   - The deployment script will automatically locate and bundle these DLLs
+
+4. **NSIS not found:**
    - Download and install NSIS from https://nsis.sourceforge.io/
    - Add NSIS to your system PATH
 
-4. **Installer creation fails:**
+5. **Installer creation fails:**
    - Check that all dependencies are properly bundled
    - Verify the build completed successfully
    - Review CPack output for error messages
