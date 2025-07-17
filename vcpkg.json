@@ -5,6 +5,9 @@
   "builtin-baseline": "f26ec398c25c4980f33a50391f00a75f7ad62ef7",
   "dependencies": [
     "fmt",
+    "libpng",
+    "harfbuzz",
+    "freetype",
     {
       "name": "qtbase",
       "features": ["widgets", "sql"]

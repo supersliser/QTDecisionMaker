@@ -34,10 +34,30 @@ jobs:
       - name: Build
         run: cmake --build build --config Release --verbose
 
+      - name: Debug vcpkg and dependency information
+        shell: bash
+        run: |
+          echo "=== vcpkg information ==="
+          ls -la vcpkg/installed/ || echo "vcpkg/installed not found"
+          ls -la vcpkg/installed/x64-windows/bin/ || echo "vcpkg x64-windows bin not found"
+          echo "=== Build directory contents ==="
+          find build -name "*.dll" -o -name "*.exe" | head -20
+          echo "=== CMake cache info ==="
+          grep -i "vcpkg\|qt\|fmt" build/CMakeCache.txt | head -10 || echo "No relevant cache entries found"
+
       - name: Build Installer Package
         run: |
           cd build
           cpack -G NSIS -C Release
+
+      - name: Validate DLL Deployment
+        shell: bash
+        run: |
+          cd build
+          # Install to a temporary directory first to validate
+          cmake --install . --prefix ./install --config Release
+          # Run validation script
+          cmake -DCMAKE_INSTALL_PREFIX=./install -P ../validate_dll_deployment.cmake
 
       - name: List build directory
         run: Get-ChildItem -Path build -Recurse -Filter "*QTDecisionMaker*" | Select-Object FullName

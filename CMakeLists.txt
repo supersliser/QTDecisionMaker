@@ -9,9 +9,14 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Find packages - Qt6 first, then fmt
+# Find packages - Qt6 first, then additional dependencies
 find_package(Qt6 REQUIRED COMPONENTS Widgets Core Gui Test Sql)
 find_package(fmt REQUIRED)
+
+# Find additional dependencies that Qt may need
+find_package(PNG QUIET)
+find_package(Freetype QUIET)
+find_package(harfbuzz QUIET)
 
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_SOURCE_DIR}/ui)
 
@@ -66,6 +71,17 @@ include_directories(include)
 
 target_link_libraries(QTDecisionMaker PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt6::Sql Qt6::Core Qt6::Gui fmt::fmt)
 
+# Link additional libraries if found
+if(TARGET PNG::PNG)
+    target_link_libraries(QTDecisionMaker PRIVATE PNG::PNG)
+endif()
+if(TARGET Freetype::Freetype)
+    target_link_libraries(QTDecisionMaker PRIVATE Freetype::Freetype)
+endif()
+if(TARGET harfbuzz::harfbuzz)
+    target_link_libraries(QTDecisionMaker PRIVATE harfbuzz::harfbuzz)
+endif()
+
 set_target_properties(QTDecisionMaker PROPERTIES
     ${BUNDLE_ID_OPTION}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
@@ -110,6 +126,17 @@ target_link_libraries(Tests PRIVATE
     Qt6::Widgets
     fmt::fmt
 )
+
+# Link additional libraries to tests if found
+if(TARGET PNG::PNG)
+    target_link_libraries(Tests PRIVATE PNG::PNG)
+endif()
+if(TARGET Freetype::Freetype)
+    target_link_libraries(Tests PRIVATE Freetype::Freetype)
+endif()
+if(TARGET harfbuzz::harfbuzz)
+    target_link_libraries(Tests PRIVATE harfbuzz::harfbuzz)
+endif()
 
 install(TARGETS Tests
     BUNDLE  DESTINATION .
@@ -178,6 +205,17 @@ if(WIN32)
     # Additional installer options
     set(CPACK_NSIS_COMPRESSOR "/SOLID lzma")
     set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
+    
+    # Ensure all components are installed
+    set(CPACK_COMPONENTS_ALL Runtime)
+    set(CPACK_COMPONENT_RUNTIME_REQUIRED TRUE)
+    
+    # Include debug information for troubleshooting
+    set(CPACK_NSIS_DEFINES "
+        !define MUI_STARTMENUPAGE_DEFAULTFOLDER \\\"QT Decision Maker\\\"
+        !define MUI_FINISHPAGE_RUN \\\"$INSTDIR\\\\bin\\\\QTDecisionMaker.exe\\\"
+        !define MUI_FINISHPAGE_RUN_TEXT \\\"Launch QT Decision Maker\\\"
+    ")
 endif()
 
 # Include CPack
