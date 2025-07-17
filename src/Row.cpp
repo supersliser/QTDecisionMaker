@@ -1,8 +1,8 @@
 #include "Row.h"
 
-#include <float.h>
 #include <iostream>
 #include <QtCore>
+#include <cfloat>
 
 Row::Row(QString i_name, bool i_verbose) {
     setName(i_name.toStdString());

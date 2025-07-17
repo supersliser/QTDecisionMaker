@@ -84,6 +84,6 @@ void Tests::row_setTotalValue_data() {
 
     QTest::newRow("normalWhole") << 5.0f << 5.0f;
     QTest::newRow("normalDecimal") << 20.3f << 20.3f;
-    QTest::newRow("erroneusUpper") << __FLT_MAX__ << __FLT_MAX__;
-    QTest::newRow("erroneusLower") << __FLT_MIN__ << __FLT_MIN__;
+    QTest::newRow("erroneusUpper") << FLT_MAX << FLT_MAX;
+    QTest::newRow("erroneusLower") << FLT_MIN << FLT_MIN;
 }
