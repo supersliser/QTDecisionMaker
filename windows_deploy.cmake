@@ -43,6 +43,8 @@ if(WIN32)
             
             # Look for the DLL in vcpkg installed directory
             set(VCPKG_BIN_DIR "${VCPKG_ROOT}/installed/${VCPKG_ARCH}/bin")
+            message(STATUS "Looking for ${DLL_NAME} in ${VCPKG_BIN_DIR}")
+            
             find_file(${DLL_NAME}_PATH 
                 NAMES ${DLL_NAME}
                 PATHS ${VCPKG_BIN_DIR}
@@ -55,8 +57,29 @@ if(WIN32)
                     DESTINATION ${CMAKE_INSTALL_BINDIR} 
                     COMPONENT Runtime)
             else()
-                message(WARNING "${DLL_NAME} not found in vcpkg installation at ${VCPKG_BIN_DIR}")
+                message(STATUS "Warning: ${DLL_NAME} not found in vcpkg installation at ${VCPKG_BIN_DIR}")
+                # Also check if the directory exists
+                if(NOT EXISTS ${VCPKG_BIN_DIR})
+                    message(STATUS "vcpkg bin directory does not exist: ${VCPKG_BIN_DIR}")
+                else()
+                    # List what's actually there for debugging
+                    file(GLOB AVAILABLE_DLLS "${VCPKG_BIN_DIR}/*.dll")
+                    if(AVAILABLE_DLLS)
+                        message(STATUS "Available DLLs in vcpkg bin:")
+                        foreach(DLL ${AVAILABLE_DLLS})
+                            get_filename_component(DLL_NAME_ONLY ${DLL} NAME)
+                            message(STATUS "  - ${DLL_NAME_ONLY}")
+                        endforeach()
+                    else()
+                        message(STATUS "No DLLs found in vcpkg bin directory")
+                    endif()
+                endif()
             endif()
+            
+            # Clear the variable for next call
+            unset(${DLL_NAME}_PATH CACHE)
+        else()
+            message(STATUS "vcpkg toolchain not detected, skipping ${DLL_NAME}")
         endif()
     endfunction()
     
