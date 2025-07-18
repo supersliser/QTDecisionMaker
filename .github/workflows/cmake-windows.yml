@@ -20,7 +20,7 @@ jobs:
           git clone https://github.com/Microsoft/vcpkg.git
           cd vcpkg
           ls
-          .\bootstrap-vcpkg.sh
+          bash bootstrap-vcpkg.sh
 
       - name: Install build dependencies
         run: |
