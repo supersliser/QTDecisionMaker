@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-windows:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,6 +21,19 @@ jobs:
           cd vcpkg
           .\bootstrap-vcpkg.bat
 
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            cmake \
+            ninja-build \
+            g++-mingw-w64-x86-64 \
+            nsis \
+            mingw-w64-tools \
+            libfmt-mingw-w64-dev \
+            qt6-base-dev-mingw-w64 \
+            qt6-tools-dev-mingw-w64
+
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:
@@ -29,60 +42,23 @@ jobs:
 
       - name: Configure CMake
         run: |
-          cmake -B build `
-          -DCMAKE_BUILD_TYPE=Release `
-          -DCMAKE_PREFIX_PATH=${{ env.Qt6_DIR }} `
-          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake `
-          -DBUILD_TESTING=OFF
+          cmake -S . -B build -G "Ninja" -DCMAKE_TOOLCHAIN_FILE=toolchain-windows.cmake
 
       - name: Build
-        run: cmake --build build --config Release --verbose --target QTDecisionMaker
+        run: cmake --build build
 
-      - name: Build Installer Package
+      - name: Create deployment package
         run: |
-          cd build
-          cpack -G NSIS -C Release
+          mkdir dist
+          x86_64-w64-mingw32-windeployqt --dir dist build/my_program.exe
+          cp build/my_program.exe dist/
+          cp /usr/x86_64-w64-mingw32/bin/libfmt*.dll dist/
 
-      - name: List build directory
-        run: Get-ChildItem -Path build -Recurse -Filter "*QTDecisionMaker*" | Select-Object FullName
+      - name: Build installer with NSIS
+        run: makensis installer.nsi
 
-      - name: Find Executable
-        id: find_exe
-        shell: bash
-        run: |
-          exe=$(find build -type f -name "QTDecisionMaker.exe" | head -n 1)
-          if [ -z "$exe" ]; then
-            echo "No executable found!"
-            exit 1
-          fi
-          echo "exe_path=$exe" >> $GITHUB_OUTPUT
-          echo "Found executable at: $exe"
-
-      - name: Find Installer
-        id: find_installer
-        shell: bash
-        run: |
-          installer=$(find build -type f -name "*.exe" -path "*/QTDecisionMaker-*" | head -n 1)
-          if [ -z "$installer" ]; then
-            echo "No installer found, checking for NSIS output..."
-            find build -name "*.exe" -o -name "*QTDecisionMaker*"
-            installer=$(find build -type f -name "QTDecisionMaker-*.exe" | head -n 1)
-            if [ -z "$installer" ]; then
-              echo "Still no installer found!"
-              exit 1
-            fi
-          fi
-          echo "installer_path=$installer" >> $GITHUB_OUTPUT
-          echo "Found installer at: $installer"
-
-      - name: Upload Executable
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-executable
-          path: ${{ steps.find_exe.outputs.exe_path }}
-
-      - name: Upload Windows Installer
+      - name: Upload installer artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows-installer
-          path: ${{ steps.find_installer.outputs.installer_path }}
+          path: DecisionMaker_Installer.exe
