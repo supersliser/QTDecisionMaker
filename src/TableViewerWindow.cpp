@@ -2,6 +2,8 @@
 #include "TableViewerWindow.h"
 #include "./ui_tableviewerwindow.h"
 #include "FileSystemManager.h"
+#include <QDesktopServices>
+#include <QUrl>
 
 TableViewerWindow::TableViewerWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -259,4 +261,31 @@ void TableViewerWindow::changeColumnType(Type i_type)
     _m_columnDock->setType(_m_data->heading(_m_table->selectedColumn())->type().type());
     _m_fileSaved = false;
     emit sendDrawTable(_m_data);
+}
+
+// Help menu slot implementations
+void TableViewerWindow::searchTriggered()
+{
+    // Reuse the existing find functionality for search
+    findTriggered();
+}
+
+void TableViewerWindow::reportBugTriggered()
+{
+    QDesktopServices::openUrl(QUrl("https://github.com/supersliser/QTDecisionMaker/issues"));
+}
+
+void TableViewerWindow::viewSourceTriggered()
+{
+    QDesktopServices::openUrl(QUrl("https://github.com/supersliser/QTDecisionMaker"));
+}
+
+void TableViewerWindow::openForumsTriggered()
+{
+    QDesktopServices::openUrl(QUrl("https://github.com/supersliser/QTDecisionMaker/discussions"));
+}
+
+void TableViewerWindow::documentationTriggered()
+{
+    QDesktopServices::openUrl(QUrl("https://github.com/supersliser/QTDecisionMaker/wiki"));
 }
