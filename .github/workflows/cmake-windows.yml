@@ -35,14 +35,7 @@ jobs:
 
       - name: Build
         run: cmake --build build
-
-      - name: Create deployment package
-        run: |
-          mkdir dist
-          x86_64-w64-mingw32-windeployqt --dir dist build/DecisionMaker.exe
-          cp build/DecisionMaker.exe dist/
-          cp /usr/x86_64-w64-mingw32/bin/libfmt*.dll dist/
-
+ 
       - name: Create deployment package
         run: |
           # Add Qt's bin directory to the PATH so we can find windeployqt.exe
