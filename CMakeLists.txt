@@ -117,20 +117,7 @@ install(TARGETS Tests
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
-qt_generate_deploy_app_script(
-    TARGET Tests
-    OUTPUT_SCRIPT deploy_script
-    NO_UNSUPPORTED_PLATFORM_ERROR
-)
-install(SCRIPT ${deploy_script})
-
-# Generate deployment script for main application
-qt_generate_deploy_app_script(
-    TARGET QTDecisionMaker
-    OUTPUT_SCRIPT deploy_main_script
-    NO_UNSUPPORTED_PLATFORM_ERROR
-)
-install(SCRIPT ${deploy_main_script})
+# Deployment scripts disabled for Linux build
 
 # Include Windows-specific deployment configuration
 if(WIN32)
