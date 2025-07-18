@@ -272,7 +272,7 @@ void TableViewerWindow::searchTriggered()
 
 void TableViewerWindow::reportBugTriggered()
 {
-    QDesktopServices::openUrl(QUrl("https://github.com/supersliser/QTDecisionMaker/issues"));
+    QDesktopServices::openUrl(QUrl("https://github.com/supersliser/QTDecisionMaker/issues/new"));
 }
 
 void TableViewerWindow::viewSourceTriggered()
