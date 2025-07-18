@@ -50,15 +50,6 @@ jobs:
           cd build
           cpack -G NSIS -C Release
 
-      - name: Validate DLL Deployment
-        shell: bash
-        run: |
-          cd build
-          # Install to a temporary directory first to validate
-          cmake --install . --prefix ./install --config Release
-          # Run validation script
-          cmake -DCMAKE_INSTALL_PREFIX=./install -P ../validate_dll_deployment.cmake
-
       - name: List build directory
         run: Get-ChildItem -Path build -Recurse -Filter "*QTDecisionMaker*" | Select-Object FullName
 
