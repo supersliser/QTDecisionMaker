@@ -76,6 +76,13 @@ public slots:
 
     void changeColumnType(Type i_type);
 
+    // Help menu slots
+    void searchTriggered();
+    void reportBugTriggered();
+    void viewSourceTriggered();
+    void openForumsTriggered();
+    void documentationTriggered();
+
 private:
     bool _m_fileSaved = true;
     QString _m_filePath;

@@ -50,6 +50,8 @@ set(PROJECT_SOURCES
         include/TableColumnDataDock.h
         include/MenuBarEdit.h
         src/MenuBarEdit.cpp
+        include/MenuBarHelp.h
+        src/MenuBarHelp.cpp
 )
 
 # Add Windows resource file on Windows

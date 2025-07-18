@@ -9,6 +9,7 @@
 
 #include "MenuBarEdit.h"
 #include "MenuBarFile.h"
+#include "MenuBarHelp.h"
 
 
 class TableViewerMenubar : public QMenuBar {
@@ -22,6 +23,7 @@ public:
 private:
     MenuBarFile *_m_fileMenu;
     MenuBarEdit *_m_editMenu;
+    MenuBarHelp *_m_helpMenu;
 };
 
 
