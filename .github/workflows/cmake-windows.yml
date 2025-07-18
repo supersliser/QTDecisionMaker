@@ -8,7 +8,10 @@ on:
 
 jobs:
   build-windows:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: powershell
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -16,30 +19,12 @@ jobs:
           submodules: recursive
 
       - name: Setup vcpkg
-        run: |
-          git clone https://github.com/Microsoft/vcpkg.git
-          cd vcpkg
-          ls
-          bash bootstrap-vcpkg.sh
+        uses: microsoft/vcpkg-action@v1
 
       - name: Install build dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            cmake \
-            ninja-build \
-            g++-mingw-w64-x86-64 \
-            nsis \
-            mingw-w64-tools \
-            libfmt-mingw-w64-dev \
-            qt6-base-dev-mingw-w64 \
-            qt6-tools-dev-mingw-w64
-
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v3
-        with:
-          version: '6.5.0'
-          modules: 'qt5compat qtmultimedia qtnetworkauth qtpositioning qtcharts qtvirtualkeyboard qtwebchannel qtwebsockets qtwebview'
+          vcpkg install qt6:x64-windows fmt:x64-windows
+          choco install nsis
 
       - name: Configure CMake
         run: |
@@ -51,10 +36,25 @@ jobs:
       - name: Create deployment package
         run: |
           mkdir dist
-          x86_64-w64-mingw32-windeployqt --dir dist build/my_program.exe
-          cp build/my_program.exe dist/
+          x86_64-w64-mingw32-windeployqt --dir dist build/DecisionMaker.exe
+          cp build/DecisionMaker.exe dist/
           cp /usr/x86_64-w64-mingw32/bin/libfmt*.dll dist/
 
+      - name: Create deployment package
+        run: |
+          # Add Qt's bin directory to the PATH so we can find windeployqt.exe
+          $env:PATH = "$env:VCPKG_ROOT/installed/x64-windows/tools/qt6/bin;$env:PATH"
+          
+          # Create the staging directory
+          mkdir dist
+
+          # Run Qt's deployment tool
+          windeployqt --dir dist build/DecisionMaker.exe
+
+          # Copy our own executable and the fmt DLL from the vcpkg install tree
+          cp build/DecisionMaker.exe dist/
+          cp $env:VCPKG_ROOT/installed/x64-windows/bin/fmt*.dll dist/
+      
       - name: Build installer with NSIS
         run: makensis installer.nsi
 
