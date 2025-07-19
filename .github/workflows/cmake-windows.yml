@@ -2,9 +2,9 @@ name: Build Windows Installer
 
 on:
   push:
-    branches: [ production ]
+    branches: [production]
   pull_request:
-    branches: [ production ]
+    branches: [production]
 
 jobs:
   build-windows:

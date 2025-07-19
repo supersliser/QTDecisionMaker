@@ -123,7 +123,7 @@ install(TARGETS Tests
 
 # Include Windows-specific deployment configuration
 if(WIN32)
-    include(windows_deploy.cmake)
+    include(toolchain-windows.cmake)
 endif()
 
 # CPack configuration for Windows installer
@@ -144,7 +144,7 @@ if(WIN32)
     set(CPACK_NSIS_CONTACT "https://github.com/supersliser/QTDecisionMaker")
     set(CPACK_NSIS_URL_INFO_ABOUT "https://github.com/supersliser/QTDecisionMaker")
     set(CPACK_NSIS_HELP_LINK "https://github.com/supersliser/QTDecisionMaker/discussions")
-    
+
     # Create desktop shortcut
     set(CPACK_NSIS_CREATE_ICONS_EXTRA
         "CreateShortCut '$DESKTOP\\\\QT Decision Maker.lnk' '$INSTDIR\\\\bin\\\\QTDecisionMaker.exe'"
@@ -152,18 +152,18 @@ if(WIN32)
     set(CPACK_NSIS_DELETE_ICONS_EXTRA
         "Delete '$DESKTOP\\\\QT Decision Maker.lnk'"
     )
-    
+
     # Add to Programs menu
     set(CPACK_NSIS_MENU_LINKS
         "bin/QTDecisionMaker.exe" "QT Decision Maker"
     )
-    
+
     # License file
     set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
-    
+
     # Enable modify/repair/remove in Add/Remove Programs
     set(CPACK_NSIS_MODIFY_PATH ON)
-    
+
     # Additional installer options
     set(CPACK_NSIS_COMPRESSOR "/SOLID lzma")
     set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
