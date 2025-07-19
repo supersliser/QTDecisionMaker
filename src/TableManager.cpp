@@ -41,12 +41,12 @@ void TableManager::drawTable(Table* i_data)
     setRowCount(i_data->rowCount());
     for (int r = 0; r < i_data->rowCount(); r++)
     {
-        _setItem(r, 0, tr(i_data->row(r)->name().data()));
+        _setItemName(r, 0, tr(i_data->row(r)->name().data()));
         for (int c = 1; c < i_data->headingCount() + 1; c++)
         {
-            _setItem(r, c, tr(i_data->item(c - 1, r)->displayValue.data()));
+            _setItem(r, c, i_data->item(c - 1, r));
         }
-        _setItem(r, i_data->headingCount() + 1, fmt::format("{:.2f}", i_data->row(r)->totalValue()).c_str());
+        _setItemName(r, i_data->headingCount() + 1, fmt::format("{:.2f}", i_data->row(r)->totalValue()).c_str());
     }
 
     show();
@@ -57,9 +57,26 @@ void TableManager::_setColumnHeader(int i_column, QString i_name)
     setHorizontalHeaderItem(i_column, new QTableWidgetItem(i_name));
 }
 
-void TableManager::_setItem(int i_row, int i_column, QString i_name)
+void TableManager::_setItemName(int i_row, int i_column, QString i_name)
 {
     setItem(i_row, i_column, new QTableWidgetItem(i_name));
+}
+
+void TableManager::_setItem(int i_row, int i_column, Item* i_item)
+{
+    auto item = new QTableWidgetItem(i_item->displayValue.data());
+    QColor color;
+
+    if (i_item->worthValue > 0) {
+        color = QColor(0, 255, 0); // Green for worth value >= 1
+    } else if (i_item->worthValue < 0) {
+        color = QColor(255, 0, 0); // Red for worth value < 0
+    } else {
+        color = QColor(255, 255, 0); // Yellow for worth value == 0
+    }
+
+    item->setBackground(color);
+    setItem(i_row, i_column, item);
 }
 
 void TableManager::_itemEdited(int i_row, int i_column)
