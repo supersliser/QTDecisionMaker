@@ -24,14 +24,13 @@ jobs:
           cd vcpkg
           .\bootstrap-vcpkg.bat
 
-      - name: Install build dependencies
-        run: |
-          vcpkg install
-          choco install nsis
+      #- name: Install build dependencies
+        #run: |
+          #vcpkg install
+          #choco install nsis
 
       - name: Configure CMake
         run: |
-          cd ../
           pwd
           ls
           cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=toolchain-windows.cmake
