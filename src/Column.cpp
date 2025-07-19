@@ -73,7 +73,6 @@ void Column::setName(std::string i_name) {
     if (i_name[i_name.length() - 1] != ' ') {
         o.push_back(i_name[i_name.length() - 1]);
     }
-
     m_name = o;
 }
 

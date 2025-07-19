@@ -1,17 +1,17 @@
-name: Build Windows App
+name: Build Windows Installer
 
 on:
   push:
-    branches: [ "production" ]
+    branches: [production]
   pull_request:
-    branches: [ "production" ]
+    branches: [production]
 
 jobs:
   build-windows:
     runs-on: windows-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
 
@@ -21,40 +21,29 @@ jobs:
           cd vcpkg
           .\bootstrap-vcpkg.bat
 
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v3
-        with:
-          version: '6.5.0'
-          modules: 'qt5compat qtmultimedia qtnetworkauth qtpositioning qtcharts qtvirtualkeyboard qtwebchannel qtwebsockets qtwebview'
-
-      - name: Configure CMake
+      - name: Install build dependencies
         run: |
-          cmake -B build `
-          -DCMAKE_BUILD_TYPE=Release `
-          -DCMAKE_PREFIX_PATH=${{ env.Qt6_DIR }} `
-          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake `
-          -DBUILD_TESTING=OFF
+          vcpkg install
+          choco install nsis
 
-      - name: Build
-        run: cmake --build build --config Release --verbose --target QTDecisionMaker
-
-      - name: List build directory
-        run: Get-ChildItem -Path build -Recurse -Filter "QTDecisionMaker*" | Select-Object FullName
-
-      - name: Find Executable
-        id: find_exe
-        shell: bash
+      - name: Set environment variables
         run: |
-          exe=$(find build -type f -name "QTDecisionMaker.exe" | head -n 1)
-          if [ -z "$exe" ]; then
-            echo "No executable found!"
-            exit 1
-          fi
-          echo "exe_path=$exe" >> $GITHUB_OUTPUT
-          echo "Found executable at: $exe"
+          echo "CMAKE_PREFIX_PATH=D:/a/QTDecisionMaker/QTDecisionMaker/vcpkg/installed/x64-windows/share/qt6" >> $env:GITHUB_ENV
+          echo "VCPKG_ROOT=D:/a/QTDecisionMaker/QTDecisionMaker/vcpkg" >> $env:GITHUB_ENV
 
-      - name: Upload Executable
+      - name: Configure and build
+        run: |
+          $toolchainPath = Join-Path -Path $env:VCPKG_ROOT -ChildPath "scripts/buildsystems/vcpkg.cmake"
+          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="$toolchainPath"
+          cmake --build build --config Release
+
+      - name: Create installer
+        run: |
+          cd build
+          makensis ../installer.nsi
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: windows-executable
-          path: ${{ steps.find_exe.outputs.exe_path }}
+          name: windows-installer
+          path: build/QTDecisionMaker-Installer.exe

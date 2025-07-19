@@ -12,9 +12,11 @@ You've no doubt heard of a "pros and cons list", or the "yellow legal pad" syste
 
 ### Windows
 
-To install on windows, check [releases](https://github.com/supersliser/QTDecisionMaker/releases) for the file which ends with .exe
+To install on windows, check [releases](https://github.com/supersliser/QTDecisionMaker/releases) for the installer file which ends with .exe
 
-> Just a general rule, an exe file is a program for windows.
+The Windows installer includes all necessary dependencies (Qt6, FMT library) and creates desktop shortcuts for easy access.
+
+> For developers: See [WINDOWS_BUILD.md](WINDOWS_BUILD.md) for instructions on building the Windows installer from source.
 
 ### Linux
 
