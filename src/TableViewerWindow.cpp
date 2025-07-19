@@ -18,6 +18,7 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
     connect(_m_toolbar, &TableViewerToolbar::newColumn, this, &TableViewerWindow::newColumnTriggered);
 
     _m_menubar = new TableViewerMenubar(this);
+    connect(_m_menubar, &TableViewerMenubar::zoom, this, &TableViewerWindow::changeZoom);
 
     _m_table = new TableManager(this);
     ui->TableContainer->addWidget(_m_table);
@@ -262,6 +263,12 @@ void TableViewerWindow::changeColumnType(Type i_type)
     _m_fileSaved = false;
     emit sendDrawTable(_m_data);
 }
+
+void TableViewerWindow::changeZoom(float i_newZoom)
+{
+    _m_table->zoomChanged(i_newZoom);
+}
+
 
 // Help menu slot implementations
 void TableViewerWindow::searchTriggered()

@@ -76,6 +76,8 @@ public slots:
 
     void changeColumnType(Type i_type);
 
+    void changeZoom(float i_newZoom);
+
     // Help menu slots
     void searchTriggered();
     void reportBugTriggered();

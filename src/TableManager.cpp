@@ -4,12 +4,14 @@
 
 #include "../include/TableManager.h"
 
+#include <QApplication>
 #include <fmt/format.h>
 #include <QHeaderView>
 
 TableManager::TableManager(QWidget* parent)
     : QTableWidget(parent)
 {
+    _M_ORIGINAL_SIZE = QApplication::font().pointSize();
     connect(this, &QTableWidget::currentCellChanged, this, &TableManager::_selectItem);
 }
 
@@ -92,4 +94,11 @@ void TableManager::findTriggered(const QString& i_text)
             }
         }
     }
+}
+
+void TableManager::zoomChanged(float i_newZoom)
+{
+    auto f = QApplication::font();
+    f.setPointSize(_M_ORIGINAL_SIZE * (i_newZoom / 100.0f));
+    QApplication::setFont(f);
 }
