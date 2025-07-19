@@ -32,7 +32,9 @@ jobs:
       - name: Configure CMake
         run: |
           cd ../
-          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=./toolchain-windows.cmake
+          pwd
+          ls
+          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=toolchain-windows.cmake
 
       - name: Build
         run: cmake --build build
