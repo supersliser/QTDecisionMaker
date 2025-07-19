@@ -29,12 +29,12 @@ jobs:
           choco install nsis
 
       - name: Set up Qt6 CMake path
-        run: echo "CMAKE_PREFIX_PATH=$VCPKG_INSTALLATION_ROOT/installed/x64-windows/share/qt6" >> $GITHUB_ENV
+        run: echo "CMAKE_PREFIX_PATH=$VCPKG_ROOT/installed/x64-windows/share/qt6" >> $GITHUB_ENV
 
       - name: Configure CMake
         run: |
           ls
-          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="toolchain-windows.cmake" -DCMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH"
+          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" -DCMAKE_PREFIX_PATH="${{ env.CMAKE_PREFIX_PATH }}"
 
       - name: Build
         run: cmake --build build
