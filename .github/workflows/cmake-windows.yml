@@ -1,20 +1,17 @@
-name: Build Windows App
+name: Build Windows Installer
 
 on:
   push:
-    branches: [ "production" ]
+    branches: [ production ]
   pull_request:
-    branches: [ "production" ]
+    branches: [ production ]
 
 jobs:
   build-windows:
     runs-on: windows-latest
-    defaults:
-      run:
-        shell: powershell
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
 
@@ -23,42 +20,30 @@ jobs:
           git clone https://github.com/Microsoft/vcpkg.git
           cd vcpkg
           .\bootstrap-vcpkg.bat
+
       - name: Install build dependencies
         run: |
           vcpkg install
           choco install nsis
 
-      - name: Set up Qt6 CMake path
-        run: echo "CMAKE_PREFIX_PATH=$VCPKG_ROOT/installed/x64-windows/share/qt6" >> $GITHUB_ENV
-
-      - name: Configure CMake
+      - name: Set environment variables
         run: |
-          ls
-          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" -DCMAKE_PREFIX_PATH="${{ env.CMAKE_PREFIX_PATH }}"
+          echo "CMAKE_PREFIX_PATH=D:/a/QTDecisionMaker/QTDecisionMaker/vcpkg/installed/x64-windows/share/qt6" >> $env:GITHUB_ENV
+          echo "VCPKG_ROOT=D:/a/QTDecisionMaker/QTDecisionMaker/vcpkg" >> $env:GITHUB_ENV
 
-      - name: Build
-        run: cmake --build build
- 
-      - name: Create deployment package
+      - name: Configure and build
         run: |
-          # Add Qt's bin directory to the PATH so we can find windeployqt.exe
-          $env:PATH = "$env:VCPKG_ROOT/installed/x64-windows/tools/qt6/bin;$env:PATH"
-          
-          # Create the staging directory
-          mkdir dist
+          $toolchainPath = Join-Path -Path $env:VCPKG_ROOT -ChildPath "scripts/buildsystems/vcpkg.cmake"
+          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="$toolchainPath"
+          cmake --build build --config Release
 
-          # Run Qt's deployment tool
-          windeployqt --dir dist build/DecisionMaker.exe
+      - name: Create installer
+        run: |
+          cd build
+          makensis ../installer.nsi
 
-          # Copy our own executable and the fmt DLL from the vcpkg install tree
-          cp build/DecisionMaker.exe dist/
-          cp $env:VCPKG_ROOT/installed/x64-windows/bin/fmt*.dll dist/
-      
-      - name: Build installer with NSIS
-        run: makensis installer.nsi
-
-      - name: Upload installer artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows-installer
-          path: DecisionMaker_Installer.exe
+          path: build/QTDecisionMaker-Installer.exe
