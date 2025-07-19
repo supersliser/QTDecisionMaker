@@ -36,7 +36,7 @@ MenuBarFile::MenuBarFile(QWidget* parent)
     newAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key::Key_N)});
     openAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key::Key_O)});
     saveAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key::Key_S)});
-    saveAsAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key::Key_Shift | Qt::Key::Key_S)});
+    saveAsAction->setShortcuts({QKeySequence(Qt::CTRL | (Qt::Key::Key_Shift | Qt::Key::Key_S))});
 
     // Add actions to the menu
     addAction(newAction);

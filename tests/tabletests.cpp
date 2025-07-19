@@ -319,7 +319,7 @@ void Tests::table_setTitle() {
 
     Table t;
     t.setTitle(title.toStdString());
-    QCOMPARE(t.title(), expected);
+    QCOMPARE(t.title(), expected.toStdString());
 }
 
 void Tests::table_setTitle_data() {
