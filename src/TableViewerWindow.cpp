@@ -263,6 +263,12 @@ void TableViewerWindow::changeColumnType(Type i_type)
     emit sendDrawTable(_m_data);
 }
 
+void TableViewerWindow::changeZoom(float i_newZoom)
+{
+
+}
+
+
 // Help menu slot implementations
 void TableViewerWindow::searchTriggered()
 {
