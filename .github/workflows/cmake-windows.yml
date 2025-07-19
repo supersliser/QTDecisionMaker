@@ -23,10 +23,10 @@ jobs:
           git clone https://github.com/Microsoft/vcpkg.git
           cd vcpkg
           .\bootstrap-vcpkg.bat
-          #- name: Install build dependencies
-          #run: |
-          #vcpkg install
-          #choco install nsis
+      - name: Install build dependencies
+        run: |
+          vcpkg install
+          choco install nsis
 
       - name: Configure CMake
         run: |
