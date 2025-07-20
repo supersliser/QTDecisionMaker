@@ -1,3 +1,5 @@
+#include <cfloat>
+
 #include "test_main.h"
 #include "Row.h"
 #include <cstdlib>
@@ -83,6 +85,6 @@ void Tests::row_setTotalValue_data() {
 
     QTest::newRow("normalWhole") << 5.0f << 5.0f;
     QTest::newRow("normalDecimal") << 20.3f << 20.3f;
-    QTest::newRow("erroneusUpper") << (float)(__FLT32_MAX__) << (float)(__FLT32_MAX__);
-    QTest::newRow("erroneusLower") << (float)(__FLT32_MIN__) << (float)(__FLT32_MIN__);
+    QTest::newRow("erroneusUpper") << (float)(FLT_MAX) << (float)(FLT_MAX);
+    QTest::newRow("erroneusLower") << (float)(FLT_MIN) << (float)(FLT_MIN);
 }
