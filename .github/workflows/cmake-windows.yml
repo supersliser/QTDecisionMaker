@@ -23,7 +23,7 @@ jobs:
 
       - name: Install build dependencies
         run: |
-          vcpkg install
+          vcpkg install --triplet x64-windows
           choco install nsis
 
       - name: Set environment variables
@@ -36,6 +36,15 @@ jobs:
           $toolchainPath = Join-Path -Path $env:VCPKG_ROOT -ChildPath "scripts/buildsystems/vcpkg.cmake"
           cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="$toolchainPath"
           cmake --build build --config Release
+
+      - name: Prepare dist directory
+        run: |
+          mkdir dist
+          copy build\Release\QTDecisionMaker.exe dist\
+
+      - name: Install build
+        run: |
+          cmake --install build --config Release --prefix dist
 
       - name: Create installer
         run: |

@@ -76,6 +76,10 @@ set_target_properties(QTDecisionMaker PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
+if(WIN32)
+  set(HB_HAVE_PTHREAD OFF CACHE BOOL "" FORCE)
+endif()
+
 include(GNUInstallDirs)
 install(TARGETS QTDecisionMaker
     BUNDLE DESTINATION .
