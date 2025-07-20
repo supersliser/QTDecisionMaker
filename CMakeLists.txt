@@ -68,12 +68,6 @@ qt_add_executable(QTDecisionMaker
         ${PROJECT_SOURCES}
 )
 
-target_compile_definitions(QTDecisionMaker PRIVATE
-        -DVERSION_STRING="${PROJECT_VERSION}"
-        -DCOMPANY_NAME="${PROJECT_COMPANY}"
-        -DFILE_DESCRIPTION="${PROJECT_DESCRIPTION}"
-)
-
 target_link_libraries(QTDecisionMaker PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt6::Sql Qt6::Core Qt6::Gui fmt::fmt)
 
 set_target_properties(QTDecisionMaker PROPERTIES
@@ -136,17 +130,17 @@ if (WIN32)
     include(toolchain-windows.cmake)
 endif ()
 
-# CPack configuration for Windows installer
-set(CPACK_PACKAGE_NAME "QTDecisionMaker")
-set(CPACK_PACKAGE_VENDOR "supersliser")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A decision-making application based on QT")
-set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
-set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "QTDecisionMaker")
-
 # Windows-specific installer configuration
 if (WIN32)
+
+    # CPack configuration for Windows installer
+    set(CPACK_PACKAGE_NAME "QTDecisionMaker")
+    set(CPACK_PACKAGE_VENDOR "supersliser")
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A decision-making application based on QT")
+    set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+    set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+    set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+    set(CPACK_PACKAGE_INSTALL_DIRECTORY "QTDecisionMaker")
     # Use NSIS generator for Windows installer
     set(CPACK_GENERATOR "NSIS")
     set(CPACK_NSIS_DISPLAY_NAME "QT Decision Maker")
