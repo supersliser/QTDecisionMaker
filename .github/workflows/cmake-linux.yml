@@ -41,19 +41,19 @@ jobs:
       - name: List build directory
         run: find build -type f -name "QTDecisionMaker*" | sort
 
-      - name: Find Executable
-        id: find_exe
-        run: |
-          exe=$(find build -type f -executable -name "QTDecisionMaker" | head -n 1)
-          if [ -z "$exe" ]; then
-            echo "No executable found!"
-            exit 1
-          fi
-          echo "exe_path=$exe" >> $GITHUB_OUTPUT
-          echo "Found executable at: $exe"
+#      - name: Find Executable
+#        id: find_exe
+#        run: |
+#          exe=$(find build -type f -executable -name "QTDecisionMaker" | head -n 1)
+#          if [ -z "$exe" ]; then
+#            echo "No executable found!"
+#            exit 1
+#          fi
+#          echo "exe_path=$exe" >> $GITHUB_OUTPUT
+#          echo "Found executable at: $exe"
 
       - name: Upload Executable
         uses: actions/upload-artifact@v4
         with:
           name: linux-executable
-          path: ${{ steps.find_exe.outputs.exe_path }}
+          path: build/QTDecisionMaker
