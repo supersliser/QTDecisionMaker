@@ -60,7 +60,6 @@ if(WIN32)
 endif()
 include_directories(include)
     qt_add_executable(QTDecisionMaker
-        MANUAL_FINALIZATION
             src/main.cpp
             ${PROJECT_SOURCES}
     )
