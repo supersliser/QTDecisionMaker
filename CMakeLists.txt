@@ -61,55 +61,47 @@ set(PROJECT_SOURCES
 )
 
 # Add Windows resource file on Windows
-if(WIN32)
-    set_target_properties(QTDecisionMaker PROPERTIES
-            WIN32_EXECUTABLE TRUE
-            MACOSX_BUNDLE TRUE
-    )
-    # Set version information for the executable
-    set_target_properties(QTDecisionMaker PROPERTIES
-            VERSION ${PROJECT_VERSION}
-            SOVERSION ${PROJECT_VERSION}
-    )
-    target_compile_definitions(QTDecisionMaker PRIVATE
-            -DVERSION_STRING="${PROJECT_VERSION}"
-            -DCOMPANY_NAME="${PROJECT_COMPANY}"
-            -DFILE_DESCRIPTION="${PROJECT_DESCRIPTION}"
-    )
-endif()
-include_directories(include)
-    qt_add_executable(QTDecisionMaker
-            src/main.cpp
-            ${PROJECT_SOURCES}
-    )
 
+include_directories(include)
+qt_add_executable(QTDecisionMaker
+        src/main.cpp
+        ${PROJECT_SOURCES}
+)
+
+target_compile_definitions(QTDecisionMaker PRIVATE
+        -DVERSION_STRING="${PROJECT_VERSION}"
+        -DCOMPANY_NAME="${PROJECT_COMPANY}"
+        -DFILE_DESCRIPTION="${PROJECT_DESCRIPTION}"
+)
 
 target_link_libraries(QTDecisionMaker PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt6::Sql Qt6::Core Qt6::Gui fmt::fmt)
 
 set_target_properties(QTDecisionMaker PROPERTIES
-    ${BUNDLE_ID_OPTION}
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
+        VERSION ${PROJECT_VERSION}
+        SOVERSION ${PROJECT_VERSION}
+        ${BUNDLE_ID_OPTION}
+        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+        MACOSX_BUNDLE TRUE
+        WIN32_EXECUTABLE TRUE
 )
 
 include(GNUInstallDirs)
 install(TARGETS QTDecisionMaker
-    BUNDLE DESTINATION .
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        BUNDLE DESTINATION .
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-if(QT_VERSION_MAJOR EQUAL 6)
+if (QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(QTDecisionMaker)
-endif()
+endif ()
 
 qt_standard_project_setup()
 
 qt_add_executable(Tests
         ${PROJECT_SOURCES}
-    tests/test_main.cpp
+        tests/test_main.cpp
         tests/test_main.h
         tests/columntests.cpp
         tests/rowtests.cpp
@@ -118,31 +110,31 @@ qt_add_executable(Tests
 )
 
 set_target_properties(Tests PROPERTIES
-    WIN32_EXECUTABLE TRUE
-    MACOSX_BUNDLE TRUE
+        WIN32_EXECUTABLE TRUE
+        MACOSX_BUNDLE TRUE
 )
 
 target_link_libraries(Tests PRIVATE
-    Qt6::Core
-    Qt6::Gui
-    Qt6::Test
-    Qt6::Sql
-    Qt6::Widgets
-    fmt::fmt
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Test
+        Qt6::Sql
+        Qt6::Widgets
+        fmt::fmt
 )
 
 install(TARGETS Tests
-    BUNDLE  DESTINATION .
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        BUNDLE DESTINATION .
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
 # Deployment scripts disabled for Linux build
 
 # Include Windows-specific deployment configuration
-if(WIN32)
+if (WIN32)
     include(toolchain-windows.cmake)
-endif()
+endif ()
 
 # CPack configuration for Windows installer
 set(CPACK_PACKAGE_NAME "QTDecisionMaker")
@@ -154,7 +146,7 @@ set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "QTDecisionMaker")
 
 # Windows-specific installer configuration
-if(WIN32)
+if (WIN32)
     # Use NSIS generator for Windows installer
     set(CPACK_GENERATOR "NSIS")
     set(CPACK_NSIS_DISPLAY_NAME "QT Decision Maker")
@@ -165,15 +157,15 @@ if(WIN32)
 
     # Create desktop shortcut
     set(CPACK_NSIS_CREATE_ICONS_EXTRA
-        "CreateShortCut '$DESKTOP\\\\QT Decision Maker.lnk' '$INSTDIR\\\\bin\\\\QTDecisionMaker.exe'"
+            "CreateShortCut '$DESKTOP\\\\QT Decision Maker.lnk' '$INSTDIR\\\\bin\\\\QTDecisionMaker.exe'"
     )
     set(CPACK_NSIS_DELETE_ICONS_EXTRA
-        "Delete '$DESKTOP\\\\QT Decision Maker.lnk'"
+            "Delete '$DESKTOP\\\\QT Decision Maker.lnk'"
     )
 
     # Add to Programs menu
     set(CPACK_NSIS_MENU_LINKS
-        "bin/QTDecisionMaker.exe" "QT Decision Maker"
+            "bin/QTDecisionMaker.exe" "QT Decision Maker"
     )
 
     # License file
@@ -185,7 +177,7 @@ if(WIN32)
     # Additional installer options
     set(CPACK_NSIS_COMPRESSOR "/SOLID lzma")
     set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
-endif()
+endif ()
 
 # Include CPack
 include(CPack)
