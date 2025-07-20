@@ -9,6 +9,12 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Meta
+set(PROJECT_NAME "DecisionMaker")
+set(PROJECT_VERSION "1.0.0")
+set(PROJECT_DESCRIPTION "Qt-based Decision Maker Application")
+set(PROJECT_COMPANY "Supersliser")
+
 # Find packages - Qt6 first, then fmt
 find_package(Qt6 REQUIRED COMPONENTS Widgets Core Gui Test Sql)
 find_package(fmt REQUIRED)
@@ -56,7 +62,20 @@ set(PROJECT_SOURCES
 
 # Add Windows resource file on Windows
 if(WIN32)
-    list(APPEND PROJECT_SOURCES app.rc)
+    set_target_properties(QTDecisionMaker PROPERTIES
+            WIN32_EXECUTABLE TRUE
+            MACOSX_BUNDLE TRUE
+    )
+    # Set version information for the executable
+    set_target_properties(QTDecisionMaker PROPERTIES
+            VERSION ${PROJECT_VERSION}
+            SOVERSION ${PROJECT_VERSION}
+    )
+    target_compile_definitions(QTDecisionMaker PRIVATE
+            -DVERSION_STRING="${PROJECT_VERSION}"
+            -DCOMPANY_NAME="${PROJECT_COMPANY}"
+            -DFILE_DESCRIPTION="${PROJECT_DESCRIPTION}"
+    )
 endif()
 include_directories(include)
     qt_add_executable(QTDecisionMaker
