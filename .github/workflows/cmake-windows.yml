@@ -51,18 +51,9 @@ jobs:
           cd build
           makensis ../installer.nsi
 
-      - name: Find installer
-        run: |
-          $installerPath = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath "build\QTDecisionMaker_Installer.exe"
-          if (Test-Path $installerPath) {
-            Move-Item -Path $installerPath -Destination $env:GITHUB_WORKSPACE
-          } else {
-            Write-Error "Installer not found."
-          }
-
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows-installer
-          path: QTDecisionMaker_Installer.exe
+          path: D:\a\QTDecisionMaker\QTDecisionMaker\DecisionMaker_Installer.exe
           if-no-files-found: 'error'
