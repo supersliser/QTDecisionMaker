@@ -46,4 +46,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-installer
-          path: build/QTDecisionMaker-Installer.exe
+          path: QTDecisionMaker-Installer.exe
