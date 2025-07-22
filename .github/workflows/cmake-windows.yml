@@ -18,7 +18,7 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:
-          version: '6.5.*'
+          version: '6.9.*'
           host: 'windows'
           target: 'desktop'
           arch: 'win64_msvc2019_64'
@@ -31,7 +31,7 @@ jobs:
       - name: Configure and build
         run: |
           cmake -S . -B build
-          cmake --build build --config Release --target QTDecisionMaker
+          cmake --build build --config Release
 
       - name: Prepare dist directory
         run: |
@@ -44,7 +44,7 @@ jobs:
 
       - name: Install build
         run: |
-          cmake --install build --config Release --prefix dist --target QTDecisionMaker
+          cmake --install build --config Release --prefix dist
 
       - name: Debug - List files in dist
         run: |
