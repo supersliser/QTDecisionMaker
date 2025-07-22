@@ -13,26 +13,30 @@
 MenuBarFile::MenuBarFile(QWidget* parent)
     : QMenu(parent)
 {
-
-
     // Set the title of the menu
     setTitle(tr("File"));
 
     // Create actions for file operations
-    QAction* newAction = new QAction(tr("New"), this);
-    QAction* openAction = new QAction(tr("Open"), this);
-    QAction* saveAction = new QAction(tr("Save"), this);
-    QAction* saveAsAction = new QAction(tr("Save As"), this);
-    QAction* closeAction = new QAction(tr("Close"), this);
-    QAction* quitAction = new QAction(tr("Quit"), this);
+    auto* newAction = new QAction(tr("New"), this);
+    auto* openAction = new QAction(tr("Open"), this);
+    auto* saveAction = new QAction(tr("Save"), this);
+    auto* saveAsAction = new QAction(tr("Save As"), this);
+    auto* closeAction = new QAction(tr("Close"), this);
+    auto* quitAction = new QAction(tr("Quit"), this);
 
-//     Connect actions to slots
-     connect(newAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::newTriggered);
-     connect(openAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::openTriggered);
-     connect(saveAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::saveTriggered);
-     connect(saveAsAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::saveAsTriggered);
-     connect(closeAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::closeTriggered);
-     connect(quitAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::quitTriggered);
+    //     Connect actions to slots
+    connect(newAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::newTriggered);
+    connect(openAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::openTriggered);
+    connect(saveAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::saveTriggered);
+    connect(saveAsAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::saveAsTriggered);
+    connect(closeAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::closeTriggered);
+    connect(quitAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::quitTriggered);
+
+    // add keybinds
+    newAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key::Key_N)});
+    openAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key::Key_O)});
+    saveAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key::Key_S)});
+    saveAsAction->setShortcuts({QKeySequence(Qt::CTRL | (Qt::Key::Key_Shift | Qt::Key::Key_S))});
 
     // Add actions to the menu
     addAction(newAction);
@@ -43,46 +47,4 @@ MenuBarFile::MenuBarFile(QWidget* parent)
     addSeparator();
     addAction(closeAction);
     addAction(quitAction);
-}
-
-void MenuBarFile::_new(bool i_checked)
-{
-    Q_UNUSED(i_checked);
-    // Handle the new action
-    emit newClicked();
-}
-
-void MenuBarFile::_open(bool i_checked)
-{
-    Q_UNUSED(i_checked);
-    // Handle the open action
-    emit openClicked();
-}
-
-void MenuBarFile::_save(bool i_checked)
-{
-    Q_UNUSED(i_checked);
-    // Handle the save action
-    emit saveClicked();
-}
-
-void MenuBarFile::_saveAs(bool i_checked)
-{
-    Q_UNUSED(i_checked);
-    // Handle the save as action
-    emit saveAsClicked();
-}
-
-void MenuBarFile::_close(bool i_checked)
-{
-    Q_UNUSED(i_checked);
-    // Handle the close action
-    emit closeClicked();
-}
-
-void MenuBarFile::_quit(bool i_checked)
-{
-    Q_UNUSED(i_checked);
-    // Handle the quit action
-    emit quitClicked();
 }

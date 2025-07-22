@@ -15,8 +15,9 @@ void Tests::table_addHeading() {
         t.addHeading(input[i]);
     }
     for (int i = 0; i < columnCount; i++) {
-        QCOMPARE(t.heading(i+1)->name(), expected[i].name());
-        QCOMPARE(t.heading(i+1)->importance(), expected[i].importance());
+        Column* col = t.heading(i);
+        QCOMPARE(t.heading(i)->name(), expected[i].name());
+        QCOMPARE(t.heading(i)->importance(), expected[i].importance());
     }
     for (int i = 0; i < t.headingCount(); i++) {
         QCOMPARE(t.heading(i)->index(), i);
@@ -54,14 +55,13 @@ void Tests::table_updateHeading() {
 
     Table t;
     t.addHeading(Column());
-    t.heading(1);
     Table t2 = t;
-    t.heading(1)->setName(inputName.toStdString());
-    QCOMPARE(t.heading(1)->name(), expectedName.toStdString());
-    t.heading(1)->setImportance(inputWorth);
-    QCOMPARE(t.heading(1)->importance(), expectedWorth);
+    t.heading(0)->setName(inputName.toStdString());
+    QCOMPARE(t.heading(0)->name(), expectedName.toStdString());
+    t.heading(0)->setImportance(inputWorth);
+    QCOMPARE(t.heading(0)->importance(), expectedWorth);
 
-    Column* c = t2.heading(1);
+    Column* c = t2.heading(0);
 
     QCOMPARE_NE(c->name(), expectedName.toStdString());
 
@@ -88,9 +88,7 @@ void Tests::table_getHeading() {
 
     Table t;
     t.addHeading(inputColumn);
-    QCOMPARE(t.heading(0)->name(), "Name");
-    QCOMPARE(t.heading(3), nullptr);
-    QCOMPARE(t.heading(1)->name(), expectedColumn.name());
+    QCOMPARE(t.heading(0)->name(), "TEST");
 }
 
 void Tests::table_getHeading_data() {
@@ -102,18 +100,18 @@ void Tests::table_getHeading_data() {
 
 void Tests::table_removeHeading() {
     QFETCH(std::vector<Column>, columnsToAdd);
-    QFETCH(int, indexToRemove);
     QFETCH(std::vector<Column>, expectedColumnsAfterwards);
+    QFETCH(int, indexToRemove);
 
     Table t;
     for (auto c : columnsToAdd) {
         t.addHeading(c);
     }
-    QCOMPARE(t.headingCount(), columnsToAdd.size() + 1);
+    QCOMPARE(t.headingCount(), columnsToAdd.size());
     t.removeHeading(indexToRemove);
-    QCOMPARE(t.headingCount(), expectedColumnsAfterwards.size() + 1);
+    QCOMPARE(t.headingCount(), expectedColumnsAfterwards.size());
     for (int i = 0; i < expectedColumnsAfterwards.size(); i ++) {
-        QCOMPARE(*t.heading(i + 1), expectedColumnsAfterwards[i]);
+        QCOMPARE(t.heading(i)->name(), expectedColumnsAfterwards[i].name());
     }
 }
 
@@ -124,7 +122,7 @@ void Tests::table_removeHeading_data() {
 
     std::vector<Column> addColumns = {Column(), Column("TEST1"), Column("TEST2")};
     std::vector<Column> expectColumns = {Column(), Column("TEST2")};
-    QTest::newRow("normal") << addColumns << expectColumns << 2;
+    QTest::newRow("normal") << addColumns << expectColumns << 1;
     QTest::newRow("indexOutside") << addColumns << addColumns << 27;
 }
 
@@ -159,7 +157,7 @@ void Tests::table_findHeadingIndex_data() {
     std::function<bool(Column i_value)> p4 = [](Column i_value) {
         return i_value.index() == 20;
     };
-    QTest::newRow("normalWithEqual") << normalColumns << p1 << 4;
+    QTest::newRow("normalWithEqual") << normalColumns << p1 << 3;
     QTest::newRow("normalWithIndex") << normalColumns << p2 << 3;
     QTest::newRow("erroneusPredicateWithEqual") << normalColumns << p3 << -1;
     QTest::newRow("erroenusPredicateWithIndex") << normalColumns << p4 << -1;
@@ -238,7 +236,7 @@ void Tests::table_getRow() {
 
     Table t;
     t.addRow(inputRow);
-    QCOMPARE(t.row(0)->name(), "Blank Name");
+    QCOMPARE(t.row(0)->name(), std::string("Blank Name"));
     QCOMPARE(t.row(3), nullptr);
     QCOMPARE(t.row(1)->name(), expectedRow.name());
 }
@@ -321,7 +319,7 @@ void Tests::table_setTitle() {
 
     Table t;
     t.setTitle(title.toStdString());
-    QCOMPARE(t.title(), expected);
+    QCOMPARE(t.title(), expected.toStdString());
 }
 
 void Tests::table_setTitle_data() {
@@ -349,7 +347,7 @@ void Tests::table_setTotalValues() {
 
     table.calculateAllTotals();
     for (int i = 0; i < expectedTotals.size(); i++) {
-        QCOMPARE(table.row(i + 1)->totalValue(), expectedTotals[i]);
+        QCOMPARE(table.row(i)->totalValue(), expectedTotals[i]);
     }
 }
 
@@ -362,19 +360,19 @@ void Tests::table_setTotalValues_data() {
     t.addHeading(Column("Column 2"));
     t.addRow(Row("Row 1"));
     t.addRow(Row("Row 2"));
-    t.heading(1)->setImportance(5);
-    t.heading(2)->setImportance(-3);
-    t.item(1, 1)->worthValue = 1;
-    t.item(1, 2)->worthValue = 0;
-    t.item(2, 1)->worthValue = -1;
-    t.item(2, 2)->worthValue = -1;
+    t.heading(0)->setImportance(5);
+    t.heading(1)->setImportance(-3);
+    t.item(0, 0)->worthValue = 1;
+    t.item(0, 1)->worthValue = 0;
+    t.item(1, 0)->worthValue = -1;
+    t.item(1, 1)->worthValue = -1;
     std::vector<float> expected = {8, 3};
 
     QTest::newRow("normal") << t << expected;
+    t.item(0, 0)->worthValue = 0;
+    t.item(0, 1)->worthValue = 0;
+    t.item(1, 0)->worthValue = 0;
     t.item(1, 1)->worthValue = 0;
-    t.item(1, 2)->worthValue = 0;
-    t.item(2, 1)->worthValue = 0;
-    t.item(2, 2)->worthValue = 0;
     expected = {0, 0};
     QTest::newRow("zero") << t << expected;
 }

@@ -6,11 +6,20 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Meta
+set(PROJECT_NAME "DecisionMaker")
+set(PROJECT_VERSION "1.0.0")
+set(PROJECT_DESCRIPTION "Qt-based Decision Maker Application")
+set(PROJECT_COMPANY "Supersliser")
+
+# Find packages - Qt6 first, then fmt
 find_package(Qt6 REQUIRED COMPONENTS Widgets Core Gui Test Sql)
-find_package(fmt REQUIRED)
+add_subdirectory(external/fmt)
 
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_SOURCE_DIR}/ui)
 
@@ -47,41 +56,54 @@ set(PROJECT_SOURCES
         include/TableDataDock.h
         src/TableColumnDataDock.cpp
         include/TableColumnDataDock.h
+        include/MenuBarEdit.h
+        src/MenuBarEdit.cpp
+        include/MenuBarHelp.h
+        src/MenuBarHelp.cpp
+        include/MenuBarView.h
+        src/MenuBarView.cpp
 )
-include_directories(include)
-    qt_add_executable(QTDecisionMaker
-        MANUAL_FINALIZATION
-            src/main.cpp
-            ${PROJECT_SOURCES}
-    )
 
+# Add Windows resource file on Windows
+
+include_directories(include)
+qt_add_executable(QTDecisionMaker
+        src/main.cpp
+        ${PROJECT_SOURCES}
+)
 
 target_link_libraries(QTDecisionMaker PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt6::Sql Qt6::Core Qt6::Gui fmt::fmt)
 
 set_target_properties(QTDecisionMaker PROPERTIES
-    ${BUNDLE_ID_OPTION}
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
+        VERSION ${PROJECT_VERSION}
+        SOVERSION ${PROJECT_VERSION}
+        ${BUNDLE_ID_OPTION}
+        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+        MACOSX_BUNDLE TRUE
+        WIN32_EXECUTABLE TRUE
 )
+
+if(WIN32)
+  set(HB_HAVE_PTHREAD OFF CACHE BOOL "" FORCE)
+endif()
 
 include(GNUInstallDirs)
 install(TARGETS QTDecisionMaker
-    BUNDLE DESTINATION .
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        BUNDLE DESTINATION .
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-if(QT_VERSION_MAJOR EQUAL 6)
+if (QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(QTDecisionMaker)
-endif()
+endif ()
 
 qt_standard_project_setup()
 
 qt_add_executable(Tests
         ${PROJECT_SOURCES}
-    tests/test_main.cpp
+        tests/test_main.cpp
         tests/test_main.h
         tests/columntests.cpp
         tests/rowtests.cpp
@@ -90,28 +112,74 @@ qt_add_executable(Tests
 )
 
 set_target_properties(Tests PROPERTIES
-    WIN32_EXECUTABLE TRUE
-    MACOSX_BUNDLE TRUE
+        WIN32_EXECUTABLE TRUE
+        MACOSX_BUNDLE TRUE
 )
 
 target_link_libraries(Tests PRIVATE
-    Qt6::Core
-    Qt6::Gui
-    Qt6::Test
-    Qt6::Sql
-    Qt6::Widgets
-    fmt::fmt
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Test
+        Qt6::Sql
+        Qt6::Widgets
+        fmt::fmt
 )
 
 install(TARGETS Tests
-    BUNDLE  DESTINATION .
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        BUNDLE DESTINATION .
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
-qt_generate_deploy_app_script(
-    TARGET Tests
-    OUTPUT_SCRIPT deploy_script
-    NO_UNSUPPORTED_PLATFORM_ERROR
-)
-install(SCRIPT ${deploy_script})
+# Deployment scripts disabled for Linux build
+
+# Include Windows-specific deployment configuration
+if (WIN32)
+    include(toolchain-windows.cmake)
+endif ()
+
+# Windows-specific installer configuration
+if (WIN32)
+
+    # CPack configuration for Windows installer
+    set(CPACK_PACKAGE_NAME "QTDecisionMaker")
+    set(CPACK_PACKAGE_VENDOR "supersliser")
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A decision-making application based on QT")
+    set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+    set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+    set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+    set(CPACK_PACKAGE_INSTALL_DIRECTORY "QTDecisionMaker")
+    # Use NSIS generator for Windows installer
+    set(CPACK_GENERATOR "NSIS")
+    set(CPACK_NSIS_DISPLAY_NAME "QT Decision Maker")
+    set(CPACK_NSIS_PACKAGE_NAME "QT Decision Maker")
+    set(CPACK_NSIS_CONTACT "https://github.com/supersliser/QTDecisionMaker")
+    set(CPACK_NSIS_URL_INFO_ABOUT "https://github.com/supersliser/QTDecisionMaker")
+    set(CPACK_NSIS_HELP_LINK "https://github.com/supersliser/QTDecisionMaker/discussions")
+
+    # Create desktop shortcut
+    set(CPACK_NSIS_CREATE_ICONS_EXTRA
+            "CreateShortCut '$DESKTOP\\\\QT Decision Maker.lnk' '$INSTDIR\\\\bin\\\\QTDecisionMaker.exe'"
+    )
+    set(CPACK_NSIS_DELETE_ICONS_EXTRA
+            "Delete '$DESKTOP\\\\QT Decision Maker.lnk'"
+    )
+
+    # Add to Programs menu
+    set(CPACK_NSIS_MENU_LINKS
+            "bin/QTDecisionMaker.exe" "QT Decision Maker"
+    )
+
+    # License file
+    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
+
+    # Enable modify/repair/remove in Add/Remove Programs
+    set(CPACK_NSIS_MODIFY_PATH ON)
+
+    # Additional installer options
+    set(CPACK_NSIS_COMPRESSOR "/SOLID lzma")
+    set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
+endif ()
+
+# Include CPack
+include(CPack)
