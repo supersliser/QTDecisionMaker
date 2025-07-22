@@ -236,7 +236,7 @@ void Tests::table_getRow() {
 
     Table t;
     t.addRow(inputRow);
-    QCOMPARE(t.row(0)->name(), "Blank Name");
+    QCOMPARE(t.row(0)->name(), std::string("Blank Name"));
     QCOMPARE(t.row(3), nullptr);
     QCOMPARE(t.row(1)->name(), expectedRow.name());
 }
@@ -319,7 +319,7 @@ void Tests::table_setTitle() {
 
     Table t;
     t.setTitle(title.toStdString());
-    QCOMPARE(t.title(), expected);
+    QCOMPARE(t.title(), expected.toStdString());
 }
 
 void Tests::table_setTitle_data() {
