@@ -17,7 +17,7 @@ set(PROJECT_COMPANY "Supersliser")
 
 # Find packages - Qt6 first, then fmt
 find_package(Qt6 REQUIRED COMPONENTS Widgets Core Gui Test Sql)
-find_package(fmt REQUIRED)
+add_subdirectory(external/fmt)
 
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_SOURCE_DIR}/ui)
 

@@ -15,17 +15,66 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup vcpkg
-        run: |
-          git clone https://github.com/Microsoft/vcpkg.git
-          cd vcpkg
-          .\bootstrap-vcpkg.bat
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.5.*'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2019_64'
+          cache: 'true'
+          setup-python: 'false'
 
-      - name: Install build dependencies
+      - name: Install NSIS
+        run: choco install nsis
+
+      - name: Configure and build
         run: |
-          # This will use your vcpkg.json to install dependencies
-          .\vcpkg\vcpkg install --triplet x64-windows
-          choco install nsis
+          cmake -S . -B build
+          cmake --build build --config Release
+
+      - name: Prepare dist directory
+        run: |
+          mkdir -p dist
+          Copy-Item build\Release\QTDecisionMaker.exe -Destination dist\
+
+      - name: Deploy Qt dependencies
+        run: |
+          windeployqt dist\QTDecisionMaker.exe --release --no-translations --no-system-d3d-compiler
+
+      - name: Install build
+        run: |
+          cmake --install build --config Release --prefix dist
+
+      - name: Debug - List files in dist
+        run: |
+          Get-ChildItem -Path dist -Recurse | ForEach-Object { Write-Host $_.FullName }
+
+      - name: Create installer
+        run: |
+          cd build
+          makensis ../installer.nsi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: D:\a\QTDecisionMaker\QTDecisionMaker\DecisionMaker_Installer.exe
+          if-no-files-found: 'error'
+
+      - name: Upload dist directory (for debugging)
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-directory-contents
+          path: dist
+          if-no-files-found: 'warn'
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
@@ -37,14 +86,12 @@ jobs:
           cache: 'true'
           setup-python: 'false'
 
-      - name: Set environment variables
-        run: |
-          echo "VCPKG_ROOT=D:/a/QTDecisionMaker/QTDecisionMaker/vcpkg" >> $env:GITHUB_ENV
+      - name: Install NSIS
+        run: choco install nsis
 
       - name: Configure and build
         run: |
-          $toolchainPath = Join-Path -Path $env:VCPKG_ROOT -ChildPath "scripts/buildsystems/vcpkg.cmake"
-          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="$toolchainPath"
+          cmake -S . -B build
           cmake --build build --config Release
 
       - name: Prepare dist directory
@@ -52,14 +99,8 @@ jobs:
           mkdir -p dist
           Copy-Item build\Release\QTDecisionMaker.exe -Destination dist\
 
-      - name: Copy vcpkg dependencies
-        run: |
-          # Copy all DLLs from vcpkg installed directory
-          Copy-Item "$env:VCPKG_ROOT\installed\x64-windows\bin\*.dll" -Destination dist\ -Recurse
-
       - name: Deploy Qt dependencies
         run: |
-          # This tool copies all required Qt DLLs to your app's directory
           windeployqt dist\QTDecisionMaker.exe --release --no-translations --no-system-d3d-compiler
 
       - name: Install build
