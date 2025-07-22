@@ -44,7 +44,7 @@ jobs:
 
       - name: Install build
         run: |
-          cmake --install build --config Release --prefix dist
+          cmake --install build --config Release --prefix dist --target QTDecisionMaker
 
       - name: Debug - List files in dist
         run: |
