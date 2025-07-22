@@ -27,7 +27,7 @@ jobs:
 
       - name: Install build dependencies
         run: |
-          vcpkg install fmt:x64-windows
+          vcpkg install
           choco install nsis
 
       - name: Set environment variables
