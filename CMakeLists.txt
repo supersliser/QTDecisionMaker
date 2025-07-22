@@ -60,6 +60,8 @@ set(PROJECT_SOURCES
         src/MenuBarEdit.cpp
         include/MenuBarHelp.h
         src/MenuBarHelp.cpp
+        include/MenuBarView.h
+        src/MenuBarView.cpp
 )
 
 # Add Windows resource file on Windows
