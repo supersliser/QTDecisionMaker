@@ -36,7 +36,8 @@ public slots:
 
 private:
     void _setColumnHeader(int i_column, QString i_name);
-    void _setItem(int i_row, int i_column, QString i_name);
+    void _setItem(int i_row, int i_column, Item *i_item);
+    void _setItemName(int i_row, int i_column, QString i_name);
     int _m_lastSelectedRow = -1;
     int _m_lastSelectedColumn = -1;
 };
