@@ -15,15 +15,19 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup vcpkg
-        run: |
-          git clone https://github.com/Microsoft/vcpkg.git
-          cd vcpkg
-          .\bootstrap-vcpkg.bat
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.5.*'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2019_64'
+          cache: 'true'
+          setup-python: 'false'
 
       - name: Install build dependencies
         run: |
-          vcpkg install --triplet x64-windows
+          .\vcpkg\vcpkg install fmt:x64-windows
           choco install nsis
 
       - name: Set environment variables
@@ -41,6 +45,15 @@ jobs:
         run: |
           mkdir dist
           copy build\Release\QTDecisionMaker.exe dist\
+
+      - name: Deploy Qt dependencies
+        run: |
+          windeployqt dist\QTDecisionMaker.exe --release --no-translations --no-system-d3d-compiler --no-opengl-sw
+
+      - name: Copy vcpkg dependencies
+        run: |
+          Copy-Item -Path "$env:VCPKG_ROOT\installed\x64-windows\bin\fmt.dll" -Destination dist\
+          # Copy any other specific DLLs you need that aren't handled by windeployqt
 
       - name: Install build
         run: |
