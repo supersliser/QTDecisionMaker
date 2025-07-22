@@ -1,7 +1,7 @@
 #ifndef TEST_MAIN_H
 #define TEST_MAIN_H
 
-#include <qt6/QtTest/QTest>
+#include <QTest>
 
 
 class Tests : public QObject{
