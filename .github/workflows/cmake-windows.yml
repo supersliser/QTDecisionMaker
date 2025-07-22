@@ -15,6 +15,18 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Setup vcpkg
+        run: |
+          git clone https://github.com/Microsoft/vcpkg.git
+          cd vcpkg
+          .\bootstrap-vcpkg.bat
+
+      - name: Install build dependencies
+        run: |
+          # This will use your vcpkg.json to install dependencies
+          .\vcpkg\vcpkg install --triplet x64-windows
+          choco install nsis
+
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:
@@ -25,14 +37,8 @@ jobs:
           cache: 'true'
           setup-python: 'false'
 
-      - name: Install build dependencies
-        run: |
-          vcpkg install
-          choco install nsis
-
       - name: Set environment variables
         run: |
-          echo "CMAKE_PREFIX_PATH=D:/a/QTDecisionMaker/QTDecisionMaker/vcpkg/installed/x64-windows/share/qt6" >> $env:GITHUB_ENV
           echo "VCPKG_ROOT=D:/a/QTDecisionMaker/QTDecisionMaker/vcpkg" >> $env:GITHUB_ENV
 
       - name: Configure and build
@@ -43,21 +49,26 @@ jobs:
 
       - name: Prepare dist directory
         run: |
-          mkdir dist
-          copy build\Release\QTDecisionMaker.exe dist\
-
-      - name: Deploy Qt dependencies
-        run: |
-          windeployqt dist\QTDecisionMaker.exe --release --no-translations --no-system-d3d-compiler --no-opengl-sw
+          mkdir -p dist
+          Copy-Item build\Release\QTDecisionMaker.exe -Destination dist\
 
       - name: Copy vcpkg dependencies
         run: |
-          Copy-Item -Path "$env:VCPKG_ROOT\installed\x64-windows\bin\fmt.dll" -Destination dist\
-          # Copy any other specific DLLs you need that aren't handled by windeployqt
+          # Copy all DLLs from vcpkg installed directory
+          Copy-Item "$env:VCPKG_ROOT\installed\x64-windows\bin\*.dll" -Destination dist\ -Recurse
+
+      - name: Deploy Qt dependencies
+        run: |
+          # This tool copies all required Qt DLLs to your app's directory
+          windeployqt dist\QTDecisionMaker.exe --release --no-translations --no-system-d3d-compiler
 
       - name: Install build
         run: |
           cmake --install build --config Release --prefix dist
+
+      - name: Debug - List files in dist
+        run: |
+          Get-ChildItem -Path dist -Recurse | ForEach-Object { Write-Host $_.FullName }
 
       - name: Create installer
         run: |
@@ -70,3 +81,10 @@ jobs:
           name: windows-installer
           path: D:\a\QTDecisionMaker\QTDecisionMaker\DecisionMaker_Installer.exe
           if-no-files-found: 'error'
+
+      - name: Upload dist directory (for debugging)
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-directory-contents
+          path: dist
+          if-no-files-found: 'warn'
