@@ -106,7 +106,7 @@ void PreferencesManager::savePreferences()
     }
     else
     {
-        qWarning() << "Failed to save preferences to:" << getPreferencesFilePath();
+        qWarning() << "Failed to save preferences to:" << getPreferencesFilePath() << "-" << file.errorString();
     }
 }
 
