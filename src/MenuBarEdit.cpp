@@ -20,7 +20,6 @@ MenuBarEdit::MenuBarEdit(QWidget* parent)
     auto* cutAction = new QAction(tr("Cut"), this);
     auto* copyAction = new QAction(tr("Copy"), this);
     auto* pasteAction = new QAction(tr("Paste"), this);
-    auto* preferencesAction = new QAction(tr("Preferences"), this);
     auto* findAction = new QAction(tr("Find"), this);
 
     // Connect actions to slots
@@ -29,7 +28,6 @@ MenuBarEdit::MenuBarEdit(QWidget* parent)
     connect(cutAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::cutTriggered);
     connect(copyAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::copyTriggered);
     connect(pasteAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::pasteTriggered);
-    connect(preferencesAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::preferencesTriggered);
     connect(findAction, &QAction::triggered, dynamic_cast<TableViewerWindow*>(parent->parent()), &TableViewerWindow::findTriggered);
 
     // Add keybinds
@@ -49,6 +47,4 @@ MenuBarEdit::MenuBarEdit(QWidget* parent)
     addAction(pasteAction);
     addSeparator();
     addAction(findAction);
-    addSeparator();
-    addAction(preferencesAction);
 }
