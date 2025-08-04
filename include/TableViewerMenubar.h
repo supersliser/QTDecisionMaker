@@ -21,6 +21,8 @@ public:
     TableViewerMenubar(QWidget* parent = nullptr);
 
     ~TableViewerMenubar() override = default;
+    
+    MenuBarFile* getFileMenu() const { return _m_fileMenu; }
 
 signals:
     void zoom(float i_newZoomAmount);

@@ -62,6 +62,10 @@ set(PROJECT_SOURCES
         src/MenuBarHelp.cpp
         include/MenuBarView.h
         src/MenuBarView.cpp
+        include/PreferencesManager.h
+        src/PreferencesManager.cpp
+        include/PreferencesWindow.h
+        src/PreferencesWindow.cpp
 )
 
 # Add Windows resource file on Windows
