@@ -106,7 +106,7 @@ void PreferencesManager::savePreferences()
     }
     else
     {
-        std::cerr << "Failed to save preferences to: " << getPreferencesFilePath().toStdString() << std::endl;
+        qWarning() << "Failed to save preferences to:" << getPreferencesFilePath();
     }
 }
 
