@@ -135,6 +135,11 @@ void PreferencesManager::loadPreferences()
         if (!doc.isNull() && doc.isObject())
         {
             fromJson(doc.object());
+            
+            // Emit signals to update UI after loading preferences
+            emit backgroundColorChanged(_backgroundColor);
+            emit textColorChanged(_textColor);
+            emit defaultZoomChanged(_defaultZoom);
         }
     }
     else

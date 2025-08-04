@@ -295,13 +295,9 @@ void TableViewerWindow::preferencesTriggered()
             fileMenu->updateRecentFiles();
         }
         
-        // Apply color theme and zoom - the signals will automatically handle this
-        // but we call applyColorTheme() as well to ensure immediate update
+        // The color and zoom changes will be handled automatically by the signals
+        // from PreferencesManager, but we call applyColorTheme() to ensure immediate update
         applyColorTheme();
-        
-        // Apply default zoom if changed
-        float defaultZoom = _m_preferencesManager->getDefaultZoom();
-        changeZoom(defaultZoom);
     }
 }
 
