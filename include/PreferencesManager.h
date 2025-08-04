@@ -9,6 +9,8 @@
 #include <QStringList>
 #include <QColor>
 #include <QJsonObject>
+#include <QApplication>
+#include <QPalette>
 
 class PreferencesManager : public QObject
 {
@@ -42,6 +44,11 @@ public:
 
     static QString getPreferencesFilePath();
 
+signals:
+    void backgroundColorChanged(const QColor& color);
+    void textColorChanged(const QColor& color);
+    void defaultZoomChanged(float zoom);
+
 private:
     QStringList _recentFiles;
     QColor _backgroundColor;
@@ -53,6 +60,7 @@ private:
 
     QJsonObject toJson() const;
     void fromJson(const QJsonObject& json);
+    void initializeDefaults();
 };
 
 #endif // PREFERENCESMANAGER_H

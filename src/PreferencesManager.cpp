@@ -9,15 +9,16 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QFile>
+#include <QApplication>
+#include <QPalette>
 
 const QString PreferencesManager::PREFERENCES_FILE_NAME = "preferences.json";
 
 PreferencesManager::PreferencesManager(QObject* parent)
     : QObject(parent)
-    , _backgroundColor(Qt::white)
-    , _textColor(Qt::black)
     , _defaultZoom(1.0f)
 {
+    initializeDefaults();
     loadPreferences();
 }
 
@@ -51,8 +52,12 @@ void PreferencesManager::clearRecentFiles()
 
 void PreferencesManager::setBackgroundColor(const QColor& color)
 {
-    _backgroundColor = color;
-    savePreferences();
+    if (_backgroundColor != color)
+    {
+        _backgroundColor = color;
+        savePreferences();
+        emit backgroundColorChanged(color);
+    }
 }
 
 QColor PreferencesManager::getBackgroundColor() const
@@ -62,8 +67,12 @@ QColor PreferencesManager::getBackgroundColor() const
 
 void PreferencesManager::setTextColor(const QColor& color)
 {
-    _textColor = color;
-    savePreferences();
+    if (_textColor != color)
+    {
+        _textColor = color;
+        savePreferences();
+        emit textColorChanged(color);
+    }
 }
 
 QColor PreferencesManager::getTextColor() const
@@ -73,8 +82,12 @@ QColor PreferencesManager::getTextColor() const
 
 void PreferencesManager::setDefaultZoom(float zoom)
 {
-    _defaultZoom = zoom;
-    savePreferences();
+    if (_defaultZoom != zoom)
+    {
+        _defaultZoom = zoom;
+        savePreferences();
+        emit defaultZoomChanged(zoom);
+    }
 }
 
 float PreferencesManager::getDefaultZoom() const
@@ -134,10 +147,13 @@ void PreferencesManager::loadPreferences()
 void PreferencesManager::resetToDefaults()
 {
     _recentFiles.clear();
-    _backgroundColor = Qt::white;
-    _textColor = Qt::black;
-    _defaultZoom = 1.0f;
+    initializeDefaults();
     savePreferences();
+    
+    // Emit signals to update UI
+    emit backgroundColorChanged(_backgroundColor);
+    emit textColorChanged(_textColor);
+    emit defaultZoomChanged(_defaultZoom);
 }
 
 QJsonObject PreferencesManager::toJson() const
@@ -193,4 +209,22 @@ void PreferencesManager::fromJson(const QJsonObject& json)
     {
         _defaultZoom = static_cast<float>(json["defaultZoom"].toDouble());
     }
+}
+
+void PreferencesManager::initializeDefaults()
+{
+    // Get Qt's default colors from the application palette
+    if (QApplication::instance())
+    {
+        QPalette defaultPalette = QApplication::palette();
+        _backgroundColor = defaultPalette.color(QPalette::Window);
+        _textColor = defaultPalette.color(QPalette::WindowText);
+    }
+    else
+    {
+        // Fallback to standard colors if no application instance
+        _backgroundColor = Qt::white;
+        _textColor = Qt::black;
+    }
+    _defaultZoom = 1.0f;
 }
