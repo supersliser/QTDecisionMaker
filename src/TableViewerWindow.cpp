@@ -2,14 +2,23 @@
 #include "TableViewerWindow.h"
 #include "./ui_tableviewerwindow.h"
 #include "FileSystemManager.h"
+#include "PreferencesManager.h"
+#include "PreferencesWindow.h"
+#include "MenuBarFile.h"
 #include <QDesktopServices>
 #include <QUrl>
+#include <QMessageBox>
+#include <QFile>
 
 TableViewerWindow::TableViewerWindow(QWidget* parent)
     : QMainWindow(parent)
       , ui(new Ui::TableViewerWindow)
 {
     ui->setupUi(this);
+    
+    // Initialize preferences manager
+    _m_preferencesManager = new PreferencesManager(this);
+    
     _m_data = new Table(true);
 
     _m_toolbar = new TableViewerToolbar(this);
@@ -19,6 +28,13 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
 
     _m_menubar = new TableViewerMenubar(this);
     connect(_m_menubar, &TableViewerMenubar::zoom, this, &TableViewerWindow::changeZoom);
+    
+    // Connect preferences manager to file menu for recent files
+    auto* fileMenu = _m_menubar->getFileMenu();
+    if (fileMenu)
+    {
+        fileMenu->setPreferencesManager(_m_preferencesManager);
+    }
 
     _m_table = new TableManager(this);
     ui->TableContainer->addWidget(_m_table);
@@ -136,10 +152,20 @@ void TableViewerWindow::openTriggered()
     {
         return;
     }
-    *_m_data = FileSystemManager::readFile(fileName);
-    emit sendDrawTable(_m_data);
-    _m_fileSaved = true;
-    _m_filePath = fileName;
+    openFileInternal(fileName);
+}
+
+void TableViewerWindow::openRecentFile(const QString& filePath)
+{
+    // Check if file exists
+    if (!QFile::exists(filePath))
+    {
+        QMessageBox::warning(this, tr("File Not Found"),
+                           tr("The file '%1' no longer exists.").arg(filePath));
+        return;
+    }
+    
+    openFileInternal(filePath);
 }
 
 void TableViewerWindow::saveTriggered()
@@ -153,6 +179,16 @@ void TableViewerWindow::saveTriggered()
         if (FileSystemManager::writeFile(_m_filePath, _m_data))
         {
             _m_fileSaved = true;
+            
+            // Add to recent files
+            _m_preferencesManager->addRecentFile(_m_filePath);
+            
+            // Update recent files menu
+            auto* fileMenu = _m_menubar->getFileMenu();
+            if (fileMenu)
+            {
+                fileMenu->updateRecentFiles();
+            }
         }
         else
         {
@@ -172,6 +208,16 @@ void TableViewerWindow::saveAsTriggered()
     {
         _m_fileSaved = true;
         _m_filePath = fileName;
+        
+        // Add to recent files
+        _m_preferencesManager->addRecentFile(fileName);
+        
+        // Update recent files menu
+        auto* fileMenu = _m_menubar->getFileMenu();
+        if (fileMenu)
+        {
+            fileMenu->updateRecentFiles();
+        }
     }
     else
     {
@@ -228,7 +274,46 @@ void TableViewerWindow::pasteTriggered()
 }
 void TableViewerWindow::preferencesTriggered()
 {
-    // Implement preferences logic here
+    PreferencesWindow prefsWindow(_m_preferencesManager, this);
+    if (prefsWindow.exec() == QDialog::Accepted)
+    {
+        // Update UI based on new preferences
+        auto* fileMenu = _m_menubar->getFileMenu();
+        if (fileMenu)
+        {
+            fileMenu->updateRecentFiles();
+        }
+        
+        // Apply default zoom if changed
+        float defaultZoom = _m_preferencesManager->getDefaultZoom();
+        changeZoom(defaultZoom);
+    }
+}
+
+void TableViewerWindow::openFileInternal(const QString& filePath)
+{
+    try
+    {
+        *_m_data = FileSystemManager::readFile(filePath);
+        emit sendDrawTable(_m_data);
+        _m_fileSaved = true;
+        _m_filePath = filePath;
+        
+        // Add to recent files
+        _m_preferencesManager->addRecentFile(filePath);
+        
+        // Update recent files menu
+        auto* fileMenu = _m_menubar->getFileMenu();
+        if (fileMenu)
+        {
+            fileMenu->updateRecentFiles();
+        }
+    }
+    catch (...)
+    {
+        QMessageBox::warning(this, tr("Error Opening File"),
+                           tr("Failed to open file '%1'.").arg(filePath));
+    }
 }
 void TableViewerWindow::findTriggered()
 {
