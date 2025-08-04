@@ -9,7 +9,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QFile>
-#include <iostream>
 
 const QString PreferencesManager::PREFERENCES_FILE_NAME = "preferences.json";
 
