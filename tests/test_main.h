@@ -135,6 +135,42 @@ private slots:
     void linktype_initialization();
     void linktype_attemptAutoSet();
     void linktype_attemptAutoSet_data();
+// |---------------------------------------|
+// FileSystemManager Tests
+    void filesystemmanager_fileExists();
+    void filesystemmanager_fileExists_data();
+
+    void filesystemmanager_writeFile();
+    void filesystemmanager_writeFile_data();
+
+    void filesystemmanager_readFile();
+    void filesystemmanager_readFile_data();
+
+    void filesystemmanager_roundtrip();
+    void filesystemmanager_roundtrip_data();
+
+// Table JSON Tests
+    void table_fromJson();
+    void table_fromJson_data();
+// |---------------------------------------|
+// PreferencesManager Tests
+    void preferencesmanager_recentFiles();
+    void preferencesmanager_recentFiles_data();
+
+    void preferencesmanager_colors();
+    void preferencesmanager_colors_data();
+
+    void preferencesmanager_zoom();
+    void preferencesmanager_zoom_data();
+
+    void preferencesmanager_defaults();
+
+    void preferencesmanager_persistence();
+    void preferencesmanager_persistence_data();
+
+    void preferencesmanager_filePath();
+
+    void preferencesmanager_clearRecentFiles();
 };
 
 #endif // TEST_MAIN_H

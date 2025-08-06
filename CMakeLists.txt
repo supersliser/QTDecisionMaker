@@ -115,6 +115,8 @@ qt_add_executable(Tests
         tests/enhanced_rowtests.cpp
         tests/tabletests.cpp
         tests/datatypetests.cpp
+        tests/filesystemtests.cpp
+        tests/preferencestests.cpp
 
 )
 
