@@ -107,19 +107,18 @@ void Table::removeHeading(unsigned int i_index) {
 
 void Table::addRow(Row i_row) {
     i_row.setIndex(rowCount());
-    i_row.setDisplayIndex(i_row.index());
+    i_row.setDisplayIndex(rowCount());
 
     m_rows.push_back(i_row);
 
     // Resize m_items to accommodate the new row
     m_items.resize(headingCount() * rowCount());
 
-    for (int x = 0; x < headingCount(); x++) {
-        for (int y = 0; y < rowCount(); y++) {
-            if (y == i_row.index()) {
-                m_items[x * rowCount() + y] = Item();
-            }
+    for (int x = headingCount() - 1; x >= 0; x--) {
+        for (int y = rowCount() - 2; y >= 0; y--) {
+                m_items[x * rowCount() + y] = m_items[x * (rowCount() - 1) + y];
         }
+        m_items[x * rowCount() + rowCount() - 1] = Item(); // Initialize the new row's items
     }
 }
 
@@ -235,6 +234,7 @@ Table Table::fromJson(const QJsonDocument& i_json)
     auto rows = i_json.object().value("rows").toArray();
     auto title = i_json.object().value("title").toString();
     auto table = Table();
+    table.removeRow(0);
     table.setTitle(title.toStdString());
     for (const auto& column : columns) {
         auto col = column.toObject();

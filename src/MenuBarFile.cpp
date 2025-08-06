@@ -70,7 +70,7 @@ void MenuBarFile::setPreferencesManager(PreferencesManager* prefsManager)
 void MenuBarFile::setupRecentFilesMenu()
 {
     _recentFilesMenu = new QMenu(tr("Recent Files"), this);
-    _recentFilesSeparator = insertMenu(actions().at(2), _recentFilesMenu); // Insert after "Open"
+    _recentFilesSeparator = addMenu( _recentFilesMenu); // Insert after "Open"
     
     // Initialize with empty state
     auto* noRecentAction = new QAction(tr("No recent files"), _recentFilesMenu);
