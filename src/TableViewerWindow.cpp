@@ -393,12 +393,12 @@ void TableViewerWindow::documentationTriggered()
     QDesktopServices::openUrl(QUrl("https://github.com/supersliser/QTDecisionMaker/wiki"));
 }
 
-void TableViewerWindow::onBackgroundColorChanged(const QColor& color)
+void TableViewerWindow::onBackgroundColorChanged()
 {
     applyColorTheme();
 }
 
-void TableViewerWindow::onTextColorChanged(const QColor& color)
+void TableViewerWindow::onTextColorChanged()
 {
     applyColorTheme();
 }
