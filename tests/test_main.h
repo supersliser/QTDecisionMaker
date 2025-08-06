@@ -62,6 +62,47 @@ private slots:
 
     void table_setTotalValues();
     void table_setTotalValues_data();
+// |---------------------------------------|
+// DataType Tests
+    void datatype_createDataType();
+    void datatype_createDataType_data();
+
+// NameType Tests  
+    void nametype_initialization();
+    void nametype_attemptAutoSet();
+    void nametype_attemptAutoSet_data();
+
+// BoolType Tests
+    void booltype_initialization();
+    void booltype_attemptAutoSet(); 
+    void booltype_attemptAutoSet_data();
+
+// RateType Tests
+    void ratetype_initialization();
+    void ratetype_customRange();
+    void ratetype_customRange_data();
+    void ratetype_attemptAutoSet();
+    void ratetype_attemptAutoSet_data();
+
+// MoneyType Tests
+    void moneytype_initialization();
+    void moneytype_attemptAutoSet();
+    void moneytype_attemptAutoSet_data();
+
+// NumType Tests  
+    void numtype_initialization();
+    void numtype_attemptAutoSet();
+    void numtype_attemptAutoSet_data();
+
+// DescType Tests
+    void desctype_initialization();
+    void desctype_attemptAutoSet();
+    void desctype_attemptAutoSet_data();
+
+// LinkType Tests
+    void linktype_initialization();
+    void linktype_attemptAutoSet();
+    void linktype_attemptAutoSet_data();
 };
 
 #endif // TEST_MAIN_H

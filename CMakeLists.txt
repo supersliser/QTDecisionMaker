@@ -112,6 +112,7 @@ qt_add_executable(Tests
         tests/columntests.cpp
         tests/rowtests.cpp
         tests/tabletests.cpp
+        tests/datatypetests.cpp
 
 )
 
