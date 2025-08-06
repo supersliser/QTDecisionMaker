@@ -313,7 +313,6 @@ void TableViewerWindow::openFileInternal(const QString& filePath)
 {
     try
     {
-
         *_m_data = FileSystemManager::readFile(filePath);
         emit sendDrawTable(_m_data);
         _m_fileSaved = true;
