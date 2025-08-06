@@ -84,6 +84,8 @@ public slots:
     void sortTable(int columnIndex, bool ascending);
     void reorderColumns();
     void reorderRows();
+    void reorderColumnsByDrag(int fromIndex, int toIndex);
+    void reorderRowsByDrag(int fromIndex, int toIndex);
 
     // Help menu slots
     void searchTriggered();

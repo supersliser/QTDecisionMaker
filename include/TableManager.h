@@ -6,6 +6,7 @@
 #define TABLEMANAGER_H
 #include <QTableWidget>
 #include <stack>
+#include <QHeaderView>
 
 #include "Column.h"
 #include "Row.h"
@@ -26,10 +27,14 @@ public:
 signals:
     void selectItem(int i_row, int i_column);
     void itemEdited(std::string i_value);
+    void columnReordered(int fromIndex, int toIndex);
+    void rowReordered(int fromIndex, int toIndex);
 
 private slots:
     void _selectItem(int i_row, int i_column, int i_prev_row, int i_prev_column);
     void _itemEdited(int i_row, int i_column);
+    void _onColumnMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex);
+    void _onRowMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex);
 
 public slots:
     void drawTable(Table* i_data);

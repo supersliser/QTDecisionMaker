@@ -30,8 +30,6 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
     connect(_m_menubar, &TableViewerMenubar::zoom, this, &TableViewerWindow::changeZoom);
     connect(_m_menubar, &TableViewerMenubar::filterChanged, this, &TableViewerWindow::filterTable);
     connect(_m_menubar, &TableViewerMenubar::sortChanged, this, &TableViewerWindow::sortTable);
-    connect(_m_menubar, &TableViewerMenubar::reorderColumns, this, &TableViewerWindow::reorderColumns);
-    connect(_m_menubar, &TableViewerMenubar::reorderRows, this, &TableViewerWindow::reorderRows);
     
     // Connect preferences manager to file menu for recent files
     auto* fileMenu = _m_menubar->getFileMenu();
@@ -43,6 +41,8 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
     _m_table = new TableManager(this);
     ui->TableContainer->addWidget(_m_table);
     connect(_m_table, &TableManager::selectItem, this, &TableViewerWindow::selectItem);
+    connect(_m_table, &TableManager::columnReordered, this, &TableViewerWindow::reorderColumnsByDrag);
+    connect(_m_table, &TableManager::rowReordered, this, &TableViewerWindow::reorderRowsByDrag);
     connect(this, &TableViewerWindow::sendDrawTable, _m_table, &TableManager::drawTable);
     connect(this, &TableViewerWindow::sendDrawTable, this, &TableViewerWindow::actionOccured);
 
@@ -390,6 +390,42 @@ void TableViewerWindow::reorderRows()
 {
     // Use the reordering functionality in Table class
     if (_m_data) {
+        _m_data->reorderRowsByDisplayIndex();
+        _m_fileSaved = false;
+        emit sendDrawTable(_m_data);
+    }
+}
+
+void TableViewerWindow::reorderColumnsByDrag(int fromIndex, int toIndex)
+{
+    if (!_m_data || fromIndex == toIndex) return;
+    
+    // Implement actual column reordering by swapping columns
+    if (fromIndex >= 0 && fromIndex < static_cast<int>(_m_data->headingCount()) &&
+        toIndex >= 0 && toIndex < static_cast<int>(_m_data->headingCount())) {
+        
+        // Update display indices for reordering
+        _m_data->heading(fromIndex)->setDisplayIndex(toIndex);
+        _m_data->heading(toIndex)->setDisplayIndex(fromIndex);
+        
+        _m_data->reorderColumnsByDisplayIndex();
+        _m_fileSaved = false;
+        emit sendDrawTable(_m_data);
+    }
+}
+
+void TableViewerWindow::reorderRowsByDrag(int fromIndex, int toIndex)
+{
+    if (!_m_data || fromIndex == toIndex) return;
+    
+    // Implement actual row reordering by swapping rows
+    if (fromIndex >= 0 && fromIndex < static_cast<int>(_m_data->rowCount()) &&
+        toIndex >= 0 && toIndex < static_cast<int>(_m_data->rowCount())) {
+        
+        // Update display indices for reordering
+        _m_data->row(fromIndex)->setDisplayIndex(toIndex);
+        _m_data->row(toIndex)->setDisplayIndex(fromIndex);
+        
         _m_data->reorderRowsByDisplayIndex();
         _m_fileSaved = false;
         emit sendDrawTable(_m_data);

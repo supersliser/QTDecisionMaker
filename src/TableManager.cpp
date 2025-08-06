@@ -13,6 +13,16 @@ TableManager::TableManager(QWidget* parent)
 {
     _M_ORIGINAL_SIZE = QApplication::font().pointSize();
     connect(this, &QTableWidget::currentCellChanged, this, &TableManager::_selectItem);
+    
+    // Enable drag and drop for column headers
+    horizontalHeader()->setSectionsMovable(true);
+    horizontalHeader()->setDragDropMode(QAbstractItemView::InternalMove);
+    connect(horizontalHeader(), &QHeaderView::sectionMoved, this, &TableManager::_onColumnMoved);
+    
+    // Enable drag and drop for rows (we'll handle this by allowing selection of first column items)
+    verticalHeader()->setSectionsMovable(true);
+    verticalHeader()->setDragDropMode(QAbstractItemView::InternalMove);
+    connect(verticalHeader(), &QHeaderView::sectionMoved, this, &TableManager::_onRowMoved);
 }
 
 void TableManager::_selectItem(int i_row, int i_column, int i_prev_row, int i_prev_column)
@@ -141,4 +151,24 @@ void TableManager::zoomChanged(float i_newZoom)
     auto f = QApplication::font();
     f.setPointSize(_M_ORIGINAL_SIZE * (i_newZoom / 100.0f));
     QApplication::setFont(f);
+}
+
+void TableManager::_onColumnMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex)
+{
+    Q_UNUSED(logicalIndex);
+    // Only allow reordering of data columns (not Name or Total Value columns)
+    if (oldVisualIndex == 0 || newVisualIndex == 0 || 
+        oldVisualIndex == columnCount() - 1 || newVisualIndex == columnCount() - 1) {
+        // Reset the move if trying to move Name or Total Value columns
+        horizontalHeader()->moveSection(newVisualIndex, oldVisualIndex);
+        return;
+    }
+    
+    emit columnReordered(oldVisualIndex - 1, newVisualIndex - 1); // Adjust for Name column offset
+}
+
+void TableManager::_onRowMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex)
+{
+    Q_UNUSED(logicalIndex);
+    emit rowReordered(oldVisualIndex, newVisualIndex);
 }

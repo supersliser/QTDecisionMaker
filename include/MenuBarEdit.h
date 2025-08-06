@@ -13,13 +13,5 @@ class MenuBarEdit : public QMenu
 public:
     MenuBarEdit(QWidget* parent = nullptr);
     ~MenuBarEdit() override = default;
-
-signals:
-    void reorderColumns();
-    void reorderRows();
-
-private slots:
-    void _showReorderColumnsDialog();
-    void _showReorderRowsDialog();
 };
 #endif //MENUBAREDIT_H
