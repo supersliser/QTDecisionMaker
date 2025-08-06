@@ -94,8 +94,15 @@ public slots:
     void openForumsTriggered();
     void documentationTriggered();
 
+    // Preferences slots
+    void onBackgroundColorChanged(const QColor& color);
+    void onTextColorChanged(const QColor& color);
+    void onDefaultZoomChanged(float zoom);
+
 private:
     void openFileInternal(const QString& filePath);
+    void applyColorTheme();
+    
     bool _m_fileSaved = true;
     QString _m_filePath;
     Ui::TableViewerWindow *ui;

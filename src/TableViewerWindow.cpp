@@ -64,6 +64,17 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
     _m_undoStack.push(_m_table);
     _m_redoStack = std::stack<Table>();
 
+    // Connect preference change signals
+    connect(_m_preferencesManager, &PreferencesManager::backgroundColorChanged,
+            this, &TableViewerWindow::onBackgroundColorChanged);
+    connect(_m_preferencesManager, &PreferencesManager::textColorChanged,
+            this, &TableViewerWindow::onTextColorChanged);
+    connect(_m_preferencesManager, &PreferencesManager::defaultZoomChanged,
+            this, &TableViewerWindow::onDefaultZoomChanged);
+
+    // Apply current color theme
+    applyColorTheme();
+
     emit sendDrawTable(_m_data);
 }
 
@@ -288,9 +299,9 @@ void TableViewerWindow::preferencesTriggered()
             fileMenu->updateRecentFiles();
         }
         
-        // Apply default zoom if changed
-        float defaultZoom = _m_preferencesManager->getDefaultZoom();
-        changeZoom(defaultZoom);
+        // The color and zoom changes will be handled automatically by the signals
+        // from PreferencesManager, but we call applyColorTheme() to ensure immediate update
+        applyColorTheme();
     }
 }
 
@@ -458,4 +469,59 @@ void TableViewerWindow::openForumsTriggered()
 void TableViewerWindow::documentationTriggered()
 {
     QDesktopServices::openUrl(QUrl("https://github.com/supersliser/QTDecisionMaker/wiki"));
+}
+
+void TableViewerWindow::onBackgroundColorChanged(const QColor& color)
+{
+    applyColorTheme();
+}
+
+void TableViewerWindow::onTextColorChanged(const QColor& color)
+{
+    applyColorTheme();
+}
+
+void TableViewerWindow::onDefaultZoomChanged(float zoom)
+{
+    changeZoom(zoom);
+}
+
+void TableViewerWindow::applyColorTheme()
+{
+    QColor backgroundColor = _m_preferencesManager->getBackgroundColor();
+    QColor textColor = _m_preferencesManager->getTextColor();
+    
+    // Create a palette with the custom colors
+    QPalette customPalette = this->palette();
+    customPalette.setColor(QPalette::Window, backgroundColor);
+    customPalette.setColor(QPalette::WindowText, textColor);
+    customPalette.setColor(QPalette::Base, backgroundColor.lighter(110)); // Slightly lighter for input fields
+    customPalette.setColor(QPalette::AlternateBase, backgroundColor.lighter(120));
+    customPalette.setColor(QPalette::Text, textColor);
+    customPalette.setColor(QPalette::Button, backgroundColor);
+    customPalette.setColor(QPalette::ButtonText, textColor);
+    
+    // Apply to the main window
+    this->setPalette(customPalette);
+    
+    // Apply to major UI components
+    if (_m_table)
+    {
+        _m_table->setPalette(customPalette);
+    }
+    if (_m_itemDock)
+    {
+        _m_itemDock->setPalette(customPalette);
+    }
+    if (_m_columnDock)
+    {
+        _m_columnDock->setPalette(customPalette);
+    }
+    if (_m_toolbar)
+    {
+        _m_toolbar->setPalette(customPalette);
+    }
+    
+    // Force update of all child widgets
+    this->update();
 }
