@@ -18,6 +18,8 @@
 #include "TableColumnDataDock.h"
 #include "TableDataDock.h"
 #include "TableManager.h"
+#include "PreferencesManager.h"
+#include "PreferencesWindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -60,6 +62,7 @@ public slots:
 
     void newTriggered();
     void openTriggered();
+    void openRecentFile(const QString& filePath);
     void saveTriggered();
     void saveAsTriggered();
     void closeTriggered();
@@ -86,6 +89,7 @@ public slots:
     void documentationTriggered();
 
 private:
+    void openFileInternal(const QString& filePath);
     bool _m_fileSaved = true;
     QString _m_filePath;
     Ui::TableViewerWindow *ui;
@@ -101,6 +105,8 @@ private:
     bool _m_undoing = false;
 
     QLineEdit* _m_findLineEdit = nullptr;
+    
+    PreferencesManager* _m_preferencesManager;
 };
 
 #endif // TABLEVIEWERWINDOW_H
