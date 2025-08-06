@@ -117,6 +117,7 @@ qt_add_executable(Tests
         tests/datatypetests.cpp
         tests/filesystemtests.cpp
         tests/preferencestests.cpp
+        tests/tablemanagertests.cpp
 
 )
 

@@ -171,6 +171,21 @@ private slots:
     void preferencesmanager_filePath();
 
     void preferencesmanager_clearRecentFiles();
+// |---------------------------------------|
+// TableManager Tests
+    void tablemanager_initialization();
+
+    void tablemanager_drawTable();
+    void tablemanager_drawTable_data();
+
+    void tablemanager_selection();
+    void tablemanager_selection_data();
+
+    void tablemanager_zoom();
+    void tablemanager_zoom_data();
+
+    void tablemanager_findTriggered();
+    void tablemanager_findTriggered_data();
 };
 
 #endif // TEST_MAIN_H
