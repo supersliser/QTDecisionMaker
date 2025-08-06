@@ -460,7 +460,6 @@ void TableViewerWindow::applyColorTheme()
 
 void TableViewerWindow::_itemEditedReceived(std::string i_value)
 {
-    auto cv = _m_data->item(_m_table->selectedColumn() - 1, _m_table->selectedRow())->displayValue;
     _m_data->item(_m_table->selectedColumn() - 1, _m_table->selectedRow())->displayValue = i_value;
     _m_fileSaved = false;
     emit itemEdited(_m_table->selectedRow(), _m_table->selectedColumn());
