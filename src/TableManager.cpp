@@ -113,6 +113,29 @@ void TableManager::findTriggered(const QString& i_text)
     }
 }
 
+void TableManager::filterTable(const QString& filterText)
+{
+    // If filter text is empty, show all rows
+    if (filterText.isEmpty()) {
+        for (int r = 0; r < rowCount(); r++) {
+            setRowHidden(r, false);
+        }
+        return;
+    }
+
+    // Hide rows that don't match the filter
+    for (int r = 0; r < rowCount(); r++) {
+        bool rowMatches = false;
+        for (int c = 0; c < columnCount(); c++) {
+            if (item(r, c) && item(r, c)->text().contains(filterText, Qt::CaseInsensitive)) {
+                rowMatches = true;
+                break;
+            }
+        }
+        setRowHidden(r, !rowMatches);
+    }
+}
+
 void TableManager::zoomChanged(float i_newZoom)
 {
     auto f = QApplication::font();

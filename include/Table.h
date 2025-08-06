@@ -47,6 +47,9 @@ public:
     void print() const;
     void calculateTotal(unsigned int i_row);
     void calculateAllTotals();
+    void sortByColumn(int columnIndex, bool ascending);
+    void reorderColumnsByDisplayIndex();
+    void reorderRowsByDisplayIndex();
 };
 
 #endif // TABLE_H

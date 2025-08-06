@@ -34,6 +34,7 @@ private slots:
 public slots:
     void drawTable(Table* i_data);
     void findTriggered(const QString& i_text);
+    void filterTable(const QString& filterText);
 
 private:
     void _setColumnHeader(int i_column, QString i_name);

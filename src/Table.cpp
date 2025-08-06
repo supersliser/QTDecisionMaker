@@ -1,5 +1,6 @@
 #include "Table.h"
 #include <iostream>
+#include <algorithm>
 
 void Table::addHeading(Column i_column) {
     i_column.setIndex(headingCount());
@@ -260,5 +261,137 @@ Table Table::fromJson(const QJsonDocument& i_json)
         table.item(x, y)->worthValue = worthValue;
     }
     return table;
+}
+
+void Table::sortByColumn(int columnIndex, bool ascending) {
+    if (columnIndex < 0 || columnIndex >= static_cast<int>(headingCount()) + 2) {
+        return; // Invalid column index
+    }
+    
+    // Create a vector of row indices for sorting
+    std::vector<int> rowIndices(rowCount());
+    for (int i = 0; i < rowCount(); i++) {
+        rowIndices[i] = i;
+    }
+    
+    // Sort the indices based on the column values
+    std::sort(rowIndices.begin(), rowIndices.end(), [this, columnIndex, ascending](int a, int b) {
+        if (columnIndex == 0) {
+            // Sort by row name
+            std::string nameA = m_rows[a].name();
+            std::string nameB = m_rows[b].name();
+            return ascending ? nameA < nameB : nameA > nameB;
+        } else if (columnIndex == static_cast<int>(headingCount()) + 1) {
+            // Sort by total value
+            float valueA = m_rows[a].totalValue();
+            float valueB = m_rows[b].totalValue();
+            return ascending ? valueA < valueB : valueA > valueB;
+        } else {
+            // Sort by column data
+            int colIdx = columnIndex - 1;
+            if (colIdx < 0 || colIdx >= static_cast<int>(headingCount())) return false;
+            
+            Item* itemA = item(colIdx, a);
+            Item* itemB = item(colIdx, b);
+            if (!itemA || !itemB) return false;
+            
+            // Try to compare as numbers first, then as strings
+            try {
+                float valueA = std::stof(itemA->displayValue);
+                float valueB = std::stof(itemB->displayValue);
+                return ascending ? valueA < valueB : valueA > valueB;
+            } catch (...) {
+                // Fall back to string comparison
+                return ascending ? itemA->displayValue < itemB->displayValue : itemA->displayValue > itemB->displayValue;
+            }
+        }
+    });
+    
+    // Reorder rows and items based on sorted indices
+    std::vector<Row> newRows;
+    std::vector<Item> newItems(headingCount() * rowCount());
+    
+    for (int newPos = 0; newPos < rowCount(); newPos++) {
+        int oldPos = rowIndices[newPos];
+        newRows.push_back(m_rows[oldPos]);
+        
+        // Copy items for this row
+        for (int col = 0; col < headingCount(); col++) {
+            int oldIndex = col * rowCount() + oldPos;
+            int newIndex = col * rowCount() + newPos;
+            if (oldIndex < m_items.size() && newIndex < newItems.size()) {
+                newItems[newIndex] = m_items[oldIndex];
+            }
+        }
+    }
+    
+    m_rows = newRows;
+    m_items = newItems;
+}
+
+void Table::reorderColumnsByDisplayIndex() {
+    // Create a vector of column indices sorted by displayIndex
+    std::vector<int> columnIndices(headingCount());
+    for (int i = 0; i < headingCount(); i++) {
+        columnIndices[i] = i;
+    }
+    
+    std::sort(columnIndices.begin(), columnIndices.end(), [this](int a, int b) {
+        return m_headings[a].displayIndex() < m_headings[b].displayIndex();
+    });
+    
+    // Reorder columns
+    std::vector<Column> newHeadings;
+    std::vector<Item> newItems(headingCount() * rowCount());
+    
+    for (int newCol = 0; newCol < headingCount(); newCol++) {
+        int oldCol = columnIndices[newCol];
+        newHeadings.push_back(m_headings[oldCol]);
+        
+        // Copy items for this column
+        for (int row = 0; row < rowCount(); row++) {
+            int oldIndex = oldCol * rowCount() + row;
+            int newIndex = newCol * rowCount() + row;
+            if (oldIndex < m_items.size() && newIndex < newItems.size()) {
+                newItems[newIndex] = m_items[oldIndex];
+            }
+        }
+    }
+    
+    m_headings = newHeadings;
+    m_items = newItems;
+}
+
+void Table::reorderRowsByDisplayIndex() {
+    // Create a vector of row indices sorted by displayIndex
+    std::vector<int> rowIndices(rowCount());
+    for (int i = 0; i < rowCount(); i++) {
+        rowIndices[i] = i;
+    }
+    
+    std::sort(rowIndices.begin(), rowIndices.end(), [this](int a, int b) {
+        return m_rows[a].displayIndex() < m_rows[b].displayIndex();
+    });
+    
+    // Reorder rows
+    std::vector<Row> newRows;
+    std::vector<Item> newItems(headingCount() * rowCount());
+    
+    for (int newPos = 0; newPos < rowCount(); newPos++) {
+        int oldPos = rowIndices[newPos];
+        newRows.push_back(m_rows[oldPos]);
+        
+        // Copy items for this row
+        for (int col = 0; col < headingCount(); col++) {
+            int oldIndex = col * rowCount() + oldPos;
+            int newIndex = col * rowCount() + newPos;
+            if (oldIndex < m_items.size() && newIndex < newItems.size()) {
+                newItems[newIndex] = m_items[oldIndex];
+            }
+        }
+    }
+    
+    m_rows = newRows;
+    m_items = newItems;
 }
 

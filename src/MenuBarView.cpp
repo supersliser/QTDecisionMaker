@@ -115,11 +115,13 @@ void MenuBarView::_showSortDialog()
         return;
     }
 
-    // Simple sort dialog - this could be improved with a proper dialog
+    // Simple sort dialog with basic column options
     QStringList items;
-    items << tr("Name Column");
-    // Add more column options based on table data
-    items << tr("Column 1") << tr("Column 2") << tr("Total Value");
+    items << tr("Name Column") << tr("Total Value");
+    // Add a few generic column options
+    for (int i = 1; i <= 5; i++) {
+        items << tr("Column %1").arg(i);
+    }
     
     bool ok;
     QString item = QInputDialog::getItem(this, tr("Sort Table"),

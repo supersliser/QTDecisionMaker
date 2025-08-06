@@ -360,35 +360,38 @@ void TableViewerWindow::changeZoom(float i_newZoom)
 
 void TableViewerWindow::filterTable(const QString& filterText)
 {
-    // Use the existing find functionality in TableManager
-    _m_table->findTriggered(filterText);
+    // Use the new filterTable method instead of findTriggered
+    _m_table->filterTable(filterText);
 }
 
 void TableViewerWindow::sortTable(int columnIndex, bool ascending)
 {
-    // For now, we'll implement a simple sort on the table data
-    // This is a basic implementation that can be enhanced later
     if (!_m_data) return;
     
-    // TODO: Implement actual sorting logic in Table class
-    // For now, just redraw to show the feature is connected
+    // Use the new sort method in Table class
+    _m_data->sortByColumn(columnIndex, ascending);
+    _m_fileSaved = false;
+    
+    // Redraw the table to show the sorted data
     emit sendDrawTable(_m_data);
 }
 
 void TableViewerWindow::reorderColumns()
 {
-    // For now, just indicate that the feature is working
-    // This could be enhanced with a proper reordering dialog
+    // Use the reordering functionality in Table class
     if (_m_data) {
+        _m_data->reorderColumnsByDisplayIndex();
+        _m_fileSaved = false;
         emit sendDrawTable(_m_data);
     }
 }
 
 void TableViewerWindow::reorderRows()
 {
-    // For now, just indicate that the feature is working
-    // This could be enhanced with a proper reordering dialog
+    // Use the reordering functionality in Table class
     if (_m_data) {
+        _m_data->reorderRowsByDisplayIndex();
+        _m_fileSaved = false;
         emit sendDrawTable(_m_data);
     }
 }
