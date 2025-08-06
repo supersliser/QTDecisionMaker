@@ -5,6 +5,7 @@
 #include "../include/MenuBarEdit.h"
 #include <QAction>
 #include <QMenu>
+#include <QMessageBox>
 
 #include "TableViewerWindow.h"
 
@@ -38,6 +39,13 @@ MenuBarEdit::MenuBarEdit(QWidget* parent)
     pasteAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key_V)});
     findAction->setShortcuts({QKeySequence(Qt::CTRL | Qt::Key_F)});
 
+    // Reorder actions
+    auto* reorderColumnsAction = new QAction(tr("Reorder Columns..."), this);
+    auto* reorderRowsAction = new QAction(tr("Reorder Rows..."), this);
+    
+    connect(reorderColumnsAction, &QAction::triggered, this, &MenuBarEdit::_showReorderColumnsDialog);
+    connect(reorderRowsAction, &QAction::triggered, this, &MenuBarEdit::_showReorderRowsDialog);
+
     // Add actions to the menu
     addAction(undoAction);
     addAction(redoAction);
@@ -47,4 +55,25 @@ MenuBarEdit::MenuBarEdit(QWidget* parent)
     addAction(pasteAction);
     addSeparator();
     addAction(findAction);
+    addSeparator();
+    addAction(reorderColumnsAction);
+    addAction(reorderRowsAction);
+}
+
+void MenuBarEdit::_showReorderColumnsDialog()
+{
+    // Simple implementation for now
+    QMessageBox::information(this, tr("Reorder Columns"), 
+                           tr("Column reordering functionality will be implemented here.\n"
+                              "This will allow you to change the order of table columns."));
+    emit reorderColumns();
+}
+
+void MenuBarEdit::_showReorderRowsDialog()
+{
+    // Simple implementation for now
+    QMessageBox::information(this, tr("Reorder Rows"), 
+                           tr("Row reordering functionality will be implemented here.\n"
+                              "This will allow you to change the order of table rows."));
+    emit reorderRows();
 }

@@ -1,6 +1,8 @@
 #include "../include/MenuBarView.h"
 #include <QAction>
 #include <QMenu>
+#include <QInputDialog>
+#include <QMessageBox>
 
 #include "TableViewerWindow.h"
 
@@ -34,9 +36,19 @@ MenuBarView::MenuBarView(QWidget* parent)
     zoomMenu->addAction(zoom200Action);
     zoomMenu->setTitle("Zoom");
 
+    // Filter and Sort actions
+    auto filterAction = new QAction(tr("Filter..."), this);
+    auto sortAction = new QAction(tr("Sort..."), this);
+    
+    connect(filterAction, &QAction::triggered, this, &MenuBarView::_showFilterDialog);
+    connect(sortAction, &QAction::triggered, this, &MenuBarView::_showSortDialog);
+
     addMenu(zoomMenu);
     addAction(zoomIncreaseAction);
     addAction(zoomDecreaseAction);
+    addSeparator();
+    addAction(filterAction);
+    addAction(sortAction);
 }
 
 void MenuBarView::_zoom25()
@@ -73,4 +85,56 @@ void MenuBarView::_zoomout()
 {
     _m_currentZoom = _m_currentZoom -= 25;
     emit zoom(_m_currentZoom);
+}
+
+void MenuBarView::_showFilterDialog()
+{
+    bool ok;
+    QString filterText = QInputDialog::getText(this, tr("Filter Table"), 
+                                             tr("Enter filter text:"), 
+                                             QLineEdit::Normal, 
+                                             QString(), &ok);
+    if (ok) {
+        emit filterChanged(filterText);
+    }
+}
+
+void MenuBarView::_showSortDialog()
+{
+    // Get the table window to access column information
+    TableViewerWindow* mainWindow = nullptr;
+    QWidget* currentParent = this->parentWidget();
+    while (currentParent) {
+        mainWindow = qobject_cast<TableViewerWindow*>(currentParent);
+        if (mainWindow) break;
+        currentParent = currentParent->parentWidget();
+    }
+    
+    if (!mainWindow) {
+        QMessageBox::warning(this, tr("Sort"), tr("Cannot access table data."));
+        return;
+    }
+
+    // Simple sort dialog - this could be improved with a proper dialog
+    QStringList items;
+    items << tr("Name Column");
+    // Add more column options based on table data
+    items << tr("Column 1") << tr("Column 2") << tr("Total Value");
+    
+    bool ok;
+    QString item = QInputDialog::getItem(this, tr("Sort Table"),
+                                       tr("Select column to sort by:"), items, 0, false, &ok);
+    if (ok && !item.isEmpty()) {
+        int columnIndex = items.indexOf(item);
+        
+        // Ask for sort direction
+        QStringList directions;
+        directions << tr("Ascending") << tr("Descending");
+        QString direction = QInputDialog::getItem(this, tr("Sort Direction"),
+                                                tr("Select sort direction:"), directions, 0, false, &ok);
+        if (ok) {
+            bool ascending = (direction == tr("Ascending"));
+            emit sortChanged(columnIndex, ascending);
+        }
+    }
 }

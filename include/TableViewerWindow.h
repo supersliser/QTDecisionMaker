@@ -80,6 +80,10 @@ public slots:
     void changeColumnType(Type i_type);
 
     void changeZoom(float i_newZoom);
+    void filterTable(const QString& filterText);
+    void sortTable(int columnIndex, bool ascending);
+    void reorderColumns();
+    void reorderRows();
 
     // Help menu slots
     void searchTriggered();

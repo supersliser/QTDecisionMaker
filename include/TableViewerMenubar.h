@@ -26,9 +26,17 @@ public:
 
 signals:
     void zoom(float i_newZoomAmount);
+    void filterChanged(const QString& filterText);
+    void sortChanged(int columnIndex, bool ascending);
+    void reorderColumns();
+    void reorderRows();
 
 private slots:
     void _zoom(float i_newZoomAmount);
+    void _filterChanged(const QString& filterText);
+    void _sortChanged(int columnIndex, bool ascending);
+    void _reorderColumns();
+    void _reorderRows();
 
 private:
     MenuBarFile* _m_fileMenu;

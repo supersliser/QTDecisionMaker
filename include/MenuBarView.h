@@ -17,6 +17,8 @@ public:
 
 signals:
     void zoom(float i_newZoomAmount);
+    void filterChanged(const QString& filterText);
+    void sortChanged(int columnIndex, bool ascending);
 
 private slots:
     void _zoom25();
@@ -25,6 +27,8 @@ private slots:
     void _zoom200();
     void _zoomin();
     void _zoomout();
+    void _showFilterDialog();
+    void _showSortDialog();
 private:
     float _m_currentZoom = 100.0f;
 };
