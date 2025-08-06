@@ -345,8 +345,6 @@ void TableViewerWindow::findTriggered()
     }
     else
     {
-        // ui->TableContainer->removeWidget(_m_findLineEdit);
-        // disconnect(_m_findLineEdit, &QLineEdit::textEdited, _m_table, &TableManager::findTriggered);
         delete _m_findLineEdit;
         _m_findLineEdit = nullptr;
     }
