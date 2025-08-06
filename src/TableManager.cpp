@@ -52,8 +52,6 @@ void TableManager::drawTable(Table* i_data)
         }
         _setItemName(r, i_data->headingCount() + 1, fmt::format("{:.2f}", i_data->row(r)->totalValue()).c_str());
     }
-
-
     show();
 }
 
