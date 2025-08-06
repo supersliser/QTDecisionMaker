@@ -110,7 +110,9 @@ qt_add_executable(Tests
         tests/test_main.cpp
         tests/test_main.h
         tests/columntests.cpp
+        tests/enhanced_columntests.cpp
         tests/rowtests.cpp
+        tests/enhanced_rowtests.cpp
         tests/tabletests.cpp
         tests/datatypetests.cpp
 

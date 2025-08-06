@@ -20,6 +20,22 @@ private slots:
 
     void column_setImportance();
     void column_setImportance_data();
+
+// Enhanced Column Tests
+    void column_constructor();
+    void column_constructor_data();
+
+    void column_setType();
+    void column_setType_data();
+
+    void column_testAutoSetType();
+    void column_testAutoSetType_data();
+
+    void column_equality();
+    void column_equality_data();
+
+    void column_indexBoundaries();
+    void column_indexBoundaries_data();
 // |---------------------------------------|
 // Row Tests
     void row_setIndex();
@@ -33,6 +49,22 @@ private slots:
 
     void row_setTotalValue();
     void row_setTotalValue_data();
+
+// Enhanced Row Tests
+    void row_constructor();
+    void row_constructor_data();
+
+    void row_equality();
+    void row_equality_data();
+
+    void row_indexBoundaries();
+    void row_indexBoundaries_data();
+
+    void row_totalValueBoundaries();
+    void row_totalValueBoundaries_data();
+
+    void row_nameEdgeCases();
+    void row_nameEdgeCases_data();
 // |---------------------------------------|
 // Table Tests
     void table_addHeading();
