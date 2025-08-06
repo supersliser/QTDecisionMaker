@@ -5,6 +5,7 @@
 #include "../include/TableManager.h"
 
 #include <QApplication>
+#include <qevent.h>
 #include <fmt/format.h>
 #include <QHeaderView>
 
@@ -13,6 +14,7 @@ TableManager::TableManager(QWidget* parent)
 {
     _M_ORIGINAL_SIZE = QApplication::font().pointSize();
     connect(this, &QTableWidget::currentCellChanged, this, &TableManager::_selectItem);
+    connect(this, &QTableWidget::cellChanged, this, &TableManager::_itemEdited);
 }
 
 void TableManager::_selectItem(int i_row, int i_column, int i_prev_row, int i_prev_column)
@@ -51,6 +53,7 @@ void TableManager::drawTable(Table* i_data)
         _setItemName(r, i_data->headingCount() + 1, fmt::format("{:.2f}", i_data->row(r)->totalValue()).c_str());
     }
 
+
     show();
 }
 
@@ -69,11 +72,16 @@ void TableManager::_setItem(int i_row, int i_column, Item* i_item)
     auto item = new QTableWidgetItem(i_item->displayValue.data());
     QColor color;
 
-    if (i_item->worthValue > 0) {
+    if (i_item->worthValue > 0)
+    {
         color = QColor(0, 255, 0); // Green for worth value >= 1
-    } else if (i_item->worthValue < 0) {
+    }
+    else if (i_item->worthValue < 0)
+    {
         color = QColor(255, 0, 0); // Red for worth value < 0
-    } else {
+    }
+    else
+    {
         color = QColor(255, 255, 0); // Yellow for worth value == 0
     }
 
@@ -85,7 +93,12 @@ void TableManager::_itemEdited(int i_row, int i_column)
 {
     Q_UNUSED(i_row);
     Q_UNUSED(i_column);
-    emit itemEdited(currentItem()->text().toStdString());
+    if (currentRow() < 0 || currentColumn() < 0) { return; }
+    auto item = this->item(currentRow(), currentColumn());
+    if (item)
+    {
+        emit itemEdited(item->text().toStdString());
+    }
 }
 
 int TableManager::selectedColumn()

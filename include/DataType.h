@@ -51,6 +51,8 @@ public:
     [[nodiscard]] virtual Type type() const {
         return m_enumType;
     }
+
+    DataType& operator=(const DataType &i_type);
 };
 
 

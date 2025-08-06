@@ -11,7 +11,7 @@ TableColumnDataDock::TableColumnDataDock(QWidget* parent)
 {
     setMaximumSize(QSize(200, 300));
     setMinimumSize(QSize(200, 300));
-    setWindowTitle("Item Details");
+    setWindowTitle("Column Details");
 
     m_typeValue = new QComboBox(this);
     m_layout->addRow(m_typeValue);

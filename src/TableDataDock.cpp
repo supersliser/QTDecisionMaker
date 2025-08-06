@@ -28,7 +28,7 @@ TableDataDock::TableDataDock(QWidget* parent)
     m_worthValue->setSingleStep(1);
     m_worthValue->setButtonSymbols(QAbstractSpinBox::PlusMinus);
 
-    connect(m_displayValue, &QLineEdit::editingFinished, this, &TableDataDock::_displayValueChanged);
+    connect(m_displayValue, &QLineEdit::textEdited, this, &TableDataDock::_displayValueChanged);
     connect(m_worthValue, &QDoubleSpinBox::editingFinished, this, &TableDataDock::_worthValueChanged);
 }
 
@@ -40,11 +40,6 @@ void TableDataDock::_displayValueChanged()
 void TableDataDock::_worthValueChanged()
 {
     emit worthValueChanged(m_worthValue->value());
-}
-
-void TableDataDock::displayValueUpdated(std::string i_value)
-{
-    m_displayValue->setText(QString(i_value.c_str()));
 }
 
 void TableDataDock::setItem(Table* i_table, int i_row, int i_column)

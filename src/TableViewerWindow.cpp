@@ -39,6 +39,8 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
     _m_table = new TableManager(this);
     ui->TableContainer->addWidget(_m_table);
     connect(_m_table, &TableManager::selectItem, this, &TableViewerWindow::selectItem);
+    connect(_m_table, &TableManager::itemEdited, this, &TableViewerWindow::_itemEditedReceived);
+    connect(this, &TableViewerWindow::itemEdited, this, &TableViewerWindow::selectItem);
     connect(this, &TableViewerWindow::sendDrawTable, _m_table, &TableManager::drawTable);
     connect(this, &TableViewerWindow::sendDrawTable, this, &TableViewerWindow::actionOccured);
 
@@ -46,7 +48,6 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
     ui->verticalFrame->layout()->addWidget(_m_itemDock);
     connect(_m_itemDock, &TableDataDock::displayValueChanged, this, &TableViewerWindow::editItemDisplay);
     connect(_m_itemDock, &TableDataDock::worthValueChanged, this, &TableViewerWindow::editItemWorth);
-    connect(_m_table, &TableManager::itemEdited, _m_itemDock, &TableDataDock::displayValueUpdated);
     connect(this, &TableViewerWindow::itemSelected, _m_itemDock, &TableDataDock::setItem);
 
     _m_columnDock = new TableColumnDataDock(ui->verticalFrame);
@@ -113,6 +114,13 @@ void TableViewerWindow::newRowTriggered()
 
 void TableViewerWindow::editItemDisplay(std::string i_value)
 {
+    if (_m_table->selectedColumn() == 0)
+    {
+        _m_data->row(_m_table->selectedRow())->setName(i_value);
+        _m_fileSaved = false;
+        emit sendDrawTable(_m_data);
+        return;
+    }
     Item* i = _m_data->item(_m_table->selectedColumn() - 1, _m_table->selectedRow());
     if (i == nullptr) { return; }
     i->displayValue = i_value;
@@ -305,6 +313,7 @@ void TableViewerWindow::openFileInternal(const QString& filePath)
 {
     try
     {
+
         *_m_data = FileSystemManager::readFile(filePath);
         emit sendDrawTable(_m_data);
         _m_fileSaved = true;
@@ -336,9 +345,10 @@ void TableViewerWindow::findTriggered()
     }
     else
     {
-        ui->TableContainer->removeWidget(_m_findLineEdit);
-        disconnect(_m_findLineEdit, &QLineEdit::textEdited, _m_table, &TableManager::findTriggered);
+        // ui->TableContainer->removeWidget(_m_findLineEdit);
+        // disconnect(_m_findLineEdit, &QLineEdit::textEdited, _m_table, &TableManager::findTriggered);
         delete _m_findLineEdit;
+        _m_findLineEdit = nullptr;
     }
 }
 
@@ -354,8 +364,8 @@ void TableViewerWindow::changeColumnType(Type i_type)
         _m_columnDock->setType(Type::NUM);
         return;
     }
-    _m_data->heading(_m_table->selectedColumn())->setType(*DataType::createDataType(i_type));
-    _m_columnDock->setType(_m_data->heading(_m_table->selectedColumn())->type().type());
+    _m_data->heading(_m_table->selectedColumn() - 1)->setType(*DataType::createDataType(i_type));
+    _m_columnDock->setType(_m_data->heading(_m_table->selectedColumn() - 1)->type().type());
     _m_fileSaved = false;
     emit sendDrawTable(_m_data);
 }
@@ -446,4 +456,12 @@ void TableViewerWindow::applyColorTheme()
     
     // Force update of all child widgets
     this->update();
+}
+
+void TableViewerWindow::_itemEditedReceived(std::string i_value)
+{
+    auto cv = _m_data->item(_m_table->selectedColumn() - 1, _m_table->selectedRow())->displayValue;
+    _m_data->item(_m_table->selectedColumn() - 1, _m_table->selectedRow())->displayValue = i_value;
+    _m_fileSaved = false;
+    emit itemEdited(_m_table->selectedRow(), _m_table->selectedColumn());
 }
