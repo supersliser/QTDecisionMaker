@@ -34,3 +34,14 @@ DataType* DataType::createDataType(Type i_type)
             return nullptr;
     }
 }
+
+DataType& DataType::operator=(const DataType &i_type)
+{
+    if (this != &i_type) {
+        m_name = i_type.m_name;
+        m_desc = i_type.m_desc;
+        m_enumType = i_type.m_enumType;
+        m_defaultImportance = i_type.m_defaultImportance;
+    }
+    return *this;
+}

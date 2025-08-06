@@ -35,16 +35,18 @@ public:
 
     ~TableViewerWindow();
 
-    void addRow();
-
-    void addColumn();
-
 signals:
     void sendDrawTable(Table* i_table);
     void itemSelected(Table* i_table, int i_row, int i_column);
     void columnSelected(Table* i_table, int i_column);
+    void itemEdited(int i_row, int i_column);
+
+    private slots:
+    void _itemEditedReceived(std::string i_value);
+
 
 public slots:
+
 
     void selectItem(int i_row, int i_column);
 

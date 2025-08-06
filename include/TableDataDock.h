@@ -21,7 +21,6 @@ public:
     ~TableDataDock() = default;
 
 public slots:
-    void displayValueUpdated(std::string i_value);
     virtual void setItem(Table* i_table, int i_row, int i_column);
 
 signals:

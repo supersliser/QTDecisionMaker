@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(QTDecisionMaker VERSION 1.1 LANGUAGES CXX)
+project(QTDecisionMaker VERSION 1.1.1 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Meta
 set(PROJECT_NAME "DecisionMaker")
-set(PROJECT_VERSION "1.1.0")
+set(PROJECT_VERSION "1.1.1")
 set(PROJECT_DESCRIPTION "Qt-based Decision Maker Application")
 set(PROJECT_COMPANY "Supersliser")
 
@@ -110,8 +110,14 @@ qt_add_executable(Tests
         tests/test_main.cpp
         tests/test_main.h
         tests/columntests.cpp
+        tests/enhanced_columntests.cpp
         tests/rowtests.cpp
+        tests/enhanced_rowtests.cpp
         tests/tabletests.cpp
+        tests/datatypetests.cpp
+        tests/filesystemtests.cpp
+        tests/preferencestests.cpp
+        tests/tablemanagertests.cpp
 
 )
 
