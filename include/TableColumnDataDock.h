@@ -6,6 +6,8 @@
 #define TABLECOLUMNDATADOCK_H
 #include "TableDataDock.h"
 #include <QComboBox>
+#include <vector>
+#include <QPushButton>
 
 
 class TableColumnDataDock : public TableDataDock
@@ -19,15 +21,24 @@ public:
 
 public slots:
     void setItem(Table* i_table, int i_column);
+	void addedBoundsValue();
+	void removedBoundsValue();
 
 signals:
     void typeChanged(Type i_type);
+	void boundsValueChanged(int i_index, int i_value);
 
 private slots:
     void _typeChanged(int i_index);
+	void _boundsValueChanged(int i_value);
 
 private:
     QComboBox* m_typeValue;
+	QVBoxLayout* m_boundsValuesLayout;
+	QHBoxLayout* m_boundsValuesButtonsLayout;
+	QPushButton* m_addBoundValueButton;
+	QPushButton* m_removeBoundValueButton;
+	std::vector<std::unique_ptr<QDoubleSpinBox>> m_boundsValues;
 };
 
 
