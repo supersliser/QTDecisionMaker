@@ -20,13 +20,19 @@ TableColumnDataDock::TableColumnDataDock(QWidget* parent)
     {
         m_typeValue->addItem(tr(DataType::createDataType((Type)i)->name().data()));
     }
-
+	m_boundsValues = {};
     connect(m_typeValue, &QComboBox::activated, this, &TableColumnDataDock::_typeChanged);
 }
 
 void TableColumnDataDock::_typeChanged(int i_type)
 {
     emit typeChanged((Type)i_type);
+}
+
+void TableColumnDataDock::addedBoundsValue()
+{
+	m_boundsValues.push_back(new QDoubleSpinBox(this));
+	m_layout->addRow(m_boundsValues.back());
 }
 
 void TableColumnDataDock::setItem(Table* i_table, int i_column)
