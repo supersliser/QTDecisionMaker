@@ -180,3 +180,46 @@ void Column::testAutoSetType(std::string_view i_value)
         }
     }
 }
+
+void Column::addBoundsValue(int32_t i_value) {
+m_boundsValues.push_back(i_value);
+	_sortBoundsValues();
+}
+
+void Column::removeBoundsValue(int i_index) {
+for (int i = 0; i < m_boundsValues.size(); i++) {
+	if (i > i_index) {
+		m_boundsValues[i - 1] = m_boundsValues[i];
+		}
+	}
+}
+
+void Column::clearBoundsValues() {
+	m_boundsValues.clear();
+}
+
+int32_t Column::boundsValue(int i_index) {
+	if (i_index >= m_boundsValues.size())
+	{
+		std::cerr << "Attempted to get a bounds value with an index greater than the size of the vector";
+		return 0;
+	}
+return m_boundsValues[i_index];
+}
+
+size_t Column::boundsValuesLength() {
+	return m_boundsValues.size();
+}
+
+void Column::_sortBoundsValues() {
+	for (int i = 0; i < m_boundsValues.size(); i++) {
+		for (int j = 0; j < m_boundsValues.size() - 1; j++) {
+			if (m_boundsValues[j] > m_boundsValues[j + 1])
+			{
+				auto temp = m_boundsValues[j];
+				m_boundsValues[j] = m_boundsValues[j + 1];
+				m_boundsValues[j + 1] = temp;
+			}
+		}
+	}
+}

@@ -18,6 +18,9 @@ protected:
     std::string m_name = "name";
     int8_t m_importance = 0;
     bool m_verbose = false;
+	std::vector<int32_t> m_boundsValues = {};
+
+	void _sortBoundsValues();
 public:
     Column() = default;
     Column(QString i_name, int i_importance = 0, bool i_verbose = false);
@@ -34,6 +37,11 @@ public:
     void setType(DataType i_type);
     DataType type() const;
     void testAutoSetType(std::string_view i_value);
+	void addBoundsValue(int32_t i_value);
+	void removeBoundsValue(int i_index);
+	void clearBoundsValues();
+	int32_t boundsValue(int i_index);
+	size_t boundsValuesLength();
 
     void print() const;
 
