@@ -74,19 +74,23 @@ unsigned int Table::rowCount() const {
 
 Item* Table::item(unsigned int i_x, unsigned int i_y) {
     auto hc = headingCount();
-    if (i_x >= hc) {
-        if (m_verbose) {std::cerr << "Attempted to access 'TotalValue', returnning NullPtr\n"; }
+    if (i_x > hc) {
+        if (m_verbose) {std::cerr << "\nAttempted to access column 'TotalValue', returnning NullPtr\nRequested Column was " << i_x << "\nHighest possible column shouldve been " << hc << "\n"; }
         return nullptr;
     }
-    if (i_x * rowCount() + i_y > rowCount() * headingCount()) {
-        if (m_verbose) {std::cerr << "Attempted to access 'item' outside of array length on dimension '" << (i_x > headingCount() ? "x" : "y") << "', returning NullPtr\n"; }
+	auto rc = rowCount();
+    if (i_x * rc + i_y > rc * hc) {
+        if (m_verbose) {std::cerr << "Attempted to access 'item' outside of array length on dimension '" << (i_x > hc ? "x" : "y") << "', returning NullPtr\n"; }
         return nullptr;
     }
+
     return &m_items[i_x * rowCount() + i_y];
 }
 
 void Table::removeHeading(unsigned int i_index) {
-    std::vector<Column> o_c;
+    m_items.resize(headingCount() * rowCount());
+
+	std::vector<Column> o_c;
     std::vector<Item> o_i;
     for (int x = 0; x < headingCount(); x++) {
         if (x == i_index) {
@@ -98,7 +102,8 @@ void Table::removeHeading(unsigned int i_index) {
         }
         o_c.push_back(m_headings[x]);
         for (int y = 0; y < rowCount(); y++) {
-            o_i.push_back(m_items[y * headingCount() + x]);
+            o_i.push_back(m_items[x * rowCount() + y]);
+
         }
     }
     m_items = o_i;

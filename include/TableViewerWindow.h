@@ -54,6 +54,10 @@ public slots:
 
     void newRowTriggered();
 
+	void delRowTriggered();
+
+	void delColumnTriggered();
+
     void editItemDisplay(std::string i_value);
 
     void editItemWorth(float i_value);
