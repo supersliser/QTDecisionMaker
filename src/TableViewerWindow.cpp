@@ -25,6 +25,8 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
     ui->TableContainer->addWidget(_m_toolbar);
     connect(_m_toolbar, &TableViewerToolbar::newRow, this, &TableViewerWindow::newRowTriggered);
     connect(_m_toolbar, &TableViewerToolbar::newColumn, this, &TableViewerWindow::newColumnTriggered);
+	connect(_m_toolbar, &TableViewerToolbar::delRow, this, &TableViewerWindow::delRowTriggered);
+	connect(_m_toolbar, &TableViewerToolbar::delColumn, this, &TableViewerWindow::delColumnTriggered);
 
     _m_menubar = new TableViewerMenubar(this);
     connect(_m_menubar, &TableViewerMenubar::zoom, this, &TableViewerWindow::changeZoom);
@@ -110,6 +112,20 @@ void TableViewerWindow::newRowTriggered()
     _m_fileSaved = false;
 
     emit sendDrawTable(_m_data);
+}
+
+void TableViewerWindow::delRowTriggered() {
+	_m_data->removeRow(_m_table->selectedRow());
+	_m_fileSaved = false;
+
+	emit sendDrawTable(_m_data);
+}
+
+void TableViewerWindow::delColumnTriggered() {
+	_m_data->removeHeading(_m_table->selectedColumn()-1);
+	_m_fileSaved = false;
+
+	emit sendDrawTable(_m_data);
 }
 
 void TableViewerWindow::editItemDisplay(std::string i_value)
@@ -457,7 +473,14 @@ void TableViewerWindow::applyColorTheme()
 
 void TableViewerWindow::_itemEditedReceived(std::string i_value)
 {
+
+	if (_m_table->selectedColumn() == 0) {
+		_m_data->row(_m_table->selectedRow())->setName(i_value);
+	}
+	else {
     _m_data->item(_m_table->selectedColumn() - 1, _m_table->selectedRow())->displayValue = i_value;
-    _m_fileSaved = false;
+	}
+	_m_fileSaved = false;
+
     emit itemEdited(_m_table->selectedRow(), _m_table->selectedColumn());
 }
