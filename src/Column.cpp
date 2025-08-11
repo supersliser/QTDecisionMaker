@@ -211,6 +211,10 @@ size_t Column::boundsValuesLength() {
 	return m_boundsValues.size();
 }
 
+const std::vector<int32_t>& Column::boundsValues() const {
+	return m_boundsValues;
+}
+
 void Column::_sortBoundsValues() {
 	for (int i = 0; i < m_boundsValues.size(); i++) {
 		for (int j = 0; j < m_boundsValues.size() - 1; j++) {

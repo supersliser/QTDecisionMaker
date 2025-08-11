@@ -28,6 +28,34 @@ class MoneyType : public DataType
                i_item.find("₽") == 0 || i_item.find("₺") == 0 || i_item.find("₫") == 0 ||
                i_item.find("₭") == 0 || i_item.find("₮") == 0 || i_item.find("₱") == 0 ||(i_item[i_item.find('.') + 1] == '0' && i_item[i_item.find('.') + 2] == '0') && std::all_of(i_item.begin() + 1, i_item.end(), ::isdigit);
     }
+
+    [[nodiscard]] float autoCalculateWorth(const std::string& displayValue, 
+                                           const std::vector<int32_t>& boundsValues, 
+                                           int max) const override
+    {
+        if (boundsValues.empty()) {
+            return 0.0f;
+        }
+
+        float value = std::stof(displayValue);
+        
+        if (value >= boundsValues[boundsValues.size() - 1]) {
+            return ((static_cast<float>(boundsValues.size()) / max) - 0.5f) * max;
+        }
+        
+        // Note: The original loop had an error (j < 0 condition), let me fix it
+        for (int j = static_cast<int>(boundsValues.size()) - 1; j > 0; j--) {
+            if (value >= boundsValues[j - 1] && value < boundsValues[j]) {
+                return ((static_cast<float>(j - 1) / max) - 0.5f) * max;
+            }
+        }
+        
+        if (value < boundsValues[0]) {
+            return ((0.0f / max) - 0.5f) * max;
+        }
+        
+        return 0.0f;
+    }
 };
 
 #endif //MONEYTYPE_H

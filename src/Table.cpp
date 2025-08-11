@@ -223,64 +223,20 @@ void Table::calculateTotal(unsigned int i_row) {
     for (int x = 0; x < headingCount(); x++) {
         Item* i = item(x, i_row);
         Column* h = heading(x);
-	int max = h->boundsValuesLength() + 1 / 2;
-	bool hasNonNumber = false;
-	for (int k = 0; k < i->displayValue.length(); k++) {
-		if (!std::isdigit(i->displayValue[k]))
-			{
-				hasNonNumber = true;
-			}
-	}
-		if (i->displayValue.length() == 0) {
-			hasNonNumber = true;
-		}
-		if (h->boundsValuesLength() > 0 && !hasNonNumber) {
-	switch (h->type().type()) 
-	{
-			case Type::NAME:
-			case Type::DESC:
-			case Type::LINK:
-			break;
-			case Type::NUM:
-			case Type::RATE:
-				if (std::stof(i->displayValue) < h->boundsValue(0)) {
-					i->worthValue = ((0 / max) - 0.5) * max;
-					break;
-				}
-				for (int j = 0; j < h->boundsValuesLength() - 1; j++) 
-					{
-						if (std::stof(i->displayValue) >= h->boundsValue(j) && std::stof(i->displayValue) < h->boundsValue(j + 1)) {
-							i->worthValue = ((j / max) - 0.5) * max;
-						}
-					}
-				if (std::stof(i->displayValue) >= h->boundsValue(h->boundsValuesLength() - 1)) {
-					i->worthValue = ((h->boundsValuesLength() / max) - 0.5) * max;
-				}
-			break;
-			case Type::MONEY:
-				if (std::stof(i->displayValue) >= h->boundsValue(h->boundsValuesLength() - 1)) {
-					i->worthValue = ((h->boundsValuesLength() / max) - 0.5) * max;
-				}
-				for (int j = h->boundsValuesLength() - 1; j < 0; j--) 
-					{
-						if (std::stof(i->displayValue) >= h->boundsValue(j) && std::stof(i->displayValue) < h->boundsValue(j + 1)) {
-							i->worthValue = ((j / max) - 0.5) * max;
-						}
-					}
-					if (std::stof(i->displayValue) < h->boundsValue(0)) {
-					i->worthValue = ((0 / max) - 0.5) * max;
-					break;
-				}
-			break;
-			case Type::BOOL:
-				if (i->displayValue == "True" || i->displayValue == "true" || i->displayValue == "1") {
-					i->worthValue = -1;
-					}
-				else {
-					i->worthValue = 1;
-					}
-			break;
-	}}
+        int max = h->boundsValuesLength() + 1 / 2;
+        bool hasNonNumber = false;
+        for (int k = 0; k < i->displayValue.length(); k++) {
+            if (!std::isdigit(i->displayValue[k]))
+            {
+                hasNonNumber = true;
+            }
+        }
+        if (i->displayValue.length() == 0) {
+            hasNonNumber = true;
+        }
+        if (h->boundsValuesLength() > 0 && !hasNonNumber) {
+            i->worthValue = h->type().autoCalculateWorth(i->displayValue, h->boundsValues(), max);
+        }
         final += (i->worthValue * h->importance());
     }
     r->setTotalValue(final);

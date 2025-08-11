@@ -23,6 +23,17 @@ public:
         return _toLower(i_item) == "true" || _toLower(i_item) == "false" || i_item == "1" || i_item == "0";
     }
 
+    [[nodiscard]] float autoCalculateWorth(const std::string& displayValue, 
+                                           const std::vector<int32_t>& boundsValues, 
+                                           int max) const override
+    {
+        if (displayValue == "True" || displayValue == "true" || displayValue == "1") {
+            return -1.0f;
+        } else {
+            return 1.0f;
+        }
+    }
+
 private:
     static std::string_view _toLower(std::string& i_str)
     {

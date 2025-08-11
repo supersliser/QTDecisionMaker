@@ -42,6 +42,7 @@ public:
 	void clearBoundsValues();
 	int32_t boundsValue(int i_index);
 	size_t boundsValuesLength();
+	const std::vector<int32_t>& boundsValues() const;
 	void setBoundsValue(int i_index, int i_value);
     void print() const;
 
