@@ -313,3 +313,122 @@ void Tests::table_fromJson_data() {
     QJsonDocument emptyDoc;
     QTest::newRow("empty document") << emptyDoc << false << "" << 0;
 }
+
+// Bounds Values Tests
+void Tests::filesystemmanager_boundsValues_roundtrip() {
+    QFETCH(Table, originalTable);
+    
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+    
+    QString filePath = tempDir.path() + "/bounds_roundtrip.json";
+    
+    // Write the table
+    bool writeSuccess = FileSystemManager::writeFile(filePath, &originalTable);
+    QVERIFY(writeSuccess);
+    
+    // Read it back
+    Table readTable = FileSystemManager::readFile(filePath);
+    
+    // Compare bounds values
+    QCOMPARE(readTable.headingCount(), originalTable.headingCount());
+    for (unsigned int i = 0; i < originalTable.headingCount(); ++i) {
+        QCOMPARE(readTable.heading(i)->boundsValuesLength(), originalTable.heading(i)->boundsValuesLength());
+        for (size_t j = 0; j < originalTable.heading(i)->boundsValuesLength(); ++j) {
+            QCOMPARE(readTable.heading(i)->boundsValue(j), originalTable.heading(i)->boundsValue(j));
+        }
+    }
+}
+
+void Tests::filesystemmanager_boundsValues_roundtrip_data() {
+    QTest::addColumn<Table>("originalTable");
+    
+    // Table with bounds values
+    Table tableWithBounds;
+    tableWithBounds.setTitle("Bounds Test");
+    Column col1("Column1", 5);
+    col1.addBoundsValue(10);
+    col1.addBoundsValue(20);
+    col1.addBoundsValue(30);
+    tableWithBounds.addHeading(col1);
+    
+    Column col2("Column2", 3);
+    col2.addBoundsValue(1);
+    col2.addBoundsValue(5);
+    tableWithBounds.addHeading(col2);
+    
+    Column col3("Column3", 0); // No bounds values
+    tableWithBounds.addHeading(col3);
+    
+    tableWithBounds.addRow(Row("Row1"));
+    QTest::newRow("table with bounds values") << tableWithBounds;
+    
+    // Table with empty bounds
+    Table tableEmptyBounds;
+    tableEmptyBounds.setTitle("Empty Bounds Test");
+    Column emptyCol("EmptyColumn", 1);
+    tableEmptyBounds.addHeading(emptyCol);
+    tableEmptyBounds.addRow(Row("Row1"));
+    QTest::newRow("table with empty bounds") << tableEmptyBounds;
+}
+
+void Tests::filesystemmanager_boundsValues_backwardCompatibility() {
+    QFETCH(QString, jsonContent);
+    QFETCH(QString, expectedTitle);
+    QFETCH(int, expectedColumns);
+    QFETCH(QList<int>, expectedBoundsLengths);
+    
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+    
+    QString filePath = tempDir.path() + "/backward_compat.json";
+    QFile file(filePath);
+    QVERIFY(file.open(QIODevice::WriteOnly));
+    file.write(jsonContent.toUtf8());
+    file.close();
+    
+    Table result = FileSystemManager::readFile(filePath);
+    
+    QCOMPARE(result.title(), expectedTitle.toStdString());
+    QCOMPARE(static_cast<int>(result.headingCount()), expectedColumns);
+    
+    for (int i = 0; i < expectedColumns; ++i) {
+        QCOMPARE(static_cast<int>(result.heading(i)->boundsValuesLength()), expectedBoundsLengths[i]);
+    }
+}
+
+void Tests::filesystemmanager_boundsValues_backwardCompatibility_data() {
+    QTest::addColumn<QString>("jsonContent");
+    QTest::addColumn<QString>("expectedTitle");
+    QTest::addColumn<int>("expectedColumns");
+    QTest::addColumn<QList<int>>("expectedBoundsLengths");
+    
+    // Old format without bounds values (backward compatibility)
+    QString oldFormatJson = R"({
+        "title": "Old Format",
+        "columns": [
+            {"name": "Column 1", "importance": 5},
+            {"name": "Column 2", "importance": 3}
+        ],
+        "rows": [
+            {"name": "Row 1"}
+        ],
+        "items": []
+    })";
+    QTest::newRow("old format without bounds") << oldFormatJson << "Old Format" << 2 << QList<int>{0, 0};
+    
+    // New format with bounds values
+    QString newFormatJson = R"({
+        "title": "New Format",
+        "columns": [
+            {"name": "Column 1", "importance": 5, "boundsValues": [10, 20, 30]},
+            {"name": "Column 2", "importance": 3, "boundsValues": []},
+            {"name": "Column 3", "importance": 1, "boundsValues": [1, 5]}
+        ],
+        "rows": [
+            {"name": "Row 1"}
+        ],
+        "items": []
+    })";
+    QTest::newRow("new format with bounds") << newFormatJson << "New Format" << 3 << QList<int>{3, 0, 2};
+}
