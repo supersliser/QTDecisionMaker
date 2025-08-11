@@ -1,5 +1,6 @@
 #include "Table.h"
 #include <iostream>
+#include <cctype>
 
 void Table::addHeading(Column i_column) {
     i_column.setIndex(headingCount());
@@ -223,7 +224,17 @@ void Table::calculateTotal(unsigned int i_row) {
         Item* i = item(x, i_row);
         Column* h = heading(x);
 	int max = h->boundsValuesLength() + 1 / 2;
-		if (h->boundsValuesLength() > 0) {
+	bool hasNonNumber = false;
+	for (int k = 0; k < i->displayValue.length(); k++) {
+		if (!std::isdigit(i->displayValue[k]))
+			{
+				hasNonNumber = true;
+			}
+	}
+		if (i->displayValue.length() == 0) {
+			hasNonNumber = true;
+		}
+		if (h->boundsValuesLength() > 0 && !hasNonNumber) {
 	switch (h->type().type()) 
 	{
 			case Type::NAME:
@@ -232,34 +243,42 @@ void Table::calculateTotal(unsigned int i_row) {
 			break;
 			case Type::NUM:
 			case Type::RATE:
-			{
+				if (std::stof(i->displayValue) < h->boundsValue(0)) {
+					i->worthValue = ((0 / max) - 0.5) * max;
+					break;
+				}
 				for (int j = 0; j < h->boundsValuesLength() - 1; j++) 
 					{
-						if (std::stof(i->displayValue) > h->boundsValue(j) && std::stof(i->displayValue) < h->boundsValue(j + 1)) {
+						if (std::stof(i->displayValue) >= h->boundsValue(j) && std::stof(i->displayValue) < h->boundsValue(j + 1)) {
 							i->worthValue = ((j / max) - 0.5) * max;
 						}
 					}
-			}
+				if (std::stof(i->displayValue) >= h->boundsValue(h->boundsValuesLength() - 1)) {
+					i->worthValue = ((h->boundsValuesLength() / max) - 0.5) * max;
+				}
 			break;
 			case Type::MONEY:
-				{
+				if (std::stof(i->displayValue) >= h->boundsValue(h->boundsValuesLength() - 1)) {
+					i->worthValue = ((h->boundsValuesLength() / max) - 0.5) * max;
+				}
 				for (int j = h->boundsValuesLength() - 1; j < 0; j--) 
 					{
-						if (std::stof(i->displayValue) > h->boundsValue(j) && std::stof(i->displayValue) < h->boundsValue(j + 1)) {
+						if (std::stof(i->displayValue) >= h->boundsValue(j) && std::stof(i->displayValue) < h->boundsValue(j + 1)) {
 							i->worthValue = ((j / max) - 0.5) * max;
 						}
 					}
+					if (std::stof(i->displayValue) < h->boundsValue(0)) {
+					i->worthValue = ((0 / max) - 0.5) * max;
+					break;
 				}
 			break;
 			case Type::BOOL:
-				{
 				if (i->displayValue == "True" || i->displayValue == "true" || i->displayValue == "1") {
 					i->worthValue = -1;
 					}
 				else {
 					i->worthValue = 1;
 					}
-				}
 			break;
 	}}
         final += (i->worthValue * h->importance());
@@ -286,7 +305,7 @@ Table Table::fromJson(const QJsonDocument& i_json)
         Column c;
         c.setName(col.value("name").toString().toStdString());
         c.setImportance(col.value("importance").toDouble());
-        
+	c.setType(*DataType::createDataType((Type)col.value("type").toInt()));
         // Load bounds values if present (backward compatibility)
         if (col.contains("boundsValues")) {
             auto boundsArray = col.value("boundsValues").toArray();
@@ -294,7 +313,6 @@ Table Table::fromJson(const QJsonDocument& i_json)
                 c.addBoundsValue(boundsValue.toInt());
             }
         }
-        
         table.addHeading(c);
     }
     for (const auto& row : rows) {

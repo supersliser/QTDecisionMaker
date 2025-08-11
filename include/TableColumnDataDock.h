@@ -42,6 +42,7 @@ private:
 	QPushButton* m_addBoundValueButton;
 	QPushButton* m_removeBoundValueButton;
 	std::vector<std::unique_ptr<QDoubleSpinBox>> m_boundsValues;
+	void addBoundValueRun();
 };
 
 

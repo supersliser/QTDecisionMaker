@@ -96,15 +96,21 @@ TableViewerWindow::~TableViewerWindow()
 }
 
 void TableViewerWindow::addedBoundValue() {
-	_m_data->heading(_m_table->selectedColumn())->addBoundsValue(0);
+	_m_data->heading(_m_table->selectedColumn() - 1)->addBoundsValue(0);
+	_m_fileSaved = false;
+	emit sendDrawTable(_m_data);
 }
 
 void TableViewerWindow::removedBoundValue(int i_index) {
-	_m_data->heading(_m_table->selectedColumn())->removeBoundsValue(i_index);
+	_m_data->heading(_m_table->selectedColumn() - 1)->removeBoundsValue(i_index);
+	_m_fileSaved = false;
+	emit sendDrawTable(_m_data);
 }
 
 void TableViewerWindow::editedBoundValue(int i_index, int i_value) {
-	_m_data->heading(_m_table->selectedColumn())->setBoundsValue(i_index, i_value);
+	_m_data->heading(_m_table->selectedColumn() - 1)->setBoundsValue(i_index, i_value);
+	_m_fileSaved = false;
+	emit sendDrawTable(_m_data);
 }
 
 void TableViewerWindow::selectItem(int i_row, int i_column)

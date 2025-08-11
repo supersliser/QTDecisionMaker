@@ -8,6 +8,7 @@
 #include <qevent.h>
 #include <fmt/format.h>
 #include <QHeaderView>
+#include <iostream>
 
 TableManager::TableManager(QWidget* parent)
     : QTableWidget(parent)
