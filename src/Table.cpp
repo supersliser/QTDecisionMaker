@@ -286,6 +286,15 @@ Table Table::fromJson(const QJsonDocument& i_json)
         Column c;
         c.setName(col.value("name").toString().toStdString());
         c.setImportance(col.value("importance").toDouble());
+        
+        // Load bounds values if present (backward compatibility)
+        if (col.contains("boundsValues")) {
+            auto boundsArray = col.value("boundsValues").toArray();
+            for (const auto& boundsValue : boundsArray) {
+                c.addBoundsValue(boundsValue.toInt());
+            }
+        }
+        
         table.addHeading(c);
     }
     for (const auto& row : rows) {

@@ -152,6 +152,13 @@ private slots:
 // Table JSON Tests
     void table_fromJson();
     void table_fromJson_data();
+
+// Bounds Values Tests
+    void filesystemmanager_boundsValues_roundtrip();
+    void filesystemmanager_boundsValues_roundtrip_data();
+
+    void filesystemmanager_boundsValues_backwardCompatibility();
+    void filesystemmanager_boundsValues_backwardCompatibility_data();
 // |---------------------------------------|
 // PreferencesManager Tests
     void preferencesmanager_recentFiles();

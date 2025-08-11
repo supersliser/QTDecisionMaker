@@ -42,6 +42,14 @@ bool FileSystemManager::writeFile(const QString &i_filePath, Table *i_jsonDoc) {
         QJsonObject columnObject;
         columnObject["name"] = QString::fromStdString(column->name());
         columnObject["importance"] = column->importance();
+        
+        // Save bounds values
+        QJsonArray boundsArray;
+        for (size_t j = 0; j < column->boundsValuesLength(); ++j) {
+            boundsArray.append(column->boundsValue(j));
+        }
+        columnObject["boundsValues"] = boundsArray;
+        
         columnsArray.append(columnObject);
     }
     jsonObject["columns"] = columnsArray;
