@@ -91,9 +91,6 @@ void TableManager::_itemEdited(int i_row, int i_column)
 {
     Q_UNUSED(i_row);
     Q_UNUSED(i_column);	
-	printf("row = %d\n", currentRow());
-	printf("column = %d\n", currentColumn());
-
     if (currentRow() < 0 || currentColumn() < 0) { return; }
 	
     auto item = this->item(currentRow(), currentColumn());

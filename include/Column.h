@@ -42,7 +42,7 @@ public:
 	void clearBoundsValues();
 	int32_t boundsValue(int i_index);
 	size_t boundsValuesLength();
-
+	void setBoundsValue(int i_index, int i_value);
     void print() const;
 
     bool operator==(const Column &i_column) const;

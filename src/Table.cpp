@@ -222,6 +222,46 @@ void Table::calculateTotal(unsigned int i_row) {
     for (int x = 0; x < headingCount(); x++) {
         Item* i = item(x, i_row);
         Column* h = heading(x);
+	int max = h->boundsValuesLength() + 1 / 2;
+		if (h->boundsValuesLength() > 0) {
+	switch (h->type().type()) 
+	{
+			case Type::NAME:
+			case Type::DESC:
+			case Type::LINK:
+			break;
+			case Type::NUM:
+			case Type::RATE:
+			{
+				for (int j = 0; j < h->boundsValuesLength() - 1; j++) 
+					{
+						if (std::stof(i->displayValue) > h->boundsValue(j) && std::stof(i->displayValue) < h->boundsValue(j + 1)) {
+							i->worthValue = ((j / max) - 0.5) * max;
+						}
+					}
+			}
+			break;
+			case Type::MONEY:
+				{
+				for (int j = h->boundsValuesLength() - 1; j < 0; j--) 
+					{
+						if (std::stof(i->displayValue) > h->boundsValue(j) && std::stof(i->displayValue) < h->boundsValue(j + 1)) {
+							i->worthValue = ((j / max) - 0.5) * max;
+						}
+					}
+				}
+			break;
+			case Type::BOOL:
+				{
+				if (i->displayValue == "True" || i->displayValue == "true" || i->displayValue == "1") {
+					i->worthValue = -1;
+					}
+				else {
+					i->worthValue = 1;
+					}
+				}
+			break;
+	}}
         final += (i->worthValue * h->importance());
     }
     r->setTotalValue(final);

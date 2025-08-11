@@ -8,10 +8,12 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <memory>
+#include <stdio.h>
 
 TableColumnDataDock::TableColumnDataDock(QWidget* parent)
     : TableDataDock(parent)
 {
+	m_lastBoundsValueSelected = -1;
     setMaximumSize(QSize(200, 300));
     setMinimumSize(QSize(200, 300));
     setWindowTitle("Column Details");
@@ -49,6 +51,8 @@ void TableColumnDataDock::addedBoundsValue()
 	m_boundsValues.push_back(std::make_unique<QDoubleSpinBox>(new QDoubleSpinBox(this)));
 	m_boundsValuesLayout->addWidget(m_boundsValues.back().get());
 	connect(m_boundsValues.back().get(), &QDoubleSpinBox::valueChanged, this, &TableColumnDataDock::_boundsValueChanged);
+	connect(m_boundsValues.back().get(), &QDoubleSpinBox::editingFinished, this, &TableColumnDataDock::_boundsValueSelected);
+	m_lastBoundsValueSelected = m_boundsValues.size() - 1;
 }
 
 void TableColumnDataDock::setItem(Table* i_table, int i_column)
@@ -91,20 +95,19 @@ void TableColumnDataDock::setType(Type i_type)
 }
 
 void TableColumnDataDock::removedBoundsValue() {
-	auto index = -1;
-	for (int i = 0; i < m_boundsValues.size(); i++) {
-		if (m_boundsValues[i].get()->hasFocus()) {
-			index = i;
-		}
+	if (m_lastBoundsValueSelected == -1) {
+		return;
 	}
-	if (index == -1) {
+	if (m_lastBoundsValueSelected == m_boundsValues.size() - 1) {
+		m_boundsValues.pop_back();
 		return;
 	}
 	for (int i = 0; i < m_boundsValues.size(); i++) {
-		if (i > index) {
+		if (i > m_lastBoundsValueSelected) {
 			m_boundsValues[i - 1] = std::make_unique<QDoubleSpinBox>(m_boundsValues[i].get());
 		}
 	}
+	m_lastBoundsValueSelected = -1;
 }
 
 void TableColumnDataDock::_boundsValueChanged(int i_value) {
@@ -116,4 +119,13 @@ void TableColumnDataDock::_boundsValueChanged(int i_value) {
 		}
 	}
 	emit(index, i_value);
+}
+
+void TableColumnDataDock::_boundsValueSelected() {
+	for (int i = 0; i < m_boundsValues.size(); i++) {
+		if (m_boundsValues[i].get() == sender())
+		{
+			m_lastBoundsValueSelected = i;
+		}
+	}
 }

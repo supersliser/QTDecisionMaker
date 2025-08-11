@@ -201,7 +201,7 @@ void Column::clearBoundsValues() {
 int32_t Column::boundsValue(int i_index) {
 	if (i_index >= m_boundsValues.size())
 	{
-		std::cerr << "Attempted to get a bounds value with an index greater than the size of the vector";
+		std::cerr << "Attempted to get a bounds value with an index greater than the size of the vector\nGiven index was " << i_index << "\nMaximum size was " << m_boundsValues.size() << "\n";
 		return 0;
 	}
 return m_boundsValues[i_index];
@@ -222,4 +222,8 @@ void Column::_sortBoundsValues() {
 			}
 		}
 	}
+}
+
+void Column::setBoundsValue(int i_index, int i_value) {
+	m_boundsValues[i_index] = i_value;
 }
