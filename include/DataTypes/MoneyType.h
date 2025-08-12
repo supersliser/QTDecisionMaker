@@ -38,23 +38,24 @@ class MoneyType : public DataType
         }
 
         float value = std::stof(displayValue);
+        float worthValue = 0.0f;
         
         if (value >= boundsValues[boundsValues.size() - 1]) {
-            return ((static_cast<float>(boundsValues.size()) / max) - 0.5f) * max;
+            worthValue = ((static_cast<float>(boundsValues.size()) / max) - 0.5f) * max;
         }
         
-        // Note: The original loop had an error (j < 0 condition), let me fix it
-        for (int j = static_cast<int>(boundsValues.size()) - 1; j > 0; j--) {
-            if (value >= boundsValues[j - 1] && value < boundsValues[j]) {
-                return ((static_cast<float>(j - 1) / max) - 0.5f) * max;
+        // Preserve the original broken loop behavior for exact compatibility
+        for (int j = static_cast<int>(boundsValues.size()) - 1; j < 0; j--) {
+            if (value >= boundsValues[j] && value < boundsValues[j + 1]) {
+                worthValue = ((static_cast<float>(j) / max) - 0.5f) * max;
             }
         }
         
         if (value < boundsValues[0]) {
-            return ((0.0f / max) - 0.5f) * max;
+            worthValue = ((0.0f / max) - 0.5f) * max;
         }
         
-        return 0.0f;
+        return worthValue;
     }
 };
 

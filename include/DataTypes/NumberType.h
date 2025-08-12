@@ -35,22 +35,24 @@ public:
         }
 
         float value = std::stof(displayValue);
+        float worthValue = 0.0f;
         
         if (value < boundsValues[0]) {
-            return ((0.0f / max) - 0.5f) * max;
+            worthValue = ((0.0f / max) - 0.5f) * max;
+            return worthValue;  // Original had break here
         }
         
         for (size_t j = 0; j < boundsValues.size() - 1; j++) {
             if (value >= boundsValues[j] && value < boundsValues[j + 1]) {
-                return ((static_cast<float>(j) / max) - 0.5f) * max;
+                worthValue = ((static_cast<float>(j) / max) - 0.5f) * max;
             }
         }
         
         if (value >= boundsValues[boundsValues.size() - 1]) {
-            return ((static_cast<float>(boundsValues.size()) / max) - 0.5f) * max;
+            worthValue = ((static_cast<float>(boundsValues.size()) / max) - 0.5f) * max;
         }
         
-        return 0.0f;
+        return worthValue;
     }
 };
 
