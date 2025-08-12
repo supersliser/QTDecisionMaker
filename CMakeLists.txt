@@ -121,7 +121,9 @@ qt_add_executable(
   tests/datatypetests.cpp
   tests/filesystemtests.cpp
   tests/preferencestests.cpp
-  tests/tablemanagertests.cpp)
+  tests/tablemanagertests.cpp
+  tests/worthcalculationtests.cpp
+  tests/enhanced_worthcalculationtests.cpp)
 
 set_target_properties(Tests PROPERTIES WIN32_EXECUTABLE TRUE MACOSX_BUNDLE TRUE)
 
