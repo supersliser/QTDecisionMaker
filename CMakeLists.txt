@@ -143,7 +143,7 @@ if(WIN32)
   include(toolchain-windows.cmake)
 endif()
 
-# Windows-specific inst2ller configuration
+# Windows-specific installer configuration
 if(WIN32)
 
   # CPack configuration for Windows installer
