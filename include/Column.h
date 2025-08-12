@@ -13,7 +13,7 @@ class Column
 protected:
     uint16_t m_trueIndex = 0;
     uint16_t m_displayIndex = 0;
-    DataType m_type;
+    DataType* m_type;
     bool m_typeAutoSet = true;
     std::string m_name = "name";
     int8_t m_importance = 0;
@@ -22,9 +22,11 @@ protected:
 
 	void _sortBoundsValues();
 public:
-    Column() = default;
+    Column();
     Column(QString i_name, int i_importance = 0, bool i_verbose = false);
-    ~Column() = default;
+    Column(const Column& other);
+    Column& operator=(const Column& other);
+    ~Column();
 
     void setIndex(int i_index);
     int index() const;
@@ -34,8 +36,8 @@ public:
     std::string name() const;
     void setImportance(int i_importance);
     int importance() const;
-    void setType(DataType i_type);
-    DataType type() const;
+    void setType(DataType* i_type);
+    DataType& type() const;
     void testAutoSetType(std::string_view i_value);
 	void addBoundsValue(int32_t i_value);
 	void removeBoundsValue(int i_index);
