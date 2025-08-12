@@ -51,7 +51,7 @@ void Tests::column_setType() {
     c.setType(dt);
     QCOMPARE(c.type().name(), expectedTypeName.toStdString());
     QCOMPARE(c.type().type(), inputType);
-    delete dt;
+    // Note: dt is now owned by the Column object, no need to delete
 }
 
 void Tests::column_setType_data() {
