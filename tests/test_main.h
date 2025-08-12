@@ -152,6 +152,13 @@ private slots:
 // Table JSON Tests
     void table_fromJson();
     void table_fromJson_data();
+
+// Bounds Values Tests
+    void filesystemmanager_boundsValues_roundtrip();
+    void filesystemmanager_boundsValues_roundtrip_data();
+
+    void filesystemmanager_boundsValues_backwardCompatibility();
+    void filesystemmanager_boundsValues_backwardCompatibility_data();
 // |---------------------------------------|
 // PreferencesManager Tests
     void preferencesmanager_recentFiles();
@@ -186,6 +193,32 @@ private slots:
 
     void tablemanager_findTriggered();
     void tablemanager_findTriggered_data();
+// |---------------------------------------|
+// Worth Calculation Tests
+    void worthcalculation_numType();
+    void worthcalculation_numType_data();
+
+    void worthcalculation_ratingType();
+    void worthcalculation_ratingType_data();
+
+    void worthcalculation_polymorphism();
+    void worthcalculation_polymorphism_data();
+
+    void worthcalculation_boundsIntegration();
+    void worthcalculation_boundsIntegration_data();
+
+    void worthcalculation_edgeCases();
+    void worthcalculation_edgeCases_data();
+// |---------------------------------------|
+// Enhanced Worth Calculation and Memory Management Tests
+    void column_memoryManagement();
+    void column_memoryManagement_data();
+
+    void column_boundsValuesSorting();
+    void column_boundsValuesSorting_data();
+
+    void datatype_comprehensiveWorthCalculation();
+    void datatype_comprehensiveWorthCalculation_data();
 };
 
 #endif // TEST_MAIN_H

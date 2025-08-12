@@ -11,10 +11,14 @@ class TableViewerToolbar : public QToolBar
 signals:
     void newRow();
     void newColumn();
+	void delRow();
+	void delColumn();
 
 private slots:
     void _newRow(bool i_checked);
-    void _newColumn(bool checked);
+    void _newColumn(bool i_checked);
+	void _delRow(bool i_checked);
+	void _delColumn(bool i_checked);
 
 public :
     TableViewerToolbar(QWidget* parent = nullptr);

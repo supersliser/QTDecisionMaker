@@ -22,6 +22,13 @@ public:
     {
         return i_item.length() > 30;
     }
+
+    [[nodiscard]] float autoCalculateWorth(const std::string& displayValue, 
+                                           const std::vector<int32_t>& boundsValues, 
+                                           int max) const override
+    {
+        return 0.0f; // Description types don't have worth calculations
+    }
 };
 
 #endif //DESCTYPE_H

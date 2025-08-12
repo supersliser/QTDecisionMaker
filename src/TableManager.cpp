@@ -8,6 +8,7 @@
 #include <qevent.h>
 #include <fmt/format.h>
 #include <QHeaderView>
+#include <iostream>
 
 TableManager::TableManager(QWidget* parent)
     : QTableWidget(parent)
@@ -90,8 +91,9 @@ void TableManager::_setItem(int i_row, int i_column, Item* i_item)
 void TableManager::_itemEdited(int i_row, int i_column)
 {
     Q_UNUSED(i_row);
-    Q_UNUSED(i_column);
+    Q_UNUSED(i_column);	
     if (currentRow() < 0 || currentColumn() < 0) { return; }
+	
     auto item = this->item(currentRow(), currentColumn());
     if (item)
     {

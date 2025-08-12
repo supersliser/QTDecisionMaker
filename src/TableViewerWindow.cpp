@@ -25,6 +25,8 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
     ui->TableContainer->addWidget(_m_toolbar);
     connect(_m_toolbar, &TableViewerToolbar::newRow, this, &TableViewerWindow::newRowTriggered);
     connect(_m_toolbar, &TableViewerToolbar::newColumn, this, &TableViewerWindow::newColumnTriggered);
+	connect(_m_toolbar, &TableViewerToolbar::delRow, this, &TableViewerWindow::delRowTriggered);
+	connect(_m_toolbar, &TableViewerToolbar::delColumn, this, &TableViewerWindow::delColumnTriggered);
 
     _m_menubar = new TableViewerMenubar(this);
     connect(_m_menubar, &TableViewerMenubar::zoom, this, &TableViewerWindow::changeZoom);
@@ -55,6 +57,9 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
     connect(_m_columnDock, &TableColumnDataDock::displayValueChanged, this, &TableViewerWindow::editColumnName);
     connect(_m_columnDock, &TableColumnDataDock::worthValueChanged, this, &TableViewerWindow::editColumnImportance);
     connect(_m_columnDock, &TableColumnDataDock::typeChanged, this, &TableViewerWindow::changeColumnType);
+	connect(_m_columnDock, &TableColumnDataDock::boundsValueAdded, this, &TableViewerWindow::addedBoundValue);
+	connect(_m_columnDock, &TableColumnDataDock::boundsValueRemoved, this, &TableViewerWindow::removedBoundValue);
+	connect(_m_columnDock, &TableColumnDataDock::boundsValueChanged, this, &TableViewerWindow::editedBoundValue);
     connect(this, &TableViewerWindow::columnSelected, _m_columnDock, &TableColumnDataDock::setItem);
 
     _m_undoStack = std::stack<Table>();
@@ -90,6 +95,24 @@ TableViewerWindow::~TableViewerWindow()
     delete ui;
 }
 
+void TableViewerWindow::addedBoundValue() {
+	_m_data->heading(_m_table->selectedColumn() - 1)->addBoundsValue(0);
+	_m_fileSaved = false;
+	emit sendDrawTable(_m_data);
+}
+
+void TableViewerWindow::removedBoundValue(int i_index) {
+	_m_data->heading(_m_table->selectedColumn() - 1)->removeBoundsValue(i_index);
+	_m_fileSaved = false;
+	emit sendDrawTable(_m_data);
+}
+
+void TableViewerWindow::editedBoundValue(int i_index, int i_value) {
+	_m_data->heading(_m_table->selectedColumn() - 1)->setBoundsValue(i_index, i_value);
+	_m_fileSaved = false;
+	emit sendDrawTable(_m_data);
+}
+
 void TableViewerWindow::selectItem(int i_row, int i_column)
 {
     emit itemSelected(_m_data, i_row, i_column);
@@ -110,6 +133,20 @@ void TableViewerWindow::newRowTriggered()
     _m_fileSaved = false;
 
     emit sendDrawTable(_m_data);
+}
+
+void TableViewerWindow::delRowTriggered() {
+	_m_data->removeRow(_m_table->selectedRow());
+	_m_fileSaved = false;
+
+	emit sendDrawTable(_m_data);
+}
+
+void TableViewerWindow::delColumnTriggered() {
+	_m_data->removeHeading(_m_table->selectedColumn()-1);
+	_m_fileSaved = false;
+
+	emit sendDrawTable(_m_data);
 }
 
 void TableViewerWindow::editItemDisplay(std::string i_value)
@@ -361,7 +398,7 @@ void TableViewerWindow::changeColumnType(Type i_type)
         _m_columnDock->setType(Type::NUM);
         return;
     }
-    _m_data->heading(_m_table->selectedColumn() - 1)->setType(*DataType::createDataType(i_type));
+    _m_data->heading(_m_table->selectedColumn() - 1)->setType(DataType::createDataType(i_type));
     _m_columnDock->setType(_m_data->heading(_m_table->selectedColumn() - 1)->type().type());
     _m_fileSaved = false;
     emit sendDrawTable(_m_data);
@@ -457,7 +494,14 @@ void TableViewerWindow::applyColorTheme()
 
 void TableViewerWindow::_itemEditedReceived(std::string i_value)
 {
+
+	if (_m_table->selectedColumn() == 0) {
+		_m_data->row(_m_table->selectedRow())->setName(i_value);
+	}
+	else {
     _m_data->item(_m_table->selectedColumn() - 1, _m_table->selectedRow())->displayValue = i_value;
-    _m_fileSaved = false;
+	}
+	_m_fileSaved = false;
+
     emit itemEdited(_m_table->selectedRow(), _m_table->selectedColumn());
 }
