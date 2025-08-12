@@ -48,7 +48,7 @@ void Tests::column_setType() {
     
     Column c;
     DataType* dt = DataType::createDataType(inputType);
-    c.setType(*dt);
+    c.setType(dt);
     QCOMPARE(c.type().name(), expectedTypeName.toStdString());
     QCOMPARE(c.type().type(), inputType);
     delete dt;
