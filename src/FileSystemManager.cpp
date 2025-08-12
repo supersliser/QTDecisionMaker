@@ -3,13 +3,14 @@
 //
 
 #include "../include/FileSystemManager.h"
-
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonValue>
 #include <QDebug>
+#include <stdio.h>
+#include <iostream>
 
 Table FileSystemManager::readFile(const QString &i_filePath) {
     QFile file(i_filePath);
@@ -42,6 +43,13 @@ bool FileSystemManager::writeFile(const QString &i_filePath, Table *i_jsonDoc) {
         QJsonObject columnObject;
         columnObject["name"] = QString::fromStdString(column->name());
         columnObject["importance"] = column->importance();
+	columnObject["type"] = column->type().type();
+        // Save bounds values
+        QJsonArray boundsArray;
+        for (size_t j = 0; j < column->boundsValuesLength(); ++j) {
+            boundsArray.append(column->boundsValue(j));
+        }
+        columnObject["boundsValues"] = boundsArray;
         columnsArray.append(columnObject);
     }
     jsonObject["columns"] = columnsArray;

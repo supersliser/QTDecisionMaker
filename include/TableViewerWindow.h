@@ -47,6 +47,9 @@ signals:
 
 public slots:
 
+	void addedBoundValue();
+	void editedBoundValue(int i_index, int i_value);
+	void removedBoundValue(int i_index);
 
     void selectItem(int i_row, int i_column);
 

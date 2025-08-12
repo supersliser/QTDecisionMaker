@@ -57,6 +57,9 @@ TableViewerWindow::TableViewerWindow(QWidget* parent)
     connect(_m_columnDock, &TableColumnDataDock::displayValueChanged, this, &TableViewerWindow::editColumnName);
     connect(_m_columnDock, &TableColumnDataDock::worthValueChanged, this, &TableViewerWindow::editColumnImportance);
     connect(_m_columnDock, &TableColumnDataDock::typeChanged, this, &TableViewerWindow::changeColumnType);
+	connect(_m_columnDock, &TableColumnDataDock::boundsValueAdded, this, &TableViewerWindow::addedBoundValue);
+	connect(_m_columnDock, &TableColumnDataDock::boundsValueRemoved, this, &TableViewerWindow::removedBoundValue);
+	connect(_m_columnDock, &TableColumnDataDock::boundsValueChanged, this, &TableViewerWindow::editedBoundValue);
     connect(this, &TableViewerWindow::columnSelected, _m_columnDock, &TableColumnDataDock::setItem);
 
     _m_undoStack = std::stack<Table>();
@@ -90,6 +93,24 @@ void TableViewerWindow::actionOccured(Table* i_table)
 TableViewerWindow::~TableViewerWindow()
 {
     delete ui;
+}
+
+void TableViewerWindow::addedBoundValue() {
+	_m_data->heading(_m_table->selectedColumn() - 1)->addBoundsValue(0);
+	_m_fileSaved = false;
+	emit sendDrawTable(_m_data);
+}
+
+void TableViewerWindow::removedBoundValue(int i_index) {
+	_m_data->heading(_m_table->selectedColumn() - 1)->removeBoundsValue(i_index);
+	_m_fileSaved = false;
+	emit sendDrawTable(_m_data);
+}
+
+void TableViewerWindow::editedBoundValue(int i_index, int i_value) {
+	_m_data->heading(_m_table->selectedColumn() - 1)->setBoundsValue(i_index, i_value);
+	_m_fileSaved = false;
+	emit sendDrawTable(_m_data);
 }
 
 void TableViewerWindow::selectItem(int i_row, int i_column)
@@ -377,7 +398,7 @@ void TableViewerWindow::changeColumnType(Type i_type)
         _m_columnDock->setType(Type::NUM);
         return;
     }
-    _m_data->heading(_m_table->selectedColumn() - 1)->setType(*DataType::createDataType(i_type));
+    _m_data->heading(_m_table->selectedColumn() - 1)->setType(DataType::createDataType(i_type));
     _m_columnDock->setType(_m_data->heading(_m_table->selectedColumn() - 1)->type().type());
     _m_fileSaved = false;
     emit sendDrawTable(_m_data);

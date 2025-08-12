@@ -6,6 +6,7 @@
 #define DATATYPE_H
 #include <functional>
 #include <string>
+#include <vector>
 
 enum Type
 {
@@ -50,6 +51,12 @@ public:
 
     [[nodiscard]] virtual Type type() const {
         return m_enumType;
+    }
+
+    [[nodiscard]] virtual float autoCalculateWorth(const std::string& displayValue, 
+                                                   const std::vector<int32_t>& boundsValues, 
+                                                   int max) const {
+        return 0.0f; // Default implementation
     }
 
     DataType& operator=(const DataType &i_type);

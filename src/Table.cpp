@@ -1,5 +1,6 @@
 #include "Table.h"
 #include <iostream>
+#include <cctype>
 
 void Table::addHeading(Column i_column) {
     i_column.setIndex(headingCount());
@@ -222,6 +223,20 @@ void Table::calculateTotal(unsigned int i_row) {
     for (int x = 0; x < headingCount(); x++) {
         Item* i = item(x, i_row);
         Column* h = heading(x);
+        int max = h->boundsValuesLength() + 1 / 2;
+        bool hasNonNumber = false;
+        for (int k = 0; k < i->displayValue.length(); k++) {
+            if (!std::isdigit(i->displayValue[k]))
+            {
+                hasNonNumber = true;
+            }
+        }
+        if (i->displayValue.length() == 0) {
+            hasNonNumber = true;
+        }
+        if (h->boundsValuesLength() > 0 && !hasNonNumber) {
+            i->worthValue = h->type().autoCalculateWorth(i->displayValue, h->boundsValues(), max);
+        }
         final += (i->worthValue * h->importance());
     }
     r->setTotalValue(final);
@@ -246,6 +261,14 @@ Table Table::fromJson(const QJsonDocument& i_json)
         Column c;
         c.setName(col.value("name").toString().toStdString());
         c.setImportance(col.value("importance").toDouble());
+	c.setType(DataType::createDataType((Type)col.value("type").toInt()));
+        // Load bounds values if present (backward compatibility)
+        if (col.contains("boundsValues")) {
+            auto boundsArray = col.value("boundsValues").toArray();
+            for (const auto& boundsValue : boundsArray) {
+                c.addBoundsValue(boundsValue.toInt());
+            }
+        }
         table.addHeading(c);
     }
     for (const auto& row : rows) {
