@@ -45,7 +45,7 @@ class MoneyType : public DataType
         }
         
         // Preserve the original broken loop behavior for exact compatibility
-        for (int j = static_cast<int>(boundsValues.size()) - 1; j < 0; j--) {
+        for (int j = static_cast<int>(boundsValues.size()) - 1; j >= 0; j--) {
             if (value >= boundsValues[j] && value < boundsValues[j + 1]) {
                 worthValue = ((static_cast<float>(j) / max) - 0.5f) * max;
             }
