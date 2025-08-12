@@ -21,6 +21,13 @@ public:
     {
         return i_item.find("http://") == 0 || i_item.find("https://") == 0 || i_item.find("www.") == 0;
     }
+
+    [[nodiscard]] float autoCalculateWorth(const std::string& displayValue, 
+                                           const std::vector<int32_t>& boundsValues, 
+                                           int max) const override
+    {
+        return 0.0f; // Link types don't have worth calculations
+    }
 };
 
 #endif //LINKTYPE_H

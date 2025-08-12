@@ -398,7 +398,7 @@ void TableViewerWindow::changeColumnType(Type i_type)
         _m_columnDock->setType(Type::NUM);
         return;
     }
-    _m_data->heading(_m_table->selectedColumn() - 1)->setType(*DataType::createDataType(i_type));
+    _m_data->heading(_m_table->selectedColumn() - 1)->setType(DataType::createDataType(i_type));
     _m_columnDock->setType(_m_data->heading(_m_table->selectedColumn() - 1)->type().type());
     _m_fileSaved = false;
     emit sendDrawTable(_m_data);

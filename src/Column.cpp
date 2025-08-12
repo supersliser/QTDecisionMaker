@@ -2,13 +2,67 @@
 #include <iostream>
 #include <QtCore>
 
+Column::Column()
+{
+    m_type = DataType::createDataType(NAME);
+    m_typeAutoSet = true;
+}
+
 Column::Column(QString i_name, int i_importance, bool i_verbose)
 {
     setName(i_name.toStdString());
     setImportance(i_importance);
     m_verbose = i_verbose;
-    m_type = *DataType::createDataType(NAME);
+    m_type = DataType::createDataType(NAME);
     m_typeAutoSet = true;
+}
+
+Column::Column(const Column& other)
+{
+    m_trueIndex = other.m_trueIndex;
+    m_displayIndex = other.m_displayIndex;
+    m_name = other.m_name;
+    m_importance = other.m_importance;
+    m_verbose = other.m_verbose;
+    m_typeAutoSet = other.m_typeAutoSet;
+    m_boundsValues = other.m_boundsValues;
+    
+    if (other.m_type) {
+        m_type = DataType::createDataType(other.m_type->type());
+    } else {
+        m_type = nullptr;
+    }
+}
+
+Column& Column::operator=(const Column& other)
+{
+    if (this != &other) {
+        m_trueIndex = other.m_trueIndex;
+        m_displayIndex = other.m_displayIndex;
+        m_name = other.m_name;
+        m_importance = other.m_importance;
+        m_verbose = other.m_verbose;
+        m_typeAutoSet = other.m_typeAutoSet;
+        m_boundsValues = other.m_boundsValues;
+        
+        if (m_type) {
+            delete m_type;
+        }
+        
+        if (other.m_type) {
+            m_type = DataType::createDataType(other.m_type->type());
+        } else {
+            m_type = nullptr;
+        }
+    }
+    return *this;
+}
+
+Column::~Column()
+{
+    if (m_type) {
+        delete m_type;
+    }
 }
 
 void Column::setIndex(int i_index)
@@ -154,15 +208,18 @@ void Column::print() const
         << "Importance: " << importance() << '\n';
 }
 
-void Column::setType(DataType i_type)
+void Column::setType(DataType* i_type)
 {
+    if (m_type) {
+        delete m_type;
+    }
     m_type = i_type;
     m_typeAutoSet = false;
 }
 
-DataType Column::type() const
+DataType& Column::type() const
 {
-    return m_type;
+    return *m_type;
 }
 
 void Column::testAutoSetType(std::string_view i_value)
@@ -172,11 +229,16 @@ void Column::testAutoSetType(std::string_view i_value)
         if (i_value == "") { return; }
         for (int i = 1; i < 7; i++)
         {
-            if (DataType::createDataType((Type)i)->attemptAutoSet(i_value.data()))
+            DataType* testType = DataType::createDataType((Type)i);
+            if (testType->attemptAutoSet(i_value.data()))
             {
-                m_type = *DataType::createDataType(static_cast<Type>(i));
+                if (m_type) {
+                    delete m_type;
+                }
+                m_type = testType;
                 return;
             }
+            delete testType;
         }
     }
 }
@@ -209,6 +271,10 @@ return m_boundsValues[i_index];
 
 size_t Column::boundsValuesLength() {
 	return m_boundsValues.size();
+}
+
+const std::vector<int32_t>& Column::boundsValues() const {
+	return m_boundsValues;
 }
 
 void Column::_sortBoundsValues() {

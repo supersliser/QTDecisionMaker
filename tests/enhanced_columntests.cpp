@@ -48,10 +48,10 @@ void Tests::column_setType() {
     
     Column c;
     DataType* dt = DataType::createDataType(inputType);
-    c.setType(*dt);
+    c.setType(dt);
     QCOMPARE(c.type().name(), expectedTypeName.toStdString());
     QCOMPARE(c.type().type(), inputType);
-    delete dt;
+    // Note: dt is now owned by the Column object, no need to delete
 }
 
 void Tests::column_setType_data() {
