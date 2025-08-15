@@ -25,7 +25,7 @@ PreferencesWindow::PreferencesWindow(PreferencesManager* prefsManager, QWidget* 
 {
     setWindowTitle(tr("Preferences"));
     setModal(true);
-    resize(500, 400);
+    setMinimumSize(500, 400);
     
     setupUi();
     updateColorButtons();

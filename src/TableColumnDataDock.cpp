@@ -15,7 +15,6 @@ TableColumnDataDock::TableColumnDataDock(QWidget* parent)
     : TableDataDock(parent)
 {
 	m_lastBoundsValueSelected = -1;
-    setMaximumSize(QSize(200, 300));
     setMinimumSize(QSize(200, 300));
     setWindowTitle("Column Details");
 
