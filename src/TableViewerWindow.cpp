@@ -102,6 +102,8 @@ void TableViewerWindow::addedBoundValue() {
 }
 
 void TableViewerWindow::removedBoundValue(int i_index) {
+	std::cout << i_index << "\n";
+	_m_data->heading(_m_table->selectedColumn() - 1)->print();
 	_m_data->heading(_m_table->selectedColumn() - 1)->removeBoundsValue(i_index);
 	_m_fileSaved = false;
 	emit sendDrawTable(_m_data);

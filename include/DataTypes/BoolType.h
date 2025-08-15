@@ -28,9 +28,9 @@ public:
                                            int max) const override
     {
         if (displayValue == "True" || displayValue == "true" || displayValue == "1") {
-            return -1.0f;
-        } else {
             return 1.0f;
+        } else {
+            return -1.0f;
         }
     }
 

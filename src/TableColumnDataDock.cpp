@@ -55,6 +55,7 @@ void TableColumnDataDock::addedBoundsValue()
 void TableColumnDataDock::addBoundValueRun() {
 	m_boundsValues.push_back(std::make_unique<QDoubleSpinBox>(new QDoubleSpinBox(this)));
 	m_boundsValuesLayout->addWidget(m_boundsValues.back().get());
+	m_boundsValues.back().get()->setMaximum(1000000000);
 	connect(m_boundsValues.back().get(), &QDoubleSpinBox::valueChanged, this, &TableColumnDataDock::_boundsValueChanged);
 	connect(m_boundsValues.back().get(), &QDoubleSpinBox::editingFinished, this, &TableColumnDataDock::_boundsValueSelected);
 	m_lastBoundsValueSelected = m_boundsValues.size() - 1;
@@ -114,11 +115,10 @@ void TableColumnDataDock::setType(Type i_type)
 
 void TableColumnDataDock::removedBoundsValue() {
 	if (m_lastBoundsValueSelected == -1) {
-		return;
+		std::cout << "Make sure to select a bound value before attempting a delete\n";
 	}
 	if (m_lastBoundsValueSelected == m_boundsValues.size() - 1) {
 		m_boundsValues.pop_back();
-		return;
 	}
 	for (int i = 0; i < m_boundsValues.size(); i++) {
 		if (i > m_lastBoundsValueSelected) {

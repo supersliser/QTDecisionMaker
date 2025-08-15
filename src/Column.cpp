@@ -205,7 +205,8 @@ void Column::print() const
     std::cout << "Column Index: " << index() << '\n'
         << "Display Index: " << displayIndex() << '\n'
         << "Name: " << name() << '\n'
-        << "Importance: " << importance() << '\n';
+        << "Importance: " << importance() << '\n'
+	<< "Type: " << type().name() << '\n';
 }
 
 void Column::setType(DataType* i_type)
@@ -249,9 +250,16 @@ m_boundsValues.push_back(i_value);
 }
 
 void Column::removeBoundsValue(int i_index) {
-for (int i = 0; i < m_boundsValues.size(); i++) {
-	if (i > i_index) {
-		m_boundsValues[i - 1] = m_boundsValues[i];
+	if (i_index == m_boundsValues.size() - 1) 
+	{
+		m_boundsValues.pop_back();
+		return;
+	}
+	for (int i = 0; i < m_boundsValues.size(); i++) 
+	{
+		if (i > i_index) 
+		{
+			m_boundsValues[i - 1] = m_boundsValues[i];
 		}
 	}
 }

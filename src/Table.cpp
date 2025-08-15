@@ -234,7 +234,7 @@ void Table::calculateTotal(unsigned int i_row) {
         if (i->displayValue.length() == 0) {
             hasNonNumber = true;
         }
-        if (h->boundsValuesLength() > 0 && !hasNonNumber) {
+        if ((h->boundsValuesLength() > 0 && !hasNonNumber) || h->type().type() == Type::BOOL) {
             i->worthValue = h->type().autoCalculateWorth(i->displayValue, h->boundsValues(), max);
         }
         final += (i->worthValue * h->importance());
@@ -287,6 +287,7 @@ Table Table::fromJson(const QJsonDocument& i_json)
         table.item(x, y)->displayValue = displayValue;
         table.item(x, y)->worthValue = worthValue;
     }
+	std::cout << "read file successfully\n";
     return table;
 }
 

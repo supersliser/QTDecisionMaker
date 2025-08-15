@@ -139,10 +139,10 @@ void Tests::datatype_comprehensiveWorthCalculation_data() {
     QTest::newRow("RATE: max value") << RATE << "5" << QVector<int32_t>{1, 3, 5} << 3 << 1.5f << true;
     
     // BOOL type tests
-    QTest::newRow("BOOL: true") << BOOL << "true" << QVector<int32_t>{1, 2, 3} << 3 << -1.0f << true;
-    QTest::newRow("BOOL: false") << BOOL << "false" << QVector<int32_t>{1, 2, 3} << 3 << 1.0f << true;
-    QTest::newRow("BOOL: 1") << BOOL << "1" << QVector<int32_t>{1, 2, 3} << 3 << -1.0f << true;
-    QTest::newRow("BOOL: 0") << BOOL << "0" << QVector<int32_t>{1, 2, 3} << 3 << 1.0f << true;
+    QTest::newRow("BOOL: true") << BOOL << "true" << QVector<int32_t>{1, 2, 3} << 3 << 1.0f << true;
+    QTest::newRow("BOOL: false") << BOOL << "false" << QVector<int32_t>{1, 2, 3} << 3 << -1.0f << true;
+    QTest::newRow("BOOL: 1") << BOOL << "1" << QVector<int32_t>{1, 2, 3} << 3 << 1.0f << true;
+    QTest::newRow("BOOL: 0") << BOOL << "0" << QVector<int32_t>{1, 2, 3} << 3 << -1.0f << true;
     
     // Default types (should return 0)
     QTest::newRow("NAME: default") << NAME << "Test Name" << QVector<int32_t>{1, 2, 3} << 3 << 0.0f << true;

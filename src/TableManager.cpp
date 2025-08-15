@@ -40,7 +40,6 @@ void TableManager::drawTable(Table* i_data)
         _setColumnHeader(i, tr(i_data->heading(i - 1)->name().data()));
     }
     _setColumnHeader(i_data->headingCount() + 1, tr("Total Value"));
-
     i_data->calculateAllTotals();
 
     setRowCount(i_data->rowCount());
