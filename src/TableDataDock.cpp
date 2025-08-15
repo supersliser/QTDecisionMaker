@@ -8,7 +8,6 @@ TableDataDock::TableDataDock(QWidget* parent)
     : QDockWidget(parent)
 {
     setMinimumSize(QSize(200, 200));
-    setMaximumSize(QSize(200, 200));
     setWindowTitle("Item Details");
 
     auto temp = new QWidget(this);
