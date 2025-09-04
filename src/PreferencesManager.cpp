@@ -11,6 +11,7 @@
 #include <QFile>
 #include <QApplication>
 #include <QPalette>
+#include <iostream>
 
 const QString PreferencesManager::PREFERENCES_FILE_NAME = "preferences.json";
 
@@ -202,11 +203,13 @@ void PreferencesManager::fromJson(const QJsonObject& json)
     // Colors
     if (json.contains("backgroundColor") && json["backgroundColor"].isString())
     {
-        _backgroundColor.setNamedColor(json["backgroundColor"].toString());
+	std::cout << "Assigning " << json["backgroundColor"].toString().toStdString() << " as _backgroundColor\n";
+        _backgroundColor.fromString(json["backgroundColor"].toString());
     }
     if (json.contains("textColor") && json["textColor"].isString())
     {
-        _textColor.setNamedColor(json["textColor"].toString());
+	std::cout << "Assigning " << json["textColor"].toString().toStdString() << " as _textColour\n";
+        _textColor.fromString(json["textColor"].toString());
     }
     
     // Zoom
